@@ -10,6 +10,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Xamarin.Forms" Version="4.4.0.991640"/>
+        <PackageReference Include="Xamarin.Forms" Version="4.8.0.1269" />
+        <PackageReference Include="XF.Material" Version="1.6.5" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Models" />
     </ItemGroup>
 </Project>

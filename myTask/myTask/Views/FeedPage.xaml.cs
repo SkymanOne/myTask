@@ -1,15 +1,18 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Xamarin.Forms;
 
-namespace myTask
+using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
+
+namespace myTask.Views
 {
-    public partial class MainPage : ContentPage
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class FeedPage : ContentPage
     {
-        public MainPage()
+        public FeedPage()
         {
             InitializeComponent();
         }

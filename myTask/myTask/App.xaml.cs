@@ -1,6 +1,7 @@
 ﻿using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using myTask.Views;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 
@@ -11,8 +12,9 @@ namespace myTask
         public App()
         {
             InitializeComponent();
+            XF.Material.Forms.Material.Init(this);
 
-            MainPage = new MainPage();
+            MainPage = new MainNavigationPage();
         }
 
         protected override void OnStart()
