@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+using myTask.Services.Navigation;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using myTask.Views;
@@ -9,17 +11,19 @@ namespace myTask
 {
     public partial class App : Application
     {
+
+        private INavigationService _navigationService;
         public App()
         {
             InitializeComponent();
             XF.Material.Forms.Material.Init(this);
-
-            MainPage = new MainNavigationPage();
+            
         }
 
-        protected override void OnStart()
+        protected override async void OnStart()
         {
             // Handle when your app starts
+            await InitNavigation();
         }
 
         protected override void OnSleep()
@@ -30,6 +34,12 @@ namespace myTask
         protected override void OnResume()
         {
             // Handle when your app resumes
+        }
+
+        private async Task InitNavigation()
+        {
+            _navigationService = SuperContainer.Resolve<INavigationService>();
+            await _navigationService.InitMainNavigation();
         }
     }
 }

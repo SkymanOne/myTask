@@ -5,9 +5,11 @@
              x:Class="myTask.Views.TaskDetailPage">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Hello, world!"
+            <Label Text="Detail Page"
                    VerticalOptions="CenterAndExpand"
                    HorizontalOptions="CenterAndExpand" />
+            <Button Text="backView"
+                    Command="{Binding BackCommand}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
