@@ -21,6 +21,7 @@ namespace myTask.Services.Navigation
 
         public Task InitMainNavigation()
         {
+            //too lazy to do it manually, so instead deliver a list of viewModels to be resolved automatically
             var tabs = ResolveNavigation(new List<Type>()
             {
                 typeof(FeedViewModel),
@@ -47,7 +48,13 @@ namespace myTask.Services.Navigation
                 var viewModel = (BaseViewModel) SuperContainer.Resolve(viewModelType);
                 var page = ViewLocator.ResolvePageFromViewModel(viewModel);
                 
-                var navPage = new NavigationPage(page) {Title = page.Title};
+                //wrap each page into a nav page in case we need to do some "in-tab" navigation
+                //see https://docs.microsoft.com/en-us/xamarin/xamarin-forms/app-fundamentals/navigation/tabbed-page#navigate-within-a-tab
+                var navPage = new NavigationPage(page)
+                {
+                    Title = page.Title,
+                    IconImageSource = page.IconImageSource
+                };
                 pages.Add(navPage);
             }
 

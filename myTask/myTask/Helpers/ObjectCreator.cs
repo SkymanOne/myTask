@@ -10,27 +10,33 @@ namespace myTask.Helpers
     {
         private delegate T CreateObjectInternal<T>();
 
-        private static CreateObjectInternal<T> GetActivator<T>(ConstructorInfo constructorInfo) where T : class
+        private static CreateObjectInternal<T> GetActivator<T>(Type objectType) where T : class
         {
-            ParameterInfo[] parameterInfos = constructorInfo.GetParameters();
-            Expression[] args = new Expression[0];
-
-            NewExpression newExpression = Expression.New(constructorInfo, args);
-            LambdaExpression lambdaExpression = Expression.Lambda(typeof(CreateObjectInternal<T>), newExpression,
-                new List<ParameterExpression>(0));
+            //form a new expression which call parameterless constructor of the specified type
+            NewExpression newExpression = Expression.New(objectType);
+            LambdaExpression lambdaExpression = Expression.Lambda<CreateObjectInternal<T>>(newExpression);
+            //compile lambda into an executable function
             return (CreateObjectInternal<T>) lambdaExpression.Compile();
         }
 
+        //need to complete tests to estimate the performance
+        /// <summary>
+        /// Create an object of specified type which is then casted to generic type
+        /// </summary>
+        /// <param name="type"></param> 
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static T CreateObject<T>(Type type) where T : class
         {
-            CreateObjectInternal<T> creator = GetActivator<T>(type.GetConstructors().First());
+            //assign the generic function to the delegate
+            CreateObjectInternal<T> creator = GetActivator<T>(type);
             T instance = creator();
             return instance;
         }
         
         public static T CreateObject<T>() where T : class
         {
-            CreateObjectInternal<T> creator = GetActivator<T>(typeof(T).GetConstructors().First());
+            CreateObjectInternal<T> creator = GetActivator<T>(typeof(T));
             T instance = creator();
             return instance;
         }
