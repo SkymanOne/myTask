@@ -20,10 +20,10 @@ namespace myTask.Services.Navigation
             
         }
 
-        public Task InitMainNavigation()
+        public async Task InitMainNavigation()
         {
             //too lazy to do it manually, so instead deliver a list of viewModels to be resolved automatically
-            var tabs = ResolveNavigation(new List<Type>()
+            var tabs = await ResolveNavigation(new List<Type>()
             {
                 typeof(FeedViewModel),
                 typeof(TaskListViewModel),
@@ -32,19 +32,15 @@ namespace myTask.Services.Navigation
             });
 
             var mainPageViewModel = SuperContainer.Resolve<MainNavigationViewModel>();
-
             mainPageViewModel.Tabs = tabs;
-            //mainPageViewModel.CurrentPage = tabs.Where(x => x.Title == "Tasks")
-
+            
             var mainPage = ViewLocator.ResolvePageFromViewModel(mainPageViewModel);
             Application.Current.MainPage = mainPage;
-            (Application.Current.MainPage.BindingContext as MainNavigationViewModel).CurrentPage =
-                tabs.First(x => x.Title == "Tasks");
-            return Task.CompletedTask;
+            (Application.Current.MainPage.BindingContext as MainNavigationViewModel).Init("Tasks");
         }
 
 
-        private ObservableCollection<Page> ResolveNavigation(List<Type> viewModels)
+        private Task<ObservableCollection<Page>> ResolveNavigation(List<Type> viewModels)
         {
             ObservableCollection<Page> pages = new ObservableCollection<Page>();
             foreach (var viewModelType in viewModels)
@@ -62,7 +58,7 @@ namespace myTask.Services.Navigation
                 pages.Add(navPage);
             }
 
-            return pages;
+            return Task.FromResult(pages);
         }
 
         public async Task NavigateToAsync<TViewModel>() where TViewModel : BaseViewModel
@@ -78,14 +74,17 @@ namespace myTask.Services.Navigation
         private async Task NavigateToHelper<TViewModel>(object param) where TViewModel : BaseViewModel
         {
             var viewModel = SuperContainer.Resolve<TViewModel>();
-            await viewModel.PassParameter(param);
+            //await viewModel.Init(param);
             var page = ViewLocator.ResolvePageFromViewModel(viewModel);
 
             if (Application.Current.MainPage is TabbedPage tabbedPage)
             {
                 if (tabbedPage.CurrentPage is NavigationPage navigationPage)
                 {
-                   await navigationPage.PushAsync(page);
+                    #pragma warning disable 8602
+                    await (page.BindingContext as BaseViewModel).Init(param);
+                    #pragma warning restore 8602
+                    await navigationPage.PushAsync(page);
                 }
             }
             else

@@ -30,7 +30,7 @@ namespace myTask.ViewModels.Base
             OnPropertyChanged(propertyName);
         }
 
-        public virtual Task PassParameter(object param)
+        public virtual Task Init(object param)
         {
             return Task.FromResult(false);
         }

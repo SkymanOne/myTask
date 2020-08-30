@@ -1,5 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 using myTask.Services.Navigation;
 using myTask.ViewModels.Base;
 using myTask.Views;
@@ -30,6 +32,18 @@ namespace myTask.ViewModels
             get => _currentPage;
             set => SetValue(ref _currentPage, value);
         }
-        
+
+        public override async Task Init(object param)
+        {
+            if (param is string title)
+            {
+                CurrentPage = Tabs.First(x => x.Title == title);
+                await Task.FromResult(true);
+            }
+            else
+            {
+                await base.Init(param);
+            }
+        }
     }
 }
