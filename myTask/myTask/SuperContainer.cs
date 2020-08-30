@@ -25,6 +25,19 @@ namespace myTask
             Container.Register<INavigationService, NavigationService>();
         }
 
+        public static void UpdateDependencies(bool useMocks)
+        {
+            Container.Register<INavigationService, NavigationService>();
+            if (useMocks)
+            {
+                //TODO: register mockup services
+            }
+            else
+            {
+                //TODO: register production services
+            }
+        }
+
         public static T Resolve<T>() where T : class
         {
             if (Container.CanResolve<T>()) return Container.Resolve<T>();

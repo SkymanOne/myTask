@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using myTask.Services.Navigation;
@@ -13,6 +15,7 @@ namespace myTask.ViewModels
         public override Type WiredPageType => typeof(TaskListPage);
         
         public ICommand DetailCommand { get; set; }
+        public ObservableCollection<Task> MyTasks { get; set; }
 
         public TaskListViewModel(INavigationService navigationService) : base(navigationService)
         {

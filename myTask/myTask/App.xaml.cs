@@ -17,7 +17,7 @@ namespace myTask
         {
             InitializeComponent();
             XF.Material.Forms.Material.Init(this);
-            
+            InitApp(true);
         }
 
         protected override async void OnStart()
@@ -40,6 +40,11 @@ namespace myTask
         {
             _navigationService = SuperContainer.Resolve<INavigationService>();
             await _navigationService.InitMainNavigation();
+        }
+
+        private void InitApp(bool useMocks)
+        {
+            SuperContainer.UpdateDependencies(useMocks);
         }
     }
 }

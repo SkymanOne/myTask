@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using myTask.Helpers;
@@ -33,9 +34,12 @@ namespace myTask.Services.Navigation
             var mainPageViewModel = SuperContainer.Resolve<MainNavigationViewModel>();
 
             mainPageViewModel.Tabs = tabs;
+            //mainPageViewModel.CurrentPage = tabs.Where(x => x.Title == "Tasks")
 
             var mainPage = ViewLocator.ResolvePageFromViewModel(mainPageViewModel);
             Application.Current.MainPage = mainPage;
+            (Application.Current.MainPage.BindingContext as MainNavigationViewModel).CurrentPage =
+                tabs.First(x => x.Title == "Tasks");
             return Task.CompletedTask;
         }
 

@@ -5,6 +5,7 @@
              x:Class="myTask.Views.MainNavigationPage"
              xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
              android:TabbedPage.ToolbarPlacement="Bottom"
+             android:TabbedPage.IsSwipePagingEnabled="False"
              Children="{Binding Tabs, Mode=TwoWay}"
              CurrentPage="{Binding CurrentPage, Mode=TwoWay}">
 </TabbedPage>

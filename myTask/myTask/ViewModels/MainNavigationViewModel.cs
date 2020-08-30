@@ -30,5 +30,6 @@ namespace myTask.ViewModels
             get => _currentPage;
             set => SetValue(ref _currentPage, value);
         }
+        
     }
 }

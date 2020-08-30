@@ -15,6 +15,6 @@ namespace myTask.Models
         public double PriorityLevel { get; set; }
         public int Kinbens { get; set; }
         public DateTime Deadline { get; set; }
-        public int Minutes { get; set; }
+        public int DurationMinutes { get; set; }
     }
 }
