@@ -15,6 +15,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="sqlite-net-pcl" Version="1.7.335" />
+        <PackageReference Include="SQLiteNetExtensions" Version="2.1.0" />
+        <PackageReference Include="SQLiteNetExtensions.Async" Version="2.1.0" />
         <PackageReference Include="Xamarin.Forms" Version="4.8.0.1269" />
         <PackageReference Include="XF.Material" Version="1.6.5" />
     </ItemGroup>

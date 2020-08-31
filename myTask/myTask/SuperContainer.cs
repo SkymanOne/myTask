@@ -1,4 +1,5 @@
 using System;
+using myTask.Services.Database;
 using myTask.Services.Navigation;
 using myTask.ViewModels;
 using TinyIoC;
@@ -28,6 +29,7 @@ namespace myTask
         public static void UpdateDependencies(bool useMocks)
         {
             Container.Register<INavigationService, NavigationService>();
+            Container.Register<DbConnection>().AsSingleton();
             if (useMocks)
             {
                 //TODO: register mockup services
