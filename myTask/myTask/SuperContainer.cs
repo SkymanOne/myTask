@@ -1,5 +1,6 @@
 using System;
 using myTask.Services.Database;
+using myTask.Services.Database.Repositories;
 using myTask.Services.Navigation;
 using myTask.ViewModels;
 using TinyIoC;
@@ -36,7 +37,13 @@ namespace myTask
             }
             else
             {
-                //TODO: register production services
+                Container.RegisterMultiple(typeof(IRepository<>), new[]
+                {
+                    typeof(MyTaskRepository),
+                    typeof(TagRepository),
+                    typeof(DailyTimetableRepository),
+                    typeof(WeeklyTimetableRepository)
+                });
             }
         }
 

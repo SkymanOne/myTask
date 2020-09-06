@@ -1,13 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SQLite;
+using SQLiteNetExtensions.Attributes;
 
 namespace myTask.Models
 {
     public class Tag
     {
-        public int Id { get; set; }
+        [PrimaryKey]
+        public Guid Id { get; set; }
         public string Title { get; set; }
-        public virtual ICollection<Task> Tasks { get; set; }
+        [ManyToMany(typeof(MyTaskTag))]
+        public virtual ICollection<MyTask> Tasks { get; set; }
     }
 }
