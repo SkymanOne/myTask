@@ -1,4 +1,5 @@
 using System;
+using myTask.Models;
 using myTask.Services.Database;
 using myTask.Services.Database.Repositories;
 using myTask.Services.Navigation;
@@ -30,20 +31,17 @@ namespace myTask
         public static void UpdateDependencies(bool useMocks)
         {
             Container.Register<INavigationService, NavigationService>();
-            Container.Register<DbConnection>().AsSingleton();
+            Container.Register<DbConnection>();
             if (useMocks)
             {
                 //TODO: register mockup services
             }
             else
             {
-                Container.RegisterMultiple(typeof(IRepository<>), new[]
-                {
-                    typeof(MyTaskRepository),
-                    typeof(TagRepository),
-                    typeof(DailyTimetableRepository),
-                    typeof(WeeklyTimetableRepository)
-                });
+                Container.Register<IRepository<MyTask>, MyTaskRepository>();
+                Container.Register<IRepository<Tag>, TagRepository>();
+                Container.Register<IRepository<WeeklyTimetable>, WeeklyTimetableRepository>();
+                Container.Register<IRepository<DailyTimetable>, DailyTimetableRepository>();
             }
         }
 

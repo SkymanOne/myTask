@@ -16,5 +16,12 @@ namespace myTask.Views
         {
             InitializeComponent();
         }
+
+        private void ListView_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            (sender as ListView).SelectedItem = null;
+        }
+        
+        
     }
 }

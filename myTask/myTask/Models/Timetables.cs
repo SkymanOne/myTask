@@ -21,10 +21,11 @@ namespace myTask.Models
         [PrimaryKey]
         public Guid Id { get; set; }
         public Weekday Day { get; set; }
+        [OneToMany]
         public ICollection<MyTask> Tasks { get; set; }
         
         [ForeignKey(typeof(WeeklyTimetable))]
-        public int WeeklyTimetableId { get; set; }
+        public Guid WeeklyTimetableId { get; set; }
 
         [ManyToOne]
         public WeeklyTimetable Week { get; set; }

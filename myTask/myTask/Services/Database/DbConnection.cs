@@ -14,7 +14,7 @@ namespace myTask.Services.Database
         public SQLiteAsyncConnection Database { get; } = LazyDbInitializer.Value;
         private bool _setup = false;
 
-        private async Task Init()
+        private async void Init()
         {
             var tableTypes = new[]
             {
@@ -29,8 +29,9 @@ namespace myTask.Services.Database
                 //if not, drop db and create a new one
                 if (!tableTypes.Any(x => Database
                     .TableMappings
-                    .Any(z => z.TableName == x.Name))) {
-                    await Database.CreateTablesAsync(CreateFlags.None, tableTypes);
+                    .Any(z => z.TableName == x.Name)))
+                {
+                   await Database.CreateTablesAsync(CreateFlags.None, tableTypes);
                 }
                 _setup = true;
             }
@@ -38,7 +39,7 @@ namespace myTask.Services.Database
 
         public DbConnection()
         {
-            Init().ConfigureAwait(false);
+            Init();
         }
     }
 }

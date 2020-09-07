@@ -7,23 +7,42 @@
              NavigationPage.HasNavigationBar="false"
              Title="Tasks">
     <ContentPage.Content>
-        <StackLayout Padding="10, 50,10, 10">
-            <material:MaterialLabel Text="Wednesday, 20th March"
-                                    FontSize="38"
-                                    LineHeight="1"
-                                    TextColor="Black"
-                                    HorizontalOptions="StartAndExpand"
-                                    VerticalOptions="Start"
-                                    Padding="0, 0, 10, 0"/>
-            <ScrollView>
-                <StackLayout>
-                    <Label Text="Hello, world2!"
-                           VerticalOptions="Start"
-                           HorizontalOptions="CenterAndExpand" />
-                    <material:MaterialButton Text="DetailView"
-                            Command="{Binding DetailCommand}"/>
-                </StackLayout>
-            </ScrollView>
-        </StackLayout>
+        <AbsoluteLayout 
+            Padding="0, 50, 0, 0">
+            <StackLayout 
+                AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
+                AbsoluteLayout.LayoutFlags="All">
+                <material:MaterialLabel
+                    Text="Monday, 20th October"
+                    FontSize="40"/>
+                <ListView ItemsSource="{Binding MyTasks}"
+                          HasUnevenRows="True"
+                          Margin="5, 0, 5, 0"
+                          Footer=""
+                          ItemSelected="ListView_OnItemSelected"
+                          SeparatorVisibility="Default">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout Padding="10, 10">
+                                            <material:MaterialLabel
+                                                Text="{Binding Title}"/>
+                                        </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                </ListView>
+            </StackLayout>
+                <material:MaterialButton
+                    AbsoluteLayout.LayoutBounds="0.95, 0.97, 70, 70"
+                    AbsoluteLayout.LayoutFlags="PositionProportional"
+                    Text="+"
+                    TextColor="Black"
+                    FontSize="40"
+                    WidthRequest="100"
+                    BackgroundColor="Yellow"
+                    HeightRequest="100"
+                    CornerRadius="50"/>
+        </AbsoluteLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -11,7 +11,7 @@ namespace myTask.Services.MyTasksManager
     public interface IMyTaskManager
     {
         Task<ICollection<MyTask>> LoadAllTasksAsync();
-        Task<ICollection<MyTask>> LoadWeeklyTimetableAsync(int weekOfTheYear);
+        Task<ICollection<DailyTimetable>> LoadWeeklyTimetableAsync(int weekOfTheYear);
         Task<ICollection<MyTask>> LoadTasksAsync(Weekday day, int weekOfTheYear = -1);
         Task<ICollection<MyTask>> LoadTasksAsync();
         Task<bool> CreateTaskAsync(MyTask myTask);

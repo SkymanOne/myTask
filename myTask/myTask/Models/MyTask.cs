@@ -15,7 +15,9 @@ namespace myTask.Models
         public string Description { get; set; }
         [ManyToMany(typeof(MyTaskTag))]
         public virtual ICollection<Tag> Tags { get; set; }
+        [TextBlob("SubTasksBlobbed")]
         public List<string> SubTasks { get; set; }
+        public string SubTasksBlobbed { get; set; }
         //set by user
         public double Importance { get; set; }
         //Calculated automatically
@@ -25,6 +27,8 @@ namespace myTask.Models
         public int Kinbens { get; set; }
         public DateTime Deadline { get; set; }
         public int DurationMinutes { get; set; }
+        [ForeignKey(typeof(DailyTimetable))]
+        public Guid WeekId { get; set; }
     }
 
     public enum PriorityLevel
