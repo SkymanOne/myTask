@@ -19,12 +19,12 @@ namespace myTask.Models
         public List<string> SubTasks { get; set; }
         public string SubTasksBlobbed { get; set; }
         //set by user
-        public double Importance { get; set; }
+        public double Importance { get; set; } = 0.5;
         //Calculated automatically
-        public double PriorityCoefficient { get; set; }
+        public double PriorityCoefficient { get; set; } = 0.5;
         //set automatically as a hint for the user
-        public PriorityLevel PriorityLevel { get; set; }
-        public int Kinbens { get; set; }
+        public PriorityLevel PriorityLevel { get; set; } = PriorityLevel.Low;
+        public int Kinbens { get; set; } = 20;
         public DateTime Deadline { get; set; }
         public int DurationMinutes { get; set; }
         [ForeignKey(typeof(DailyTimetable))]

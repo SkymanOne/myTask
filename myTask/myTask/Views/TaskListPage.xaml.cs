@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using myTask.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -21,7 +21,11 @@ namespace myTask.Views
         {
             (sender as ListView).SelectedItem = null;
         }
-        
-        
+
+
+        private void ListView_OnItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            (BindingContext as TaskListViewModel).DetailCommand.Execute(null);
+        }
     }
 }

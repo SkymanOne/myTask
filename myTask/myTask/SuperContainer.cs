@@ -1,6 +1,7 @@
 using System;
 using myTask.Models;
 using myTask.Services.Database;
+using myTask.Services.Database.MockRepositories;
 using myTask.Services.Database.Repositories;
 using myTask.Services.Navigation;
 using myTask.ViewModels;
@@ -34,7 +35,7 @@ namespace myTask
             Container.Register<DbConnection>();
             if (useMocks)
             {
-                //TODO: register mockup services
+                Container.Register(typeof(IRepository<>), typeof(MockRepository<>));
             }
             else
             {
