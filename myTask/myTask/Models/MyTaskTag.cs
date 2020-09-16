@@ -10,6 +10,6 @@ namespace myTask.Models
         public Guid TagId { get; set; }
         
         [ForeignKey(typeof(MyTask))]
-        public int MyTaskId { get; set; }
+        public Guid MyTaskId { get; set; }
     }
 }

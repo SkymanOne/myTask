@@ -41,12 +41,16 @@ namespace myTask.ViewModels
         public async void CreateNewPage()
         {
             var title = await MaterialDialog.Instance.InputAsync("Enter task title");
-            var myTask = new MyTask()
+            title = title.TrimEnd();
+            if (!string.IsNullOrWhiteSpace(title))
             {
-                Title = title
-            };
-            var result = await _myTaskRepository.CreateItemAsync(myTask);
-            if (result) OnPropertyChanged("MyTasks");
+                var myTask = new MyTask()
+                {
+                    Title = title
+                };
+                var result = await _myTaskRepository.CreateItemAsync(myTask);
+                if (result) OnPropertyChanged("MyTasks");
+            }
         }
 
         public override async Task Init(object param)
