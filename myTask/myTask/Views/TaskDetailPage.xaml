@@ -2,14 +2,79 @@
 
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
              x:Class="myTask.Views.TaskDetailPage">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Detail Page"
-                   VerticalOptions="CenterAndExpand"
-                   HorizontalOptions="CenterAndExpand" />
-            <Button Text="backView"
-                    Command="{Binding BackCommand}"/>
-        </StackLayout>
+        <ScrollView>
+            <StackLayout Padding="10">
+                <!-- Icon section Start -->
+                <StackLayout>
+                    <StackLayout
+                        HorizontalOptions="Center">
+                        <Image />
+                        <material:MaterialButton
+                            ButtonType="Text"
+                            FontSize="9"
+                            Command="{Binding PickNewIcon}"
+                            Text="Choose Icon" />
+                    </StackLayout>
+                </StackLayout>
+                <!-- Icon section End -->
+
+                <!-- Title section Start -->
+                <StackLayout
+                    Orientation="Horizontal">
+                    <material:MaterialLabel
+                        HorizontalOptions="Start"
+                        VerticalTextAlignment="Center"
+                        HorizontalTextAlignment="Start"
+                        Text="{Binding MyTask.Title}" />
+                    <material:MaterialButton
+                        ButtonType="Text"
+                        Command="{Binding UpdateLabel}"
+                        Text="change" />
+                </StackLayout>
+                <!-- Title section End -->
+
+                <!-- Tags section Start -->
+                <StackLayout Orientation="Horizontal"
+                             VerticalOptions="Start"
+                             HorizontalOptions="Start">
+                    <CarouselView VerticalOptions="Start"
+                                  HorizontalOptions="Start"
+                                  HeightRequest="50"
+                                  EmptyView="No items"
+                                  ItemsSource="{Binding MyTask.Tags}" />
+                </StackLayout>
+                <!-- Tags section End -->
+                
+                <!-- Description section Start -->
+                <StackLayout>
+                    <material:MaterialLabel 
+                        Text="{Binding MyTask.Description}"/>
+                </StackLayout>
+                <!-- Description section End -->
+
+                <!-- Subtasks section Start -->
+                <StackLayout 
+                    HorizontalOptions="Start"
+                    VerticalOptions="Start"
+                    BindableLayout.ItemsSource="{Binding SubTasks, Mode=TwoWay}"
+                    BindableLayout.EmptyView="No items present">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout Orientation="Horizontal">
+                                <CheckBox IsChecked="{Binding Value, Mode=OneWay}"
+                                          VerticalOptions="Center"/>
+                                <material:MaterialLabel Text="{Binding Key}"
+                                                        VerticalOptions="Center"/>
+                            </StackLayout>
+                            
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </StackLayout>
+                <!-- Subtasks section End -->
+            </StackLayout>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

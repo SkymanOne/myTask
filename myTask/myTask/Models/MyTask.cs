@@ -15,8 +15,12 @@ namespace myTask.Models
         public string Description { get; set; }
         [ManyToMany(typeof(MyTaskTag))]
         public virtual ICollection<Tag> Tags { get; set; }
+
         [TextBlob("SubTasksBlobbed")]
-        public List<string> SubTasks { get; set; }
+        public IEnumerable<KeyValuePair<string, bool>> SubTasks { get; set; } = new Dictionary<string, bool>()
+        {
+            {"test", false}
+        };
         public string SubTasksBlobbed { get; set; }
         //set by user
         public double Importance { get; set; } = 0.5;

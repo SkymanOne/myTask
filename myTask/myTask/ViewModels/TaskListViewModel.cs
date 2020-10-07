@@ -24,18 +24,23 @@ namespace myTask.ViewModels
         public ICommand DetailCommand { get; set; }
         public ICommand CreateNewCommand { get; set; }
 
-        public List<MyTask> MyTasks => _myTaskRepository.GetAllItemsAsync().Result.ToList();
+        private List<MyTask> _myTasks;
+        public List<MyTask> MyTasks
+        {
+            get => _myTasks;
+            set => SetValue(ref _myTasks, value);
+        }
 
         public TaskListViewModel(INavigationService navigationService, IRepository<MyTask> repository) : base(navigationService)
         {
-            DetailCommand = new Command(GoToDetailPage);
+            DetailCommand = new Command<MyTask>(GoToDetailPage);
             CreateNewCommand = new Command(CreateNewPage);
             _myTaskRepository = repository;
         }
 
-        public async void GoToDetailPage()
+        public async void GoToDetailPage(MyTask myTask)
         {
-            await _navigationService.NavigateToAsync<TaskDetailViewModel>();
+            await _navigationService.NavigateToAsync<TaskDetailViewModel>(myTask);
         }
 
         public async void CreateNewPage()
@@ -49,14 +54,19 @@ namespace myTask.ViewModels
                     Title = title
                 };
                 var result = await _myTaskRepository.CreateItemAsync(myTask);
-                if (result) OnPropertyChanged("MyTasks");
+                if (result) await UpdateListAsync();
             }
+        }
+
+        public async Task UpdateListAsync()
+        {
+            var resultAwait = await _myTaskRepository.GetAllItemsAsync();
+            if (resultAwait != null) MyTasks = resultAwait.ToList();
         }
 
         public override async Task Init(object param)
         {
-            var list = await _myTaskRepository.GetAllItemsAsync();
-            //MyTasks = new ObservableCollection<MyTask>(list);
+            await UpdateListAsync();
         }
     }
 }

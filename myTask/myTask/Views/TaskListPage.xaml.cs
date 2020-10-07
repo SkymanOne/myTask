@@ -25,7 +25,7 @@ namespace myTask.Views
 
         private void ListView_OnItemTapped(object sender, ItemTappedEventArgs e)
         {
-            (BindingContext as TaskListViewModel).DetailCommand.Execute(null);
+            (BindingContext as TaskListViewModel).DetailCommand.Execute(e.Item);
         }
     }
 }
