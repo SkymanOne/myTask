@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using SQLite;
 using SQLiteNetExtensions.Attributes;
@@ -17,9 +18,10 @@ namespace myTask.Models
         public virtual ICollection<Tag> Tags { get; set; }
 
         [TextBlob("SubTasksBlobbed")]
-        public IEnumerable<KeyValuePair<string, bool>> SubTasks { get; set; } = new Dictionary<string, bool>()
+        public IList<SubTask> SubTasks { get; set; } = new List<SubTask>()
         {
-            {"test", false}
+            new SubTask("Hello"),
+            new SubTask("World")
         };
         public string SubTasksBlobbed { get; set; }
         //set by user

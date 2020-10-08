@@ -47,16 +47,16 @@
                                   ItemsSource="{Binding MyTask.Tags}" />
                 </StackLayout>
                 <!-- Tags section End -->
-                
+
                 <!-- Description section Start -->
                 <StackLayout>
-                    <material:MaterialLabel 
-                        Text="{Binding MyTask.Description}"/>
+                    <material:MaterialLabel
+                        Text="{Binding MyTask.Description}" />
                 </StackLayout>
                 <!-- Description section End -->
 
                 <!-- Subtasks section Start -->
-                <StackLayout 
+                <StackLayout
                     HorizontalOptions="Start"
                     VerticalOptions="Start"
                     BindableLayout.ItemsSource="{Binding SubTasks, Mode=TwoWay}"
@@ -64,12 +64,13 @@
                     <BindableLayout.ItemTemplate>
                         <DataTemplate>
                             <StackLayout Orientation="Horizontal">
-                                <CheckBox IsChecked="{Binding Value, Mode=OneWay}"
-                                          VerticalOptions="Center"/>
-                                <material:MaterialLabel Text="{Binding Key}"
-                                                        VerticalOptions="Center"/>
+                                <CheckBox IsChecked="{Binding Completed, Mode=TwoWay}"
+                                          VerticalOptions="Center">
+                                </CheckBox>
+                                    <material:MaterialLabel Text="{Binding Title}"
+                                                            VerticalOptions="Center" />
                             </StackLayout>
-                            
+
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
                 </StackLayout>

@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using myTask.DataStructures;
 using myTask.Models;
 using myTask.Services.Database.Repositories;
 using myTask.Services.Navigation;
@@ -26,7 +28,7 @@ namespace myTask.ViewModels
 
         // does not work
         //TODO: implement observable dictionary
-        public ObservableCollection<KeyValuePair<string, bool>> SubTasks { get; set; }
+        public ObservableCollection<SubTask> SubTasks { get; set; }
         
         public MyTask _myTask;
 
@@ -35,7 +37,7 @@ namespace myTask.ViewModels
             get => _myTask;
             set => SetValue(ref _myTask, value);
         }
-        
+
 
         public TaskDetailViewModel(INavigationService navigationService, IRepository<MyTask> repository) : base(navigationService)
         {
@@ -45,7 +47,7 @@ namespace myTask.ViewModels
 
         private async void GoBackAsync()
         {
-            MyTask.SubTasks = SubTasks;
+            MyTask.SubTasks = SubTasks.ToList();
             await _repository.UpdateItemAsync(MyTask);
             await _navigationService.NavigateToAsync<TaskListViewModel>();
             await _navigationService.ClearTheStackAsync();
@@ -56,7 +58,8 @@ namespace myTask.ViewModels
             if (param is MyTask myTask)
             {
                 MyTask = myTask;
-                SubTasks = (ObservableCollection<KeyValuePair<string, bool>>) MyTask.SubTasks;
+                SubTasks = new ObservableCollection<SubTask>(MyTask.SubTasks);
+                OnPropertyChanged(nameof(SubTasks));
             }
             else
             {
