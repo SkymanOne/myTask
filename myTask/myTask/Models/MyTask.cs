@@ -9,15 +9,15 @@ namespace myTask.Models
     //chose the name to avoid confusion with System.Task
     public class MyTask
     {
-        [PrimaryKey, AutoIncrement]
+        [PrimaryKey]
         public Guid Id { get; set; }
         public byte[] Icon { get; set; }
         public string Title { get; set; }
-        public string Description { get; set; }
+        public string Description { get; set; } = "No description provided";
         [ManyToMany(typeof(MyTaskTag))]
         public virtual ICollection<Tag> Tags { get; set; }
 
-        [TextBlob("SubTasksBlobbed")]
+        [TextBlob(nameof(SubTasksBlobbed))]
         public IList<SubTask> SubTasks { get; set; } = new List<SubTask>()
         {
             new SubTask("Hello"),

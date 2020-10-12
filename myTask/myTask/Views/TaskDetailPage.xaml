@@ -63,7 +63,8 @@
                     BindableLayout.EmptyView="No items present">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate>
-                            <StackLayout Orientation="Horizontal">
+                            <StackLayout Orientation="Horizontal"
+                                         Padding="0, -15, 0, 0">
                                 <CheckBox IsChecked="{Binding Completed, Mode=TwoWay}"
                                           VerticalOptions="Center">
                                 </CheckBox>
@@ -75,6 +76,70 @@
                     </BindableLayout.ItemTemplate>
                 </StackLayout>
                 <!-- Subtasks section End -->
+                
+                <!-- Priority Level Section Start -->
+                <StackLayout HorizontalOptions="Fill"
+                             VerticalOptions="Start">
+                    <material:MaterialLabel Text="Priority ⚡️"
+                                            TypeScale="H6"
+                                            Margin="0, 10, 0, 10"
+                                            HorizontalOptions="StartAndExpand"
+                                            VerticalOptions="Start"/>
+                    <StackLayout Orientation="Horizontal"
+                                 HorizontalOptions="Fill">
+                        <material:MaterialLabel Text="Low"
+                                                TypeScale="Body2"
+                                                HorizontalOptions="Start"
+                                                VerticalOptions="Center"/>
+                        <Slider Minimum="0" 
+                                Maximum="1" 
+                                Value="{Binding MyTask.Importance}"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Center"/>
+                        <material:MaterialLabel Text="High"
+                                                TypeScale="Body2"
+                                                VerticalOptions="Center"/>
+                    </StackLayout>
+                    
+                </StackLayout>
+                <!-- Priority Level Section End -->
+                
+                <!--Deadline Section Start -->
+                <StackLayout>
+                    <material:MaterialLabel Text="Deadline 🔥️"
+                                            TypeScale="H6"
+                                            Margin="0, 10, 0, 10"
+                                            HorizontalOptions="StartAndExpand"
+                                            VerticalOptions="Start"/>
+                    <material:MaterialTimePicker Format="H:mm MMMM dd, yyyy"/>
+                </StackLayout>
+                <!-- Deadline Section End -->
+                
+                <!-- Time required section start -->
+                <StackLayout>
+                    <material:MaterialLabel Text="Time Required ⏰️"
+                                            TypeScale="H6"
+                                            Margin="0, 10, 0, 10"
+                                            HorizontalOptions="StartAndExpand"
+                                            VerticalOptions="Start"/>
+                    <StackLayout Orientation="Horizontal">
+                        <Entry Placeholder="0"
+                               MaxLength="2"
+                               Keyboard="Numeric"/>
+                        <material:MaterialLabel Text="hours"
+                                                TypeScale="Caption"
+                                                VerticalOptions="End"
+                                                Margin="0, 0, 10, 0"/>
+                        <Entry Placeholder="0"
+                               MaxLength="2"
+                               Keyboard="Numeric"/>
+                        <material:MaterialLabel Text="minutes"
+                                                TypeScale="Caption"
+                                                VerticalOptions="End"
+                                                Margin="0, 0, 10, 0"/>
+                    </StackLayout>
+                </StackLayout>
+                <!-- Time required section end -->
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>
