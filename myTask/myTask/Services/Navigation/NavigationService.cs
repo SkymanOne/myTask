@@ -36,7 +36,7 @@ namespace myTask.Services.Navigation
             
             var mainPage = ViewLocator.ResolvePageFromViewModel(mainPageViewModel);
             Application.Current.MainPage = mainPage;
-            (Application.Current.MainPage.BindingContext as MainNavigationViewModel).Init("Tasks");
+            await (Application.Current.MainPage.BindingContext as MainNavigationViewModel).Init("Tasks");
         }
 
 
@@ -73,10 +73,11 @@ namespace myTask.Services.Navigation
 
         private async Task NavigateToHelper<TViewModel>(object param) where TViewModel : BaseViewModel
         {
+            //resolve page's viewmodel
             var viewModel = SuperContainer.Resolve<TViewModel>();
-            //await viewModel.Init(param);
             var page = ViewLocator.ResolvePageFromViewModel(viewModel);
-
+            
+            //check if the main navigation has been init
             if (Application.Current.MainPage is TabbedPage tabbedPage)
             {
                 if (tabbedPage.CurrentPage is NavigationPage navigationPage)

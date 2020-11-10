@@ -4,6 +4,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
              x:Class="myTask.Views.TaskDetailPage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem 
+            Text="Update"
+            Command="{Binding UpdateCommand}"/>
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <ScrollView>
             <StackLayout Padding="10">
@@ -111,7 +116,16 @@
                                             Margin="0, 10, 0, 10"
                                             HorizontalOptions="StartAndExpand"
                                             VerticalOptions="Start"/>
-                    <material:MaterialTimePicker Format="H:mm MMMM dd, yyyy"/>
+                    <material:MaterialLabel Text="Date"
+                                            TypeScale="Body2"
+                                            Margin="0, 10"/>
+                    <material:MaterialDatePicker Date="{Binding DeadlineModel.Date}"
+                                                 Format="dd MMMM, yyyy"
+                                                 MinimumDate="{Binding DeadlineModel.MinDate}"/>
+                    <material:MaterialLabel Text="Time"
+                                            TypeScale="Body2"
+                                            Margin="0, 10"/>
+                    <material:MaterialTimePicker Time="{Binding DeadlineModel.Time}"/>
                 </StackLayout>
                 <!-- Deadline Section End -->
                 

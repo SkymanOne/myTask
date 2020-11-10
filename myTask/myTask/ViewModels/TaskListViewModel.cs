@@ -51,7 +51,8 @@ namespace myTask.ViewModels
             {
                 var myTask = new MyTask()
                 {
-                    Title = title
+                    Title = title,
+                    Deadline = DateTime.Now + TimeSpan.FromMinutes(20)
                 };
                 var result = await _myTaskRepository.CreateItemAsync(myTask);
                 if (result) await UpdateListAsync();

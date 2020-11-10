@@ -16,12 +16,11 @@ namespace myTask.ViewModels
 {
     public class TaskDetailViewModel : BaseViewModel
     {
-        //TODO: revert code
         public override Type WiredPageType => typeof(TaskDetailPage);
 
         private readonly IRepository<MyTask> _repository;
-        
-        public ICommand BackCommand { get; set; }
+
+        public ICommand UpdateCommand { get; set; }
         public ICommand PickNewIcon { get; set; }
         public ICommand UpdateLabel { get; set; }
         
@@ -31,23 +30,29 @@ namespace myTask.ViewModels
         public ObservableCollection<SubTask> SubTasks { get; set; }
         
         public MyTask _myTask;
-
         public MyTask MyTask
         {
             get => _myTask;
             set => SetValue(ref _myTask, value);
         }
 
+        private Deadline _deadline;
+        public Deadline DeadlineModel
+        {
+            get => _deadline;
+            set => SetValue(ref _deadline, value);
+        }
 
         public TaskDetailViewModel(INavigationService navigationService, IRepository<MyTask> repository) : base(navigationService)
         {
-            BackCommand = new Command(GoBackAsync);
+            UpdateCommand = new Command(UpdateAsync);
             _repository = repository;
         }
 
-        private async void GoBackAsync()
+        private async void UpdateAsync()
         {
             MyTask.SubTasks = SubTasks.ToList();
+            MyTask.Deadline = DeadlineModel.GetTime();
             await _repository.UpdateItemAsync(MyTask);
             await _navigationService.NavigateToAsync<TaskListViewModel>();
             await _navigationService.ClearTheStackAsync();
@@ -59,11 +64,29 @@ namespace myTask.ViewModels
             {
                 MyTask = myTask;
                 SubTasks = new ObservableCollection<SubTask>(MyTask.SubTasks);
+                DeadlineModel = new Deadline()
+                {
+                    Date = MyTask.Deadline.Date,
+                    Time = MyTask.Deadline.TimeOfDay
+                };
+                OnPropertyChanged(nameof(DeadlineModel));
                 OnPropertyChanged(nameof(SubTasks));
             }
             else
             {
                 await base.Init(param);
+            }
+        }
+
+        public class Deadline
+        {
+            public TimeSpan Time { get; set; }
+            public DateTime Date { get; set; } 
+            public DateTime MinDate = DateTime.Now.Date;
+
+            public DateTime GetTime()
+            {
+                return Date.Add(Time);
             }
         }
     }

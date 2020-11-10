@@ -21,6 +21,11 @@ namespace myTask.Services.Database.Repositories
             return await Database.GetWithChildrenByQueryAsync(expression);
         }
 
+        public override async Task<bool> DeleteItemAsync(MyTask item)
+        {
+            return await base.DeleteItemAsync(item);
+        }
+
         public override async Task<bool> CreateItemAsync(MyTask item)
         {
             if (item.Kinbens < 0) return await Task.FromCanceled<bool>(new CancellationToken(true));

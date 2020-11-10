@@ -8,7 +8,7 @@ namespace myTask.Services.Navigation
     {
         Task InitMainNavigation();
         Task NavigateToAsync<TViewModel>() where TViewModel : BaseViewModel;
-        Task NavigateToAsync<TViewModel>(object parameters)where TViewModel : BaseViewModel;
+        Task NavigateToAsync<TViewModel>(object parameters) where TViewModel : BaseViewModel;
 
         Task ClearTheStackAsync();
 
