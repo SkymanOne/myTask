@@ -36,7 +36,7 @@
                         Text="{Binding MyTask.Title}" />
                     <material:MaterialButton
                         ButtonType="Text"
-                        Command="{Binding UpdateLabel}"
+                        Command="{Binding UpdateTitleCommand}"
                         Text="change" />
                 </StackLayout>
                 <!-- Title section End -->
@@ -139,6 +139,8 @@
                     <StackLayout Orientation="Horizontal">
                         <Entry Placeholder="0"
                                MaxLength="2"
+                               WidthRequest="40"
+                               Text="{Binding TimeRequired.Hours}"
                                Keyboard="Numeric"/>
                         <material:MaterialLabel Text="hours"
                                                 TypeScale="Caption"
@@ -146,6 +148,8 @@
                                                 Margin="0, 0, 10, 0"/>
                         <Entry Placeholder="0"
                                MaxLength="2"
+                               WidthRequest="40"
+                               Text="{Binding TimeRequired.Minutes}"
                                Keyboard="Numeric"/>
                         <material:MaterialLabel Text="minutes"
                                                 TypeScale="Caption"
