@@ -14,7 +14,7 @@ namespace myTask.DataStructures
     public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         private int _count;
-        private bool _isReadOnly;
+        private bool _isReadOnly = true;
         private IList<TKey> _keys;
         private IList<TValue> _values;
 

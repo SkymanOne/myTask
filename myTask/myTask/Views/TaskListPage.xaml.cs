@@ -19,13 +19,15 @@ namespace myTask.Views
 
         private void ListView_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            (sender as ListView).SelectedItem = null;
+            if (sender is ListView listView)
+                listView.SelectedItem = null;
         }
 
 
         private void ListView_OnItemTapped(object sender, ItemTappedEventArgs e)
         {
-            (BindingContext as TaskListViewModel).DetailCommand.Execute(e.Item);
+            if (BindingContext is TaskListViewModel viewModel)
+                viewModel.DetailCommand.Execute(e.Item);
         }
     }
 }

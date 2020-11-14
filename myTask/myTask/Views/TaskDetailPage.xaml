@@ -158,6 +158,16 @@
                     </StackLayout>
                 </StackLayout>
                 <!-- Time required section end -->
+                
+                <!-- Delete the task section START -->
+                <StackLayout>
+                    <material:MaterialButton 
+                        Text="Delete the task"
+                        ButtonType="Outlined"
+                        FontSize="Small"
+                        Command="{Binding DeleteCommand}"/>
+                </StackLayout>
+                <!-- Delete the task section END -->
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

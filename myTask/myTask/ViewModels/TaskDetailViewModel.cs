@@ -25,6 +25,7 @@ namespace myTask.ViewModels
         public ICommand UpdateTitleCommand { get; set; }
         public ICommand UpdateCommand { get; set; }
         public ICommand PickNewIcon { get; set; }
+        public ICommand DeleteCommand { get; set; }
 
 
         // does not work
@@ -57,6 +58,7 @@ namespace myTask.ViewModels
         {
             UpdateCommand = new Command(UpdateAsync);
             UpdateTitleCommand = new Command(UpdateLabelAsync);
+            DeleteCommand = new Command(DeleteAsync);
             _repository = repository;
         }
 
@@ -68,6 +70,19 @@ namespace myTask.ViewModels
             await _repository.UpdateItemAsync(MyTask);
             await _navigationService.NavigateToAsync<TaskListViewModel>();
             await _navigationService.ClearTheStackAsync();
+        }
+
+        private async void DeleteAsync()
+        {
+            bool? confirm = await MaterialDialog.Instance.ConfirmAsync("Do you want to delete current task?",
+                "Delete", "Yes", "No"
+            );
+            if (confirm == true)
+            {
+                await _repository.DeleteItemAsync(MyTask);
+                await _navigationService.NavigateToAsync<TaskListViewModel>();
+                await _navigationService.ClearTheStackAsync();
+            }
         }
 
         private async void UpdateLabelAsync()

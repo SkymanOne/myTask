@@ -36,7 +36,7 @@ namespace myTask.Services.Navigation
             
             var mainPage = ViewLocator.ResolvePageFromViewModel(mainPageViewModel);
             Application.Current.MainPage = mainPage;
-            await (Application.Current.MainPage.BindingContext as MainNavigationViewModel).Init("Tasks");
+            await (Application.Current.MainPage.BindingContext as MainNavigationViewModel)?.Init("Tasks")!;
         }
 
 

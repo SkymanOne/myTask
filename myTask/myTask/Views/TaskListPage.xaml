@@ -13,6 +13,7 @@
                 AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
                 AbsoluteLayout.LayoutFlags="All">
                 <material:MaterialLabel
+                    Margin="5, 0"
                     Text="Monday, 20th October"
                     FontSize="40"/>
                 <ListView ItemsSource="{Binding MyTasks}"
