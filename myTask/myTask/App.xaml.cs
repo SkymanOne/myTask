@@ -17,7 +17,7 @@ namespace myTask
         {
             InitializeComponent();
             XF.Material.Forms.Material.Init(this);
-            InitApp(true);
+            InitApp(false);
         }
 
         protected override async void OnStart()

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,6 +30,7 @@ namespace myTask.Services.Database.Repositories
         public override async Task<bool> CreateItemAsync(MyTask item)
         {
             if (item.Kinbens < 0) return await Task.FromCanceled<bool>(new CancellationToken(true));
+            item.Id = Guid.NewGuid();
             return await base.CreateItemAsync(item);
         }
         

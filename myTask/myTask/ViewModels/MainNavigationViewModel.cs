@@ -37,7 +37,10 @@ namespace myTask.ViewModels
         {
             if (param is string title)
             {
-                CurrentPage = Tabs.First(x => x.Title == title);
+                var page = Tabs.First(x => x.Title == title);
+                if (page is NavigationPage navPage)
+                        (navPage.CurrentPage.BindingContext as BaseViewModel)?.Init(null);
+                CurrentPage = page;
                 await Task.FromResult(true);
             }
             else
