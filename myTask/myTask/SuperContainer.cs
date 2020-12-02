@@ -1,10 +1,12 @@
 using System;
+using System.Threading.Tasks;
 using myTask.Models;
 using myTask.Services.Database;
 using myTask.Services.Database.MockRepositories;
 using myTask.Services.Database.Repositories;
 using myTask.Services.Navigation;
 using myTask.ViewModels;
+using Nito.AsyncEx;
 using TinyIoC;
 
 namespace myTask
@@ -32,7 +34,15 @@ namespace myTask
         public static void UpdateDependencies(bool useMocks)
         {
             Container.Register<INavigationService, NavigationService>();
-            Container.Register<DbConnection>();
+            Container.Register<DbConnection>(((c, o) =>
+            {
+                var dbConnection = new DbConnection();
+                Task.Run(async () =>
+                {
+                    await dbConnection.Init();
+                });
+                return dbConnection;
+            } ));
             if (useMocks)
             {
                 Container.Register(typeof(IRepository<>), typeof(MockRepository<>));

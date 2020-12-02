@@ -22,9 +22,9 @@ namespace myTask.Services.Database.Repositories
             return await Database.GetWithChildrenByQueryAsync(expression);
         }
 
-        public override async Task<bool> DeleteItemAsync(MyTask item)
+        public override async Task<bool> UpdateItemAsync(MyTask item)
         {
-            return await base.DeleteItemAsync(item);
+            return await base.UpdateItemAsync(item);
         }
 
         public override async Task<bool> CreateItemAsync(MyTask item)

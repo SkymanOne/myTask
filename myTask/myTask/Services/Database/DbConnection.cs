@@ -15,7 +15,7 @@ namespace myTask.Services.Database
         public SQLiteAsyncConnection Database { get; } = LazyDbInitializer.Value;
         private bool _setup = false;
 
-        private async Task Init()
+        public async Task Init()
         {
             var tableTypes = new[]
             {
@@ -41,37 +41,6 @@ namespace myTask.Services.Database
                     await Database.CreateTablesAsync(CreateFlags.None, tableTypes).ConfigureAwait(false);
                 }
                 _setup = true;
-            }
-        }
-
-        public DbConnection()
-        {
-            Init().SafeFireAndForget(false);
-        }
-    }
-    
-    
-    //Source: https://docs.microsoft.com/en-us/xamarin/xamarin-forms/data-cloud/data/databases
-    public static class TaskExtensions
-    {
-        // NOTE: Async void is intentional here. This provides a way
-        // to call an async method from the constructor while
-        // communicating intent to fire and forget, and allow
-        // handling of exceptions
-        public static async void SafeFireAndForget(this Task task,
-            bool returnToCallingContext,
-            Action<Exception> onException = null)
-        {
-            try
-            {
-                await task.ConfigureAwait(returnToCallingContext);
-            }
-
-            // if the provided action is not null, catch and
-            // pass the thrown exception
-            catch (Exception ex) when (onException != null)
-            {
-                onException(ex);
             }
         }
     }
