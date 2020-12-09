@@ -4,9 +4,9 @@ using myTask.Models;
 
 namespace myTask.Services.MyTasksManager
 {
-    public class MyTaskManager : IMyTaskManager
+    public class AssignmentsManager : IAssignmentsManager
     {
-        public async Task<ICollection<MyTask>> LoadAllTasksAsync()
+        public async Task<ICollection<Assignment>> LoadAllAssignmentsAsync()
         {
             throw new System.NotImplementedException();
         }
@@ -16,37 +16,37 @@ namespace myTask.Services.MyTasksManager
             throw new System.NotImplementedException();
         }
 
-        public async Task<ICollection<MyTask>> LoadTasksAsync(Weekday day, int weekOfTheYear = -1)
+        public async Task<ICollection<Assignment>> LoadAssignmentsAsync(Weekday day, int weekOfTheYear = -1)
         {
             throw new System.NotImplementedException();
         }
 
-        public async Task<ICollection<MyTask>> LoadTasksAsync()
+        public async Task<ICollection<Assignment>> LoadAssignmentsAsync()
         {
             throw new System.NotImplementedException();
         }
 
-        public async Task<bool> CreateTaskAsync(MyTask myTask)
+        public async Task<bool> CreateAssigmentAsync(Assignment assignment)
         {
             throw new System.NotImplementedException();
         }
 
-        public async Task<bool> UpdateTaskAsync(MyTask myTask)
+        public async Task<bool> UpdateAssignmentAsync(Assignment assignment)
         {
             throw new System.NotImplementedException();
         }
 
-        public async Task<List<MyTask>> SplitTaskAsync(MyTask myTask)
+        public async Task<List<Assignment>> SplitAssignmentAsync(Assignment assignment)
         {
             throw new System.NotImplementedException();
         }
 
-        public async Task<bool> MoveTaskForwardAsync(MyTask myTask)
+        public async Task<bool> MoveAssignmentForwardAsync(Assignment assignment)
         {
             throw new System.NotImplementedException();
         }
 
-        public async Task<bool> MoveTaskBackwardsAsync(MyTask myTask)
+        public async Task<bool> MoveAssignmentBackwardsAsync(Assignment assignment)
         {
             throw new System.NotImplementedException();
         }

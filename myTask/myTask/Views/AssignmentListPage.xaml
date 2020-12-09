@@ -3,9 +3,9 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
-             x:Class="myTask.Views.TaskListPage"
+             x:Class="myTask.Views.AssignmentListPage"
              NavigationPage.HasNavigationBar="false"
-             Title="Tasks">
+             Title="Assignments">
     <ContentPage.Content>
         <AbsoluteLayout 
             Padding="0, 50, 0, 0">
@@ -14,9 +14,9 @@
                 AbsoluteLayout.LayoutFlags="All">
                 <material:MaterialLabel
                     Margin="5, 0"
-                    Text="Monday, 20th October"
-                    FontSize="40"/>
-                <ListView ItemsSource="{Binding MyTasks}"
+                    Text="{Binding CurrentDate}"
+                    FontSize="33"/>
+                <ListView ItemsSource="{Binding Assignments}"
                           HasUnevenRows="True"
                           Margin="5, 0, 5, 0"
                           Footer=""

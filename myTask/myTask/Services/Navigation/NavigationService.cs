@@ -26,7 +26,7 @@ namespace myTask.Services.Navigation
             var tabs = await ResolveNavigation(new List<Type>()
             {
                 typeof(FeedViewModel),
-                typeof(TaskListViewModel),
+                typeof(AssignmentListViewModel),
                 typeof(ProgressViewModel),
                 typeof(TimeTableViewModel)
             });
@@ -36,7 +36,7 @@ namespace myTask.Services.Navigation
             
             var mainPage = ViewLocator.ResolvePageFromViewModel(mainPageViewModel);
             Application.Current.MainPage = mainPage;
-            await (Application.Current.MainPage.BindingContext as MainNavigationViewModel)?.Init("Tasks")!;
+            await (Application.Current.MainPage.BindingContext as MainNavigationViewModel)?.Init("Assignments")!;
         }
 
 

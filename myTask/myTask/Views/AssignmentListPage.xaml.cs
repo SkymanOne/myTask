@@ -10,9 +10,9 @@ using Xamarin.Forms.Xaml;
 namespace myTask.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class TaskListPage : ContentPage
+    public partial class AssignmentListPage : ContentPage
     {
-        public TaskListPage()
+        public AssignmentListPage()
         {
             InitializeComponent();
         }
@@ -26,7 +26,7 @@ namespace myTask.Views
 
         private void ListView_OnItemTapped(object sender, ItemTappedEventArgs e)
         {
-            if (BindingContext is TaskListViewModel viewModel)
+            if (BindingContext is AssignmentListViewModel viewModel)
                 viewModel.DetailCommand.Execute(e.Item);
         }
     }

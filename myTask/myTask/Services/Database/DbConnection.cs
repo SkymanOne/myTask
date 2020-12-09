@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using myTask.Models;
 using SQLite;
-using Xamarin.Forms.Internals;
 
 namespace myTask.Services.Database
 {
@@ -20,7 +19,8 @@ namespace myTask.Services.Database
             var tableTypes = new[]
             {
                 typeof(Tag),
-                typeof(MyTask),
+                typeof(Assignment),
+                typeof(AssignmentTag),
                 typeof(DailyTimetable),
                 typeof(WeeklyTimetable)
             };

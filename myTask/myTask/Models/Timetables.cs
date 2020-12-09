@@ -12,7 +12,7 @@ namespace myTask.Models
         public int Number { get; set; }
         public string Year { get; set; }
         [OneToMany]
-        public ICollection<DailyTimetable> Timetables { get; set; }
+        public List<DailyTimetable> Timetables { get; set; }
     }
 
     //avoid using DateTime as there is a lot of hassle with storing it and dealing with timezones and formats
@@ -22,7 +22,7 @@ namespace myTask.Models
         public Guid Id { get; set; }
         public Weekday Day { get; set; }
         [OneToMany]
-        public ICollection<MyTask> Tasks { get; set; }
+        public List<Assignment> Assignments { get; set; }
         
         [ForeignKey(typeof(WeeklyTimetable))]
         public Guid WeeklyTimetableId { get; set; }

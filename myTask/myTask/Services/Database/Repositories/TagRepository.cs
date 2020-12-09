@@ -12,7 +12,7 @@ namespace myTask.Services.Database.Repositories
 
         public override async Task<bool> UpdateItemAsync(Tag item)
         {
-            var children = item.Tasks;
+            var children = item.Assignments;
             if (children.Count == 0) return await DeleteItemAsync(item);
             return await base.UpdateItemAsync(item);
         }

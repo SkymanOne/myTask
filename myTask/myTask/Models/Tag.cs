@@ -11,7 +11,7 @@ namespace myTask.Models
         [PrimaryKey]
         public Guid Id { get; set; }
         public string Title { get; set; }
-        [ManyToMany(typeof(MyTaskTag))]
-        public virtual ICollection<MyTask> Tasks { get; set; }
+        [ManyToMany(typeof(AssignmentTag))]
+        public virtual List<Assignment> Assignments { get; set; }
     }
 }

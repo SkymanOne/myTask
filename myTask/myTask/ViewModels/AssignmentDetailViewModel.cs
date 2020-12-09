@@ -16,11 +16,11 @@ using XF.Material.Forms.UI.Dialogs;
 
 namespace myTask.ViewModels
 {
-    public class TaskDetailViewModel : BaseViewModel
+    public class AssignmentDetailViewModel : BaseViewModel
     {
-        public override Type WiredPageType => typeof(TaskDetailPage);
+        public override Type WiredPageType => typeof(AssignmentDetailPage);
 
-        private readonly IRepository<MyTask> _repository;
+        private readonly IRepository<Assignment> _repository;
 
         public ICommand UpdateTitleCommand { get; set; }
         public ICommand UpdateCommand { get; set; }
@@ -32,11 +32,11 @@ namespace myTask.ViewModels
         //TODO: implement observable dictionary
         public ObservableCollection<SubTask> SubTasks { get; set; }
         
-        public MyTask _myTask;
-        public MyTask MyTask
+        private Assignment _assignment;
+        public Assignment Assignment
         {
-            get => _myTask;
-            set => SetValue(ref _myTask, value);
+            get => _assignment;
+            set => SetValue(ref _assignment, value);
         }
 
         private Deadline _deadline;
@@ -54,7 +54,7 @@ namespace myTask.ViewModels
             set => SetValue(ref _timeRequired, value);
         }
 
-        public TaskDetailViewModel(INavigationService navigationService, IRepository<MyTask> repository) : base(navigationService)
+        public AssignmentDetailViewModel(INavigationService navigationService, IRepository<Assignment> repository) : base(navigationService)
         {
             UpdateCommand = new Command(UpdateAsync);
             UpdateTitleCommand = new Command(UpdateLabelAsync);
@@ -64,11 +64,11 @@ namespace myTask.ViewModels
 
         private async void UpdateAsync()
         {
-            MyTask.SubTasks = SubTasks.ToList();
-            MyTask.Deadline = DeadlineModel.GetTime();
-            MyTask.DurationMinutes = TimeRequired.GetTotalInMinutes();
-            await _repository.UpdateItemAsync(MyTask);
-            await _navigationService.NavigateToAsync<TaskListViewModel>();
+            Assignment.SubTasks = SubTasks.ToList();
+            Assignment.Deadline = DeadlineModel.GetTime();
+            Assignment.DurationMinutes = TimeRequired.GetTotalInMinutes();
+            await _repository.UpdateItemAsync(Assignment);
+            await _navigationService.NavigateToAsync<AssignmentListViewModel>();
             await _navigationService.ClearTheStackAsync();
         }
 
@@ -79,8 +79,8 @@ namespace myTask.ViewModels
             );
             if (confirm == true)
             {
-                await _repository.DeleteItemAsync(MyTask);
-                await _navigationService.NavigateToAsync<TaskListViewModel>();
+                await _repository.DeleteItemAsync(Assignment);
+                await _navigationService.NavigateToAsync<AssignmentListViewModel>();
                 await _navigationService.ClearTheStackAsync();
             }
         }
@@ -90,24 +90,29 @@ namespace myTask.ViewModels
             string newTitle = await MaterialDialog.Instance.InputAsync("Update Title");
             if (!string.IsNullOrWhiteSpace(newTitle))
             {
-                MyTask.Title = newTitle;
-                OnPropertyChanged(nameof(MyTask));
+                Assignment.Title = newTitle;
+                OnPropertyChanged(nameof(Assignment));
             }
             else await MaterialDialog.Instance.SnackbarAsync("Invalid title", 2000);
         }
 
         public override async Task Init(object param)
         {
-            if (param is MyTask myTask)
+            if (param is Assignment assignment)
             {
-                MyTask = myTask;
-                SubTasks = new ObservableCollection<SubTask>(MyTask.SubTasks);
+                Assignment = assignment;
+                var subTasksFromBlobbed = Assignment.SubTasks ?? new List<SubTask>
+                {
+                    new SubTask("Hello"),
+                    new SubTask("World")
+                };
+                SubTasks = new ObservableCollection<SubTask>(subTasksFromBlobbed);
                 DeadlineModel = new Deadline()
                 {
-                    Date = MyTask.Deadline.Date,
-                    Time = MyTask.Deadline.TimeOfDay,
+                    Date = Assignment.Deadline.Date,
+                    Time = Assignment.Deadline.TimeOfDay,
                 };
-                TimeRequired = Duration.InitFromMinutes(MyTask.DurationMinutes);
+                TimeRequired = Duration.InitFromMinutes(Assignment.DurationMinutes);
                 OnPropertyChanged(nameof(DeadlineModel));
                 OnPropertyChanged(nameof(SubTasks));
                 OnPropertyChanged(nameof(TimeRequired));

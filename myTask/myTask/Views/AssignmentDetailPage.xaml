@@ -3,7 +3,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
-             x:Class="myTask.Views.TaskDetailPage">
+             x:Class="myTask.Views.AssignmentDetailPage">
     <ContentPage.ToolbarItems>
         <ToolbarItem 
             Text="Update"
@@ -33,7 +33,7 @@
                         HorizontalOptions="Start"
                         VerticalTextAlignment="Center"
                         HorizontalTextAlignment="Start"
-                        Text="{Binding MyTask.Title}" />
+                        Text="{Binding Assignment.Title}" />
                     <material:MaterialButton
                         ButtonType="Text"
                         Command="{Binding UpdateTitleCommand}"
@@ -49,14 +49,14 @@
                                   HorizontalOptions="Start"
                                   HeightRequest="50"
                                   EmptyView="No items"
-                                  ItemsSource="{Binding MyTask.Tags}" />
+                                  ItemsSource="{Binding Assignment.Tags}" />
                 </StackLayout>
                 <!-- Tags section End -->
 
                 <!-- Description section Start -->
                 <StackLayout>
                     <material:MaterialLabel
-                        Text="{Binding MyTask.Description}" />
+                        Text="{Binding Assignment.Description}" />
                 </StackLayout>
                 <!-- Description section End -->
 
@@ -98,7 +98,7 @@
                                                 VerticalOptions="Center"/>
                         <Slider Minimum="0" 
                                 Maximum="1" 
-                                Value="{Binding MyTask.Importance}"
+                                Value="{Binding Assignment.Importance}"
                                 HorizontalOptions="FillAndExpand"
                                 VerticalOptions="Center"/>
                         <material:MaterialLabel Text="High"

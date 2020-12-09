@@ -7,22 +7,18 @@ using SQLiteNetExtensions.Attributes;
 namespace myTask.Models
 {
     //chose the name to avoid confusion with System.Task
-    public class MyTask
+    public class Assignment
     {
         [PrimaryKey]
         public Guid Id { get; set; }
         public byte[] Icon { get; set; }
         public string Title { get; set; }
         public string Description { get; set; } = "No description provided";
-        [ManyToMany(typeof(MyTaskTag))]
-        public virtual ICollection<Tag> Tags { get; set; }
+        [ManyToMany(typeof(AssignmentTag))]
+        public virtual List<Tag> Tags { get; set; }
 
         [TextBlob(nameof(SubTasksBlobbed))]
-        public IList<SubTask> SubTasks { get; set; } = new List<SubTask>()
-        {
-            new SubTask("Hello"),
-            new SubTask("World")
-        };
+        public List<SubTask> SubTasks { get; set; } 
         public string SubTasksBlobbed { get; set; }
         //set by user
         public double Importance { get; set; } = 0.5;

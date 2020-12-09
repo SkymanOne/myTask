@@ -2,7 +2,7 @@
 
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="myTask.Views.TaskNavPage">
+             x:Class="myTask.Views.AssignmentNavPage">
     <ContentPage.Content>
         <StackLayout>
             <Label Text="Hello, world!"

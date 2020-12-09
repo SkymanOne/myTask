@@ -10,9 +10,9 @@ using Xamarin.Forms.Xaml;
 namespace myTask.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class TaskNavPage : ContentPage
+    public partial class AssignmentDetailPage : ContentPage
     {
-        public TaskNavPage()
+        public AssignmentDetailPage()
         {
             InitializeComponent();
         }

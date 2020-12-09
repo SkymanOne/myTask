@@ -6,7 +6,6 @@ using myTask.Services.Database.MockRepositories;
 using myTask.Services.Database.Repositories;
 using myTask.Services.Navigation;
 using myTask.ViewModels;
-using Nito.AsyncEx;
 using TinyIoC;
 
 namespace myTask
@@ -20,8 +19,8 @@ namespace myTask
             Container = TinyIoCContainer.Current;
             
             //register viewmodels as multi instances
-            Container.Register<TaskListViewModel>();
-            Container.Register<TaskDetailViewModel>();
+            Container.Register<AssignmentListViewModel>();
+            Container.Register<AssignmentDetailViewModel>();
             Container.Register<MainNavigationViewModel>();
             Container.Register<ProgressViewModel>();
             Container.Register<TimeTableViewModel>();
@@ -39,6 +38,9 @@ namespace myTask
                 var dbConnection = new DbConnection();
                 Task.Run(async () =>
                 {
+                    //init the db connection
+                    //check the table mappings
+                    //and open the connections lazily
                     await dbConnection.Init();
                 });
                 return dbConnection;
@@ -49,7 +51,7 @@ namespace myTask
             }
             else
             {
-                Container.Register<IRepository<MyTask>, MyTaskRepository>();
+                Container.Register<IRepository<Assignment>, AssignmentRepository>();
                 Container.Register<IRepository<Tag>, TagRepository>();
                 Container.Register<IRepository<WeeklyTimetable>, WeeklyTimetableRepository>();
                 Container.Register<IRepository<DailyTimetable>, DailyTimetableRepository>();
