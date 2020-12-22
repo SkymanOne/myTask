@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -12,7 +11,6 @@ using myTask.Views;
 using Xamarin.Forms;
 using XF.Material.Forms;
 using XF.Material.Forms.UI.Dialogs;
-using XF.Material.Forms.UI.Internals;
 
 namespace myTask.ViewModels
 {

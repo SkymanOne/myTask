@@ -30,7 +30,7 @@ namespace myTask.Models
         public DateTime Deadline { get; set; }
         public int DurationMinutes { get; set; }
         [ForeignKey(typeof(DailyTimetable))]
-        public Guid WeekId { get; set; }
+        public Guid DayId { get; set; } 
     }
 
     public enum PriorityLevel

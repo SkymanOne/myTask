@@ -4,6 +4,7 @@ using myTask.Models;
 using myTask.Services.Database;
 using myTask.Services.Database.MockRepositories;
 using myTask.Services.Database.Repositories;
+using myTask.Services.Database.RepositoryWrapper;
 using myTask.Services.Navigation;
 using myTask.ViewModels;
 using TinyIoC;
@@ -55,6 +56,7 @@ namespace myTask
                 Container.Register<IRepository<Tag>, TagRepository>();
                 Container.Register<IRepository<WeeklyTimetable>, WeeklyTimetableRepository>();
                 Container.Register<IRepository<DailyTimetable>, DailyTimetableRepository>();
+                Container.Register<IRepositoryWrapper, RepositoryWrapper>();
             }
         }
 

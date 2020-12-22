@@ -126,8 +126,8 @@ namespace myTask.ViewModels
         public class Deadline
         {
             public TimeSpan Time { get; set; }
-            public DateTime Date { get; set; } 
-            public DateTime MinDate = DateTime.Now.Date;
+            public DateTime Date { get; set; }
+            public DateTime MinDate = DateTime.Now.AddMinutes(5);
 
             public DateTime GetTime()
             {

@@ -1,8 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using myTask.Models;
 
-namespace myTask.Services.MyTasksManager
+namespace myTask.Services.AssignmentsManager
 {
     /// <summary>
     /// Interface describing the basic functionality of the core
@@ -10,10 +11,11 @@ namespace myTask.Services.MyTasksManager
     /// </summary>
     public interface IAssignmentsManager
     {
-        Task<ICollection<Assignment>> LoadAllAssignmentsAsync();
-        Task<ICollection<DailyTimetable>> LoadWeeklyTimetableAsync(int weekOfTheYear);
-        Task<ICollection<Assignment>> LoadAssignmentsAsync(Weekday day, int weekOfTheYear = -1);
-        Task<ICollection<Assignment>> LoadAssignmentsAsync();
+        Task Init();
+        Task<IEnumerable<Assignment>> LoadAllAssignmentsAsync();
+        Task<WeeklyTimetable> LoadWeeklyTimetableAsync(int weekOfTheYear);
+        Task<DailyTimetable> LoadAssignmentsAsync(DayOfWeek day, int weekOfTheYear = -1);
+        Task<IEnumerable<Assignment>> LoadAssignmentsAsync();
         Task<bool> CreateAssigmentAsync(Assignment assignment);
         Task<bool> UpdateAssignmentAsync(Assignment assignment);
         Task<List<Assignment>> SplitAssignmentAsync(Assignment assignment);

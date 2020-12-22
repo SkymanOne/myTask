@@ -20,6 +20,11 @@ namespace myTask.Services.Database.Repositories
             return await Database.Table<T>().ToListAsync();
         }
 
+        public async Task<T> GetItemByIdAsync(object id)
+        {
+            return await Database.GetAsync<T>(id);
+        }
+
         public virtual async Task<IEnumerable<T>> GetItemsByQueryAsync(Expression<Func<T, bool>> expression)
         {
             return await Database.Table<T>().Where(expression).ToListAsync();

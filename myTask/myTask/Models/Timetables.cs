@@ -10,7 +10,7 @@ namespace myTask.Models
         [PrimaryKey]
         public Guid Id { get; set; }
         public int Number { get; set; }
-        public string Year { get; set; }
+        public int Year { get; set; }
         [OneToMany]
         public List<DailyTimetable> Timetables { get; set; }
     }
@@ -20,7 +20,9 @@ namespace myTask.Models
     {
         [PrimaryKey]
         public Guid Id { get; set; }
-        public Weekday Day { get; set; }
+        public int DayNumber { get; set; }
+        public DayOfWeek Day { get; set; }
+        public double AvailableTimeInHours { get; set; }
         [OneToMany]
         public List<Assignment> Assignments { get; set; }
         

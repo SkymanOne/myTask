@@ -30,6 +30,11 @@ namespace myTask.Services.Database.MockRepositories
             return Task.FromResult(result);
         }
 
+        public Task<T> GetItemByIdAsync(object id)
+        {
+            return Task.FromResult<T>(null);
+        }
+
         public Task<bool> CreateItemAsync(T item)
         {
             Datasource.Add(item);

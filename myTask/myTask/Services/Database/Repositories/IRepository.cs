@@ -10,6 +10,7 @@ namespace myTask.Services.Database.Repositories
         Task<IEnumerable<T>> GetAllItemsAsync();
         Task<IEnumerable<T>> GetItemsByQueryAsync(Expression<Func<T, bool>> expression);
         Task<T> GetItemAsync(Expression<Func<T, bool>> expression);
+        Task<T> GetItemByIdAsync(object id);
         Task<bool> CreateItemAsync(T item);
         Task<bool> UpdateItemAsync(T item);
         Task<bool> DeleteItemAsync(T item);
