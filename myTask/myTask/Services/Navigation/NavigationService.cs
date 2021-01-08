@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using myTask.Helpers;
+using myTask.Models;
+using myTask.Services.UserConfigManager;
 using myTask.ViewModels;
 using myTask.ViewModels.Base;
 using myTask.Views;
@@ -15,28 +17,45 @@ namespace myTask.Services.Navigation
     public class NavigationService : INavigationService
     {
 
-        public NavigationService()
+        private readonly IUserConfigManager _configManager;
+
+        public NavigationService(IUserConfigManager configManager)
         {
-            
+            _configManager = configManager;
         }
 
         public async Task InitMainNavigation()
         {
-            //too lazy to do it manually, so instead deliver a list of viewModels to be resolved automatically
-            var tabs = await ResolveNavigation(new List<Type>()
+            UserConfig userConfig = await _configManager.GetConfig();
+            //check if the user has initialized an app
+            if (userConfig.IsInit == false)
             {
-                typeof(FeedViewModel),
-                typeof(AssignmentListViewModel),
-                typeof(ProgressViewModel),
-                typeof(TimeTableViewModel)
-            });
+                var initPageViewModel = SuperContainer.Resolve<InitCarouselViewModel>();
+                //need init before creating a page
+                //since the XAML layout is generated from the the model
+                //see InitCarouselPage.xaml and InitPageTemplateSelector class
+                await initPageViewModel.Init(null);
+                var setupPage = ViewLocator.ResolvePageFromViewModel(initPageViewModel);
+                Application.Current.MainPage = setupPage;
+            }
+            else
+            {
+                //too lazy to do it manually, so instead deliver a list of viewModels to be resolved automatically
+                var tabs = await ResolveNavigation(new List<Type>()
+                {
+                    typeof(FeedViewModel),
+                    typeof(AssignmentListViewModel),
+                    typeof(ProgressViewModel),
+                    typeof(TimeTableViewModel)
+                });
 
-            var mainPageViewModel = SuperContainer.Resolve<MainNavigationViewModel>();
-            mainPageViewModel.Tabs = tabs;
-            
-            var mainPage = ViewLocator.ResolvePageFromViewModel(mainPageViewModel);
-            Application.Current.MainPage = mainPage;
-            await (Application.Current.MainPage.BindingContext as MainNavigationViewModel)?.Init("Assignments")!;
+                var mainPageViewModel = SuperContainer.Resolve<MainNavigationViewModel>();
+                mainPageViewModel.Tabs = tabs;
+
+                var mainPage = ViewLocator.ResolvePageFromViewModel(mainPageViewModel);
+                Application.Current.MainPage = mainPage;
+                await (Application.Current.MainPage.BindingContext as MainNavigationViewModel)?.Init("Assignments")!;
+            }
         }
 
 

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using myTask.Models;
 using myTask.Services.Database.RepositoryWrapper;
+using myTask.Services.UserConfigManager;
 using SQLitePCL;
 
 namespace myTask.Services.AssignmentsManager
@@ -15,12 +16,12 @@ namespace myTask.Services.AssignmentsManager
         //access all repositories from a single place can easily be changed,
         //if more repositories are required to be added
         private readonly IRepositoryWrapper _repWrapper;
-        private readonly IUserConfig _userConfig;
+        private readonly IUserConfigManager _userConfigManager;
 
-        public AssignmentsManager(IRepositoryWrapper repositoryWrapper, IUserConfig userConfig)
+        public AssignmentsManager(IRepositoryWrapper repositoryWrapper, IUserConfigManager userConfigManager)
         {
             _repWrapper = repositoryWrapper;
-            _userConfig = userConfig;
+            _userConfigManager = userConfigManager;
         }
 
         public async Task Init()
@@ -42,7 +43,7 @@ namespace myTask.Services.AssignmentsManager
                 //no point of creating it, so just return null
                 if (weekOfTheYear < DateTime.Now.DayOfYear / 7) return null;
                 
-                UserConfig userConfig = await _userConfig.GetConfig();
+                UserConfig userConfig = await _userConfigManager.GetConfig();
                 DailyTimetable[] dailyTimetables = new DailyTimetable[7];
                 Calendar calendar = new GregorianCalendar();
                 for (int i = 0; i < 7; i++)

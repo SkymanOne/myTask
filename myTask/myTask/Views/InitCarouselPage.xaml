@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:custom="clr-namespace:myTask.Helpers;assembly=myTask"
+             xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
+             x:Class="myTask.Views.InitCarouselPage">
+    <ContentPage.Resources>
+        <DataTemplate x:Key="WorkingDaysTemplate">
+            <StackLayout 
+                BackgroundColor="Green">
+                <material:MaterialLabel 
+                    Text="Pick your working days"/>
+                <ListView
+                    ItemsSource="{Binding WorkingDays}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <StackLayout Orientation="Horizontal">
+                                    <CheckBox IsChecked="{Binding IsChecked}"/>
+                                    <material:MaterialLabel Text="{Binding DayOfWeekName}"/>
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                
+            </StackLayout>
+        </DataTemplate>
+        <DataTemplate x:Key="WorkingHoursTemplate">
+            <StackLayout>
+                <material:MaterialLabel
+                    Text="Choose working interval"/>
+            </StackLayout>
+        </DataTemplate>
+        <DataTemplate x:Key="AddTasksTemplate">
+            <StackLayout>
+                <material:MaterialLabel
+                    Text="Add your first tasks"/>
+            </StackLayout>
+        </DataTemplate>
+        
+        <custom:InitPageTemplateSelector x:Key="TemplateSelector"
+                                         WorkingDays="{StaticResource WorkingDaysTemplate}"
+                                         WorkingHours="{StaticResource WorkingHoursTemplate}"
+                                         AddTasks="{StaticResource AddTasksTemplate}"/>
+        
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <StackLayout Padding="20">
+            <IndicatorView>
+                
+            </IndicatorView>
+            <material:MaterialLabel
+                Text="#myTask"/>
+            <CarouselView 
+                BackgroundColor="Red"
+                ItemsSource="{Binding SubPages}"
+                ItemTemplate="{StaticResource TemplateSelector}"/>
+        </StackLayout>
+        
+    </ContentPage.Content>
+</ContentPage>

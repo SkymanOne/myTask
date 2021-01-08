@@ -6,6 +6,7 @@ using myTask.Services.Database.MockRepositories;
 using myTask.Services.Database.Repositories;
 using myTask.Services.Database.RepositoryWrapper;
 using myTask.Services.Navigation;
+using myTask.Services.UserConfigManager;
 using myTask.ViewModels;
 using TinyIoC;
 
@@ -26,6 +27,7 @@ namespace myTask
             Container.Register<ProgressViewModel>();
             Container.Register<TimeTableViewModel>();
             Container.Register<FeedViewModel>();
+            Container.Register<InitCarouselViewModel>();
             
             //register services
             Container.Register<INavigationService, NavigationService>();
@@ -34,6 +36,7 @@ namespace myTask
         public static void UpdateDependencies(bool useMocks)
         {
             Container.Register<INavigationService, NavigationService>();
+            Container.Register<IUserConfigManager, UserConfigManager>();
             Container.Register<DbConnection>(((c, o) =>
             {
                 var dbConnection = new DbConnection();
