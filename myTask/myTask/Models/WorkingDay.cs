@@ -9,4 +9,5 @@ namespace myTask.Models
         public bool IsChecked { get; set; }
         public int NumberOfWorkingHours { get; set; } = 0;
     }
+    
 }

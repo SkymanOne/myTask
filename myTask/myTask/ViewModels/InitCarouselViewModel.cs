@@ -1,10 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using myTask.Helpers;
 using myTask.Models;
 using myTask.Services.Navigation;
 using myTask.ViewModels.Base;
 using myTask.Views;
+using Xamarin.Forms;
 
 namespace myTask.ViewModels
 {
@@ -17,42 +22,44 @@ namespace myTask.ViewModels
         {
             new WorkingDay()
             {
-                DayOfWeekName = DayOfWeek.Sunday.ToString(),
+                DayOfWeekName = DayOfWeek.Sunday.ToFriendlyString(),
                 DayOfWeek = DayOfWeek.Sunday,
             },
 
             new WorkingDay()
             {
-                DayOfWeekName = DayOfWeek.Monday.ToString(),
+                DayOfWeekName = DayOfWeek.Monday.ToFriendlyString(),
                 DayOfWeek = DayOfWeek.Monday,
             },
             new WorkingDay()
             {
-                DayOfWeekName = DayOfWeek.Tuesday.ToString(),
+                DayOfWeekName = DayOfWeek.Tuesday.ToFriendlyString(),
                 DayOfWeek = DayOfWeek.Tuesday,
             },
             new WorkingDay()
             {
-                DayOfWeekName = DayOfWeek.Wednesday.ToString(),
+                DayOfWeekName = DayOfWeek.Wednesday.ToFriendlyString(),
                 DayOfWeek = DayOfWeek.Wednesday,
             },
             new WorkingDay()
             {
-                DayOfWeekName = DayOfWeek.Thursday.ToString(),
+                DayOfWeekName = DayOfWeek.Thursday.ToFriendlyString(),
                 DayOfWeek = DayOfWeek.Thursday,
             },
             new WorkingDay()
             {
-                DayOfWeekName = DayOfWeek.Friday.ToString(),
+                DayOfWeekName = DayOfWeek.Friday.ToFriendlyString(),
                 DayOfWeek = DayOfWeek.Friday,
             },
             new WorkingDay()
             {
-                DayOfWeekName = DayOfWeek.Saturday.ToString(),
+                DayOfWeekName = DayOfWeek.Saturday.ToFriendlyString(),
                 DayOfWeek = DayOfWeek.Saturday,
             },
 
         };
+        
+        
 
         public InitCarouselViewModel(INavigationService navigationService) : base(navigationService)
         {
@@ -83,8 +90,23 @@ namespace myTask.ViewModels
         
         public class WorkingDaysSubViewModel : SubViewModel
         {
+            public ObservableCollection<string> WorkingDaysStrings { get; set; } = new ObservableCollection<string>()
+            {
+                "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+            };
+            public ObservableCollection<int> SelectedDays { get; set; }
+            public ICommand ChangedSelectedDaysCommand { get; set; }
             public WorkingDaysSubViewModel(ObservableCollection<WorkingDay> workingDays) : base(workingDays)
             {
+                ChangedSelectedDaysCommand = new Command<List<int>>(OnChangedSelectedDays);
+            }
+
+            private void OnChangedSelectedDays(List<int> indicies)
+            {
+                foreach (var id in indicies)
+                {
+                    WorkingDays.First(x => x.DayOfWeekName == WorkingDaysStrings[id]).IsChecked = true;
+                }
             }
         }
         

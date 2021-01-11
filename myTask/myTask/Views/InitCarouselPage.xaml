@@ -7,24 +7,15 @@
              x:Class="myTask.Views.InitCarouselPage">
     <ContentPage.Resources>
         <DataTemplate x:Key="WorkingDaysTemplate">
-            <StackLayout 
-                BackgroundColor="Green">
+            <StackLayout>
                 <material:MaterialLabel 
                     Text="Pick your working days"/>
-                <ListView
-                    ItemsSource="{Binding WorkingDays}">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <StackLayout Orientation="Horizontal">
-                                    <CheckBox IsChecked="{Binding IsChecked}"/>
-                                    <material:MaterialLabel Text="{Binding DayOfWeekName}"/>
-                                </StackLayout>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-                
+                <material:MaterialCheckboxGroup 
+                    WidthRequest="400"
+                    SelectedColor="Red"
+                    UnselectedColor="Aqua"
+                    SelectedIndicesChangedCommand="{Binding ChangedSelectedDaysCommand}"
+                    Choices="{Binding WorkingDaysStrings}"/>
             </StackLayout>
         </DataTemplate>
         <DataTemplate x:Key="WorkingHoursTemplate">
@@ -54,7 +45,6 @@
             <material:MaterialLabel
                 Text="#myTask"/>
             <CarouselView 
-                BackgroundColor="Red"
                 ItemsSource="{Binding SubPages}"
                 ItemTemplate="{StaticResource TemplateSelector}"/>
         </StackLayout>

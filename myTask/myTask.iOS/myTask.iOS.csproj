@@ -110,7 +110,7 @@
         <PackageReference Include="sqlite-net-pcl" Version="1.7.335" />
         <PackageReference Include="SQLiteNetExtensions" Version="2.1.0" />
         <PackageReference Include="SQLiteNetExtensions.Async" Version="2.1.0" />
-        <PackageReference Include="Xamarin.Forms" Version="4.8.0.1687" />
+        <PackageReference Include="Xamarin.Forms" Version="5.0.0.1874" />
         <PackageReference Include="XF.Material" Version="1.7.7" />
     </ItemGroup>
     <ItemGroup>
@@ -118,6 +118,32 @@
             <Project>{436B6C17-82B2-4426-BCD5-CCFAC7372B07}</Project>
             <Name>myTask</Name>
         </ProjectReference>
+    </ItemGroup>
+    <ItemGroup>
+      <BundleResource Include="Resources\xf_arrow_dropdown.png" />
+      <BundleResource Include="Resources\xf_arrow_dropdown@2x.png" />
+      <BundleResource Include="Resources\xf_arrow_dropdown@3x.png" />
+      <BundleResource Include="Resources\xf_arrow_right.png" />
+      <BundleResource Include="Resources\xf_arrow_right@2x.png" />
+      <BundleResource Include="Resources\xf_arrow_right@3x.png" />
+      <BundleResource Include="Resources\xf_checkbox_selected.png" />
+      <BundleResource Include="Resources\xf_checkbox_selected@2x.png" />
+      <BundleResource Include="Resources\xf_checkbox_selected@3x.png" />
+      <BundleResource Include="Resources\xf_checkbox_unselected.png" />
+      <BundleResource Include="Resources\xf_checkbox_unselected@2x.png" />
+      <BundleResource Include="Resources\xf_checkbox_unselected@3x.png" />
+      <BundleResource Include="Resources\xf_clear.png" />
+      <BundleResource Include="Resources\xf_clear@2x.png" />
+      <BundleResource Include="Resources\xf_clear@3x.png" />
+      <BundleResource Include="Resources\xf_error.png" />
+      <BundleResource Include="Resources\xf_error@2x.png" />
+      <BundleResource Include="Resources\xf_error@3x.png" />
+      <BundleResource Include="Resources\xf_radio_button_selected.png" />
+      <BundleResource Include="Resources\xf_radio_button_selected@2x.png" />
+      <BundleResource Include="Resources\xf_radio_button_selected@3x.png" />
+      <BundleResource Include="Resources\xf_radio_button_unselected.png" />
+      <BundleResource Include="Resources\xf_radio_button_unselected@2x.png" />
+      <BundleResource Include="Resources\xf_radio_button_unselected@3x.png" />
     </ItemGroup>
     <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
