@@ -1,4 +1,4 @@
-using myTask.Models;
+using myTask.Domain.Models;
 using myTask.Services.Database.Repositories;
 
 namespace myTask.Services.Database.RepositoryWrapper

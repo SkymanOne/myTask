@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using myTask.Models;
+using myTask.Domain.Models;
 
 namespace myTask.Services.Database.Repositories
 {

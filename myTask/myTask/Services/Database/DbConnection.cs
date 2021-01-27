@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using myTask.Models;
+using myTask.Domain.Models;
 using SQLite;
 
 namespace myTask.Services.Database

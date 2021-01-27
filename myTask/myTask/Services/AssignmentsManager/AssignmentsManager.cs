@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using myTask.Models;
+using myTask.Domain.Models;
 using myTask.Services.Database.RepositoryWrapper;
 using myTask.Services.UserConfigManager;
 using SQLitePCL;

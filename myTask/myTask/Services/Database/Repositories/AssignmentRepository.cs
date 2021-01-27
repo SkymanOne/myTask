@@ -4,8 +4,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using myTask.Domain.Models;
 using myTask.Helpers;
-using myTask.Models;
 using SQLiteNetExtensionsAsync.Extensions;
 
 namespace myTask.Services.Database.Repositories

@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using SQLite;
 using SQLiteNetExtensions.Attributes;
 
-namespace myTask.Models
+namespace myTask.Domain.Models
 {
     public class Tag
     {

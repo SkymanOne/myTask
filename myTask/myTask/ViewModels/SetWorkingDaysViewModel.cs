@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using myTask.Helpers;
-using myTask.Models;
 using myTask.Services.Navigation;
 using myTask.ViewModels.Base;
 using myTask.Views;

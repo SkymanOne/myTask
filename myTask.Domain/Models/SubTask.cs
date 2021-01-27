@@ -1,4 +1,4 @@
-namespace myTask.Models
+namespace myTask.Domain.Models
 {
     public class SubTask
     {

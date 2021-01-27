@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using myTask.DataStructures;
-using myTask.Models;
+using myTask.Domain.Models;
 using myTask.Services.Database.Repositories;
 using myTask.Services.Navigation;
 using myTask.ViewModels.Base;

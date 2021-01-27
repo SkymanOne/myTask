@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
-using myTask.Models;
+using myTask.Domain.Models;
 
 namespace myTask.Services.UserConfigManager
 {

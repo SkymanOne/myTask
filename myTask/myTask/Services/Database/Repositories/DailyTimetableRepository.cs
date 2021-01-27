@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using myTask.Models;
+using myTask.Domain.Models;
 using myTask.Services.UserConfigManager;
 
 namespace myTask.Services.Database.Repositories

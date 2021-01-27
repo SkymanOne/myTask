@@ -1,9 +1,8 @@
 using System;
-using System.Collections.Generic;
 using SQLite;
 using SQLiteNetExtensions.Attributes;
 
-namespace myTask.Models
+namespace myTask.Domain.Models
 {
     public class UserConfig
     {

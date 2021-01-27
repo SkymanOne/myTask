@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using myTask.Models;
+using myTask.Domain.Models;
 using myTask.Services.Database;
 using myTask.Services.Database.MockRepositories;
 using myTask.Services.Database.Repositories;

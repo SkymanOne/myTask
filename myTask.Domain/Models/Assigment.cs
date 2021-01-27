@@ -1,10 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using SQLite;
 using SQLiteNetExtensions.Attributes;
 
-namespace myTask.Models
+namespace myTask.Domain.Models
 {
     //chose the name to avoid confusion with System.Task
     public class Assignment
