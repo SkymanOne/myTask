@@ -26,17 +26,21 @@ namespace myTask.Services.Navigation
 
         public async Task InitMainNavigation()
         {
+            
             UserConfig userConfig = await _configManager.GetConfig();
             //check if the user has initialized an app
             if (userConfig.IsInit == false)
             {
-                var initPageViewModel = SuperContainer.Resolve<InitCarouselViewModel>();
+                var initViewModel = SuperContainer.Resolve<InitNavViewModel>();
+                var initNavPage = (NavigationPage) ViewLocator.ResolvePageFromViewModel(initViewModel);
                 //need init before creating a page
                 //since the XAML layout is generated from the the model
-                //see InitCarouselPage.xaml and InitPageTemplateSelector class
-                await initPageViewModel.Init(null);
-                var setupPage = ViewLocator.ResolvePageFromViewModel(initPageViewModel);
-                Application.Current.MainPage = setupPage;
+                //see InitWorkingDaysPage.xaml and InitPageTemplateSelector class
+                var setupViewModel = SuperContainer.Resolve<SetWorkingDaysViewModel>();
+                await setupViewModel.Init(null);
+                var setupPage = ViewLocator.ResolvePageFromViewModel(setupViewModel);
+                await initNavPage.PushAsync(setupPage);
+                Application.Current.MainPage = initNavPage;
             }
             else
             {
@@ -106,6 +110,14 @@ namespace myTask.Services.Navigation
                     #pragma warning restore 8602
                     await navigationPage.PushAsync(page);
                 }
+            }
+            else if (Application.Current.MainPage is InitNavPage navPage)
+            {
+                #pragma warning disable 8602
+                await viewModel.Init(param);
+                //await (page.BindingContext as BaseViewModel).Init(param);
+                #pragma warning restore 8602
+                await navPage.PushAsync(page);
             }
             else
             {

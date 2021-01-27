@@ -17,6 +17,10 @@ namespace myTask
         {
             InitializeComponent();
             XF.Material.Forms.Material.Init(this);
+            //set default page
+            //helps for debugging
+            //as it now exceptions during startup are shown fully
+            MainPage = new ContentPage();
             InitApp(false);
         }
 
@@ -35,6 +39,7 @@ namespace myTask
         {
             // Handle when your app resumes
         }
+        
 
         private async Task InitNavigation()
         {

@@ -21,4 +21,11 @@
         <PackageReference Include="Xamarin.Forms" Version="5.0.0.1874" />
         <PackageReference Include="XF.Material" Version="1.7.7" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Views\InitNavPage.xaml.cs">
+        <DependentUpon>InitNavPage.xaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
 </Project>

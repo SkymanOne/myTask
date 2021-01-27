@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<StackLayout xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="myTask.Views.Reusable.SetupNavBar"
+             xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
+             Margin="10, 40, 10, 10">
+    <material:MaterialLabel Text="#myTask"
+                            TypeScale="H2"
+                            Padding="10"
+                            HorizontalOptions="Center"/>
+</StackLayout>

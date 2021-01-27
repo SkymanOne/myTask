@@ -14,7 +14,7 @@ namespace myTask.Models
         public bool IsInit { get; set; } = false;
 
         [TextBlob(nameof(AvailableHoursBlobbed))]
-        public List<double> WeeklyAvailableTimeInHours { get; set; } = new List<double>()
+        public double[] WeeklyAvailableTimeInHours { get; set; } = new double[]
         {
             0, //Sunday
             4, //Monday

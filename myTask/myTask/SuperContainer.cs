@@ -27,7 +27,9 @@ namespace myTask
             Container.Register<ProgressViewModel>();
             Container.Register<TimeTableViewModel>();
             Container.Register<FeedViewModel>();
-            Container.Register<InitCarouselViewModel>();
+            Container.Register<SetWorkingDaysViewModel>();
+            Container.Register<SetWorkingHoursViewModel>();
+            Container.Register<InitNavViewModel>();
             
             //register services
             Container.Register<INavigationService, NavigationService>();

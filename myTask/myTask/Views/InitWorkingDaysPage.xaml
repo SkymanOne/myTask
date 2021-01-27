@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:custom="clr-namespace:myTask.Views.Reusable;assembly=myTask"
+             xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
+             x:Class="myTask.Views.InitWorkingDaysPage"
+             NavigationPage.HasNavigationBar="false"
+             Title="Assignments">
+    <ContentPage.Content>
+        <StackLayout>
+            <custom:SetupNavBar/>
+            <StackLayout Padding="50, 30">
+                <material:MaterialLabel 
+                    Text="Pick your working days"/>
+                <material:MaterialCheckboxGroup 
+                    WidthRequest="400"
+                    SelectedColor="Red"
+                    UnselectedColor="Aqua"
+                    SelectedIndicesChangedCommand="{Binding SelectedIndicesChangedCommand}"
+                    Choices="{Binding WorkingDaysStrings}"/>
+                <material:MaterialButton Text="Next"
+                                         Command="{Binding ProceedCommand}"/>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

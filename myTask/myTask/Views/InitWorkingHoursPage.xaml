@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:custom="clr-namespace:myTask.Views.Reusable;assembly=myTask"
+             xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
+             NavigationPage.HasNavigationBar="False"
+             x:Class="myTask.Views.InitWorkingHoursPage">
+    <StackLayout>
+            <custom:SetupNavBar/>
+            <CarouselView 
+                BackgroundColor="Green"
+                EmptyView="You have not selected any days!"
+                RemainingItemsThreshold="0"
+                RemainingItemsThresholdReachedCommand="{Binding RefreshCommand}"
+                ItemsSource="{Binding Days}">
+                <CarouselView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Padding="5">
+                            <material:MaterialLabel Text="{Binding DayOfWeekName}"
+                                                    HorizontalOptions="Center"/>
+                            <material:MaterialLabel Text="{Binding NumberOfWorkingHours}"/>
+                            <material:MaterialSlider 
+                                class="slider"
+                                Padding="5, 0"
+                                Value="{Binding NumberOfWorkingHours}"
+                                MinValue="1"
+                                MaxValue="24"/>
+                        </StackLayout>
+                    </DataTemplate>
+                </CarouselView.ItemTemplate>
+            </CarouselView>
+            <material:MaterialButton
+                Text="Go Back"
+                ButtonType="Outlined"
+                Command="{Binding GoBackCommand}"/>
+            <material:MaterialButton 
+                Text="Add Assignments"
+                Command="{Binding AddAssignmentsCommand}"/>
+        </StackLayout>
+</ContentPage>
