@@ -5,6 +5,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using CarouselView.FormsPlugin.Droid;
 
 namespace myTask.Android
 {
@@ -20,6 +21,7 @@ namespace myTask.Android
             base.OnCreate(savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             XF.Material.Droid.Material.Init(this, savedInstanceState);
+            CarouselViewRenderer.Init();
             LoadApplication(new App());
         }
     }

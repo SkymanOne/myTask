@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CarouselView.FormsPlugin.iOS;
 using Foundation;
 using UIKit;
 
@@ -23,6 +24,7 @@ namespace myTask.iOS
         {
             global::Xamarin.Forms.Forms.Init();
             XF.Material.iOS.Material.Init();
+            CarouselViewRenderer.Init();
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);

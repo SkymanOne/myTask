@@ -3,11 +3,13 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:custom="clr-namespace:myTask.Views.Reusable;assembly=myTask"
+             xmlns:tabview="clr-namespace:Xam.Plugin.TabView;assembly=Xam.Plugin.TabView"
              xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
              NavigationPage.HasNavigationBar="False"
              x:Class="myTask.Views.InitWorkingHoursPage">
     <StackLayout>
             <custom:SetupNavBar/>
+            <!--
             <CarouselView 
                 BackgroundColor="Green"
                 EmptyView="You have not selected any days!"
@@ -30,6 +32,33 @@
                     </DataTemplate>
                 </CarouselView.ItemTemplate>
             </CarouselView>
+            -->
+             
+            <tabview:TabViewControl
+                HeaderBackgroundColor="Transparent"
+                HeaderTabTextColor="Green"
+                HeaderSelectionUnderlineColor="Gray"
+                TabHeaderSpacing="100"
+                IsSwipeEnabled="True"
+                HorizontalOptions="FillAndExpand"
+                TemplatedItemSource="{Binding Days}">
+                <tabview:TabViewControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Padding="5">
+                            <material:MaterialLabel Text="{Binding TabViewControlTabItemTitle}"
+                                                    HorizontalOptions="Center"/>
+                            <material:MaterialLabel Text="{Binding NumberOfHours}"/>
+                            <material:MaterialSlider 
+                                class="slider"
+                                Padding="5, 0"
+                                Value="{Binding NumberOfHours}"
+                                MinValue="1"
+                                MaxValue="24"/>
+                        </StackLayout>
+                    </DataTemplate>
+                </tabview:TabViewControl.ItemTemplate>
+                
+            </tabview:TabViewControl>
             <material:MaterialButton
                 Text="Go Back"
                 ButtonType="Outlined"

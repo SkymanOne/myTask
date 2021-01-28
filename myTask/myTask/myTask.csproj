@@ -15,9 +15,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="CarouselView.FormsPlugin" Version="6.0.0" />
         <PackageReference Include="sqlite-net-pcl" Version="1.7.335" />
         <PackageReference Include="SQLiteNetExtensions" Version="2.1.0" />
         <PackageReference Include="SQLiteNetExtensions.Async" Version="2.1.0" />
+        <PackageReference Include="Xam.Plugin.TabView" Version="1.1.1" />
         <PackageReference Include="Xamarin.Forms" Version="5.0.0.1874" />
         <PackageReference Include="XF.Material" Version="1.7.7" />
     </ItemGroup>
