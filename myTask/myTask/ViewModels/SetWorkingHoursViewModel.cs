@@ -14,6 +14,7 @@ using myTask.ViewModels.Base;
 using myTask.Views;
 using Neemacademy.CustomControls.Xam.Plugin.TabView;
 using Xamarin.Forms;
+using XF.Material.Forms.UI.Dialogs;
 
 namespace myTask.ViewModels
 {
@@ -58,20 +59,19 @@ namespace myTask.ViewModels
 
         private async Task FinishSetup()
         {
-            //TODO: finish registration
-            /*
             double[] workingHours = new double[7];
             foreach (var index in _selectedIndices)
             {
                 workingHours[index] = Days
-                    .First(x => x.DayOfWeekName == ((DayOfWeek) index).ToFriendlyString())
-                    .NumberOfWorkingHours;
+                    .First(x => x.TabViewControlTabItemTitle == ((DayOfWeek) index).ToFriendlyString())
+                    .NumberOfHours;
             }
             await _configManager.SetConfig(new UserConfig()
             {
-                WeeklyAvailableTimeInHours = workingHours
+                WeeklyAvailableTimeInHours = workingHours,
+                IsInit = true
             });
-            */
+            await _navigationService.InitMainNavigation();
         }
 
         public override async Task Init(object param)
@@ -88,6 +88,7 @@ namespace myTask.ViewModels
                     });
                 }
                 Days = new ObservableCollection<DayTab>(days);
+                _selectedIndices = daysIndices.ToArray();
                 OnPropertyChanged(nameof(Days));
             }
         }
@@ -106,15 +107,17 @@ namespace myTask.ViewModels
             {
             }
 
-            public int NumberOfHours
+            public double NumberOfHours
             {
                 get => _numberOfHours;
                 set
                 {
-                    _numberOfHours = value;
-                    OnPropertyChanged(nameof(NumberOfHours));
+                    _numberOfHours = (int)Math.Round(value);
+                    OnPropertyChanged(nameof(NumberOfHoursLabel));
                 }
             }
+
+            public string NumberOfHoursLabel => $"{_numberOfHours} hour(s)";
 
             public string TabViewControlTabItemTitle
             {

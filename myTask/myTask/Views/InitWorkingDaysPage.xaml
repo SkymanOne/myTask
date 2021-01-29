@@ -15,8 +15,6 @@
                     Text="Pick your working days"/>
                 <material:MaterialCheckboxGroup 
                     WidthRequest="400"
-                    SelectedColor="Red"
-                    UnselectedColor="Aqua"
                     SelectedIndicesChangedCommand="{Binding SelectedIndicesChangedCommand}"
                     Choices="{Binding WorkingDaysStrings}"/>
                 <material:MaterialButton Text="Next"

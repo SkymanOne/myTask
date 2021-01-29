@@ -47,13 +47,21 @@
                         <StackLayout Padding="5">
                             <material:MaterialLabel Text="{Binding TabViewControlTabItemTitle}"
                                                     HorizontalOptions="Center"/>
-                            <material:MaterialLabel Text="{Binding NumberOfHours}"/>
-                            <material:MaterialSlider 
-                                class="slider"
-                                Padding="5, 0"
-                                Value="{Binding NumberOfHours}"
-                                MinValue="1"
-                                MaxValue="24"/>
+                            <material:MaterialLabel Text="{Binding NumberOfHoursLabel}"
+                                                    HorizontalOptions="Center"/>
+                            <StackLayout Orientation="Horizontal"
+                                         HorizontalOptions="FillAndExpand">
+                                <Label HorizontalOptions="Start" Text="1h"/>
+                                <Slider
+                                    class="slider"
+                                    HorizontalOptions="CenterAndExpand"
+                                    VerticalOptions="Start"
+                                    Value="{Binding NumberOfHours}"
+                                    WidthRequest="300"
+                                    Maximum="24"
+                                    Minimum="1"/>
+                                <Label HorizontalOptions="End" Text="24h"/>
+                            </StackLayout>
                         </StackLayout>
                     </DataTemplate>
                 </tabview:TabViewControl.ItemTemplate>
@@ -64,7 +72,7 @@
                 ButtonType="Outlined"
                 Command="{Binding GoBackCommand}"/>
             <material:MaterialButton 
-                Text="Add Assignments"
+                Text="Add your first Assignment"
                 Command="{Binding AddAssignmentsCommand}"/>
         </StackLayout>
 </ContentPage>
