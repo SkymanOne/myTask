@@ -5,7 +5,7 @@ namespace myTask.Services.UserConfigManager
 {
     public interface IUserConfigManager
     {
-        Task<UserConfig> GetConfig();
-        Task<bool> SetConfig(UserConfig config);
+        Task<UserConfig> GetConfigAsync();
+        Task<bool> SetConfigAsync(UserConfig config);
     }
 }

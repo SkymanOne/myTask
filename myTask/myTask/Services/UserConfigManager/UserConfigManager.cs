@@ -12,7 +12,7 @@ namespace myTask.Services.UserConfigManager
         private readonly string PathToConfig =
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "userConfig.xml");
         private XmlSerializer _xmlSerializer = new XmlSerializer(typeof(UserConfig));
-        public async Task<UserConfig> GetConfig()
+        public async Task<UserConfig> GetConfigAsync()
         {
             try
             {
@@ -23,12 +23,12 @@ namespace myTask.Services.UserConfigManager
             }
             catch (FileNotFoundException fileNotFoundException)
             {
-                await SetConfig(new UserConfig());
-                return await GetConfig();
+                await SetConfigAsync(new UserConfig());
+                return await GetConfigAsync();
             }
         }
 
-        public async Task<bool> SetConfig(UserConfig config)
+        public async Task<bool> SetConfigAsync(UserConfig config)
         {
             StreamWriter streamWriter = new StreamWriter(PathToConfig);
             _xmlSerializer.Serialize(streamWriter, config);

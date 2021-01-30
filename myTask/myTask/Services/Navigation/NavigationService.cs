@@ -27,7 +27,7 @@ namespace myTask.Services.Navigation
         public async Task InitMainNavigation()
         {
             
-            UserConfig userConfig = await _configManager.GetConfig();
+            UserConfig userConfig = await _configManager.GetConfigAsync();
             //check if the user has initialized an app
             if (userConfig.IsInit == false)
             {

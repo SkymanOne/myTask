@@ -124,6 +124,7 @@
     </ItemGroup>
     <ItemGroup>
       <BundleResource Include="Resources\baseline_add_white_18dp.png" />
+      <BundleResource Include="Resources\baseline_build_white_18dp.png" />
       <BundleResource Include="Resources\baseline_clear_white_18dp.png" />
       <BundleResource Include="Resources\xf_arrow_dropdown.png" />
       <BundleResource Include="Resources\xf_arrow_dropdown@2x.png" />

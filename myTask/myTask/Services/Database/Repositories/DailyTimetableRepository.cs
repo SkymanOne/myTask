@@ -17,7 +17,7 @@ namespace myTask.Services.Database.Repositories
 
         public override async Task<bool> UpdateItemAsync(DailyTimetable item)
         {
-            var config = await _userUserConfigManager.GetConfig();
+            var config = await _userUserConfigManager.GetConfigAsync();
             var freeTimeLeft = 
                 config.WeeklyAvailableTimeInHours.ElementAt((int)item.Day) - item.Assignments.Sum(x => x.DurationMinutes / 60);
             if (freeTimeLeft < 0)

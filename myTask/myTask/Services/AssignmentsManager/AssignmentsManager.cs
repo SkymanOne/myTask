@@ -43,7 +43,7 @@ namespace myTask.Services.AssignmentsManager
                 //no point of creating it, so just return null
                 if (weekOfTheYear < DateTime.Now.DayOfYear / 7) return null;
                 
-                UserConfig userConfig = await _userConfigManager.GetConfig();
+                UserConfig userConfig = await _userConfigManager.GetConfigAsync();
                 DailyTimetable[] dailyTimetables = new DailyTimetable[7];
                 Calendar calendar = new GregorianCalendar();
                 for (int i = 0; i < 7; i++)

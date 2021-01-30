@@ -66,7 +66,7 @@ namespace myTask.ViewModels
                     .First(x => x.TabViewControlTabItemTitle == ((DayOfWeek) index).ToFriendlyString())
                     .NumberOfHours;
             }
-            await _configManager.SetConfig(new UserConfig()
+            await _configManager.SetConfigAsync(new UserConfig()
             {
                 WeeklyAvailableTimeInHours = workingHours,
                 IsInit = true
