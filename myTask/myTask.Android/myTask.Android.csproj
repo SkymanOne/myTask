@@ -52,6 +52,7 @@
         <PackageReference Include="SQLiteNetExtensions" Version="2.1.0" />
         <PackageReference Include="SQLiteNetExtensions.Async" Version="2.1.0" />
         <PackageReference Include="Xam.Plugin.TabView" Version="1.1.1" />
+        <PackageReference Include="Xamarin.FFImageLoading.Svg.Forms" Version="2.4.11.982" />
         <PackageReference Include="Xamarin.Forms" Version="5.0.0.1874" />
         <PackageReference Include="Xamarin.Google.Android.Material" Version="1.2.1.1" />
         <PackageReference Include="Xamarin.AndroidX.AppCompat" Version="1.2.0.5" />
@@ -73,6 +74,8 @@
         <None Include="Properties\AndroidManifest.xml" />
     </ItemGroup>
     <ItemGroup>
+        <AndroidResource Include="Resources\drawable\baseline_add_white_18dp.png" />
+        <AndroidResource Include="Resources\drawable\baseline_clear_white_18dp.png" />
         <AndroidResource Include="Resources\layout\Tabbar.axml" />
         <AndroidResource Include="Resources\layout\Toolbar.axml" />
         <AndroidResource Include="Resources\values\styles.xml" />

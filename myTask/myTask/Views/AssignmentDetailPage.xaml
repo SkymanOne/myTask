@@ -2,6 +2,8 @@
 
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:myTask;assembly=myTask"
+             xmlns:ff="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
              xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
              x:Class="myTask.Views.AssignmentDetailPage">
     <ContentPage.ToolbarItems>
@@ -44,19 +46,44 @@
                 <!-- Tags section Start -->
                 <StackLayout Orientation="Horizontal"
                              VerticalOptions="Start"
-                             HorizontalOptions="Start">
-                    <CarouselView VerticalOptions="Start"
-                                  HorizontalOptions="Start"
+                             HorizontalOptions="FillAndExpand">
+                    <CollectionView VerticalOptions="Start"
+                                  HorizontalOptions="FillAndExpand"
                                   HeightRequest="50"
-                                  EmptyView="No items"
-                                  ItemsSource="{Binding Assignment.Tags}" />
+                                  ItemsUpdatingScrollMode="KeepItemsInView"
+                                  HorizontalScrollBarVisibility="Never"
+                                  ItemsSource="{Binding TagSubViewModels}">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Horizontal"
+                                               ItemSpacing="5"/>
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <material:MaterialChip 
+                                    HorizontalOptions="FillAndExpand"
+                                    ActionImage="{Binding ImageSource}"
+                                    Text="{Binding Tag.Title}"
+                                    TextColor="White"
+                                    BackgroundColor="{Binding BackgroundClr}"
+                                    ActionImageTintColor="White"
+                                    ActionImageTappedCommand="{Binding ContextDisplayCommand}">
+                                    </material:MaterialChip>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
                 </StackLayout>
                 <!-- Tags section End -->
 
                 <!-- Description section Start -->
-                <StackLayout>
-                    <material:MaterialLabel
-                        Text="{Binding Assignment.Description}" />
+                <StackLayout
+                    VerticalOptions="FillAndExpand"
+                    Padding="20">
+                    <Editor
+                        Focused="VisualElement_OnFocused"
+                        Unfocused="VisualElement_OnUnfocused"
+                        MinimumHeightRequest="50"
+                        Text="{Binding Assignment.Description}" 
+                        VerticalOptions="FillAndExpand"/>
                 </StackLayout>
                 <!-- Description section End -->
 

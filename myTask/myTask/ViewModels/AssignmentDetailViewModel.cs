@@ -20,7 +20,8 @@ namespace myTask.ViewModels
     {
         public override Type WiredPageType => typeof(AssignmentDetailPage);
 
-        private readonly IRepository<Assignment> _repository;
+        private readonly IRepository<Assignment> _assignmentRepository;
+        private readonly IRepository<Tag> _tagRepository;
 
         public ICommand UpdateTitleCommand { get; set; }
         public ICommand UpdateCommand { get; set; }
@@ -31,6 +32,7 @@ namespace myTask.ViewModels
         // does not work
         //TODO: implement observable dictionary
         public ObservableCollection<SubTask> SubTasks { get; set; }
+        public ObservableCollection<TagSubViewModel> TagSubViewModels { get; set; }
         
         private Assignment _assignment;
         public Assignment Assignment
@@ -54,12 +56,15 @@ namespace myTask.ViewModels
             set => SetValue(ref _timeRequired, value);
         }
 
-        public AssignmentDetailViewModel(INavigationService navigationService, IRepository<Assignment> repository) : base(navigationService)
+        public AssignmentDetailViewModel(INavigationService navigationService, 
+            IRepository<Assignment> assignmentRepository,
+            IRepository<Tag> tagRepository) : base(navigationService)
         {
             UpdateCommand = new Command(UpdateAsync);
             UpdateTitleCommand = new Command(UpdateLabelAsync);
             DeleteCommand = new Command(DeleteAsync);
-            _repository = repository;
+            _assignmentRepository = assignmentRepository;
+            _tagRepository = tagRepository;
         }
 
         private async void UpdateAsync()
@@ -67,10 +72,31 @@ namespace myTask.ViewModels
             Assignment.SubTasks = SubTasks.ToList();
             Assignment.Deadline = DeadlineModel.GetTime();
             Assignment.DurationMinutes = TimeRequired.GetTotalInMinutes();
-            await _repository.UpdateItemAsync(Assignment);
+            var tags = TagSubViewModels
+                .Select(x => x.Tag)
+                .Where(x => x.Title != "Add new")
+                .ToList();
+            Assignment.Tags = new List<Tag>();
+            foreach (var tag in tags)
+            {
+                var item = await _tagRepository.GetItemAsync(x =>
+                    x.Title.ToUpper() == tag.Title.ToUpper());
+                if (item == null)
+                {
+                    tag.Assignments = new List<Assignment> {Assignment};
+                    await _tagRepository.CreateItemAsync(tag);
+                    Assignment.Tags.Add(tag);
+                }
+                else
+                {
+                    Assignment.Tags.Add(item);
+                }
+            }
+            await _assignmentRepository.UpdateItemAsync(Assignment);
             await _navigationService.NavigateToAsync<AssignmentListViewModel>();
             await _navigationService.ClearTheStackAsync();
         }
+        
 
         private async void DeleteAsync()
         {
@@ -79,7 +105,7 @@ namespace myTask.ViewModels
             );
             if (confirm == true)
             {
-                await _repository.DeleteItemAsync(Assignment);
+                await _assignmentRepository.DeleteItemAsync(Assignment);
                 await _navigationService.NavigateToAsync<AssignmentListViewModel>();
                 await _navigationService.ClearTheStackAsync();
             }
@@ -107,6 +133,14 @@ namespace myTask.ViewModels
                     new SubTask("World")
                 };
                 SubTasks = new ObservableCollection<SubTask>(subTasksFromBlobbed);
+                
+                TagSubViewModels = new ObservableCollection<TagSubViewModel>(
+                    assignment.Tags.Select(x => new TagSubViewModel(this, x)));
+                TagSubViewModels.Add(new TagSubViewModel(this, new Tag()
+                {
+                    Id = Guid.Empty,
+                    Title = "Add new"
+                }));
                 DeadlineModel = new Deadline()
                 {
                     Date = Assignment.Deadline.Date,
@@ -116,6 +150,7 @@ namespace myTask.ViewModels
                 OnPropertyChanged(nameof(DeadlineModel));
                 OnPropertyChanged(nameof(SubTasks));
                 OnPropertyChanged(nameof(TimeRequired));
+                OnPropertyChanged(nameof(TagSubViewModels));
             }
             else
             {
@@ -123,6 +158,62 @@ namespace myTask.ViewModels
             }
         }
 
+        public class TagSubViewModel : SubViewModel
+        {
+            public Tag Tag { get; set; }
+            public Color BackgroundClr { get; set; }
+
+            private Color[] _colors =
+            {
+                Color.FromHex("#D81B60"),
+                Color.FromHex("#8E24AA"),
+                Color.FromHex("#D32F2F"),
+                Color.FromHex("#1976D2"),
+                Color.FromHex("#795548"),
+            };
+            public ImageSource ImageSource { get; set; }
+            public ICommand ContextDisplayCommand { get; set; }
+            private readonly AssignmentDetailViewModel _assignmentDetailViewModel;
+
+            public TagSubViewModel(AssignmentDetailViewModel detailViewModel, Tag tag)
+            {
+                _assignmentDetailViewModel = detailViewModel;
+                Tag = tag;
+                ContextDisplayCommand = new Command(ContextDisplay);
+                ImageSource = tag.Title == "Add new" ? "baseline_add_white_18dp.png" : "baseline_clear_white_18dp.png";
+                Random rnd = new Random();
+                int colorIndex = rnd.Next(0, _colors.Length);
+                BackgroundClr = _colors[colorIndex];
+            }
+
+            public async void ContextDisplay()
+            {
+                if (Tag.Title != "Add new")
+                {
+                    var result = await MaterialDialog.Instance.ConfirmAsync("Delete this tag?", "", "Yes", "No");
+                    if (result == true)
+                    {
+                        _assignmentDetailViewModel.TagSubViewModels.Remove(this);
+                        OnPropertyChanged(nameof(TagSubViewModels));
+                    }
+                }
+                else
+                {
+                    var title = await MaterialDialog.Instance.InputAsync("New Tag", "Enter the title of a new tag");
+                    if (!string.IsNullOrEmpty(title) && !string.IsNullOrWhiteSpace(title))
+                    {
+                        Tag newTag = new Tag()
+                        {
+                            Id = Guid.NewGuid(),
+                            Title = title,
+                        };
+                        _assignmentDetailViewModel.TagSubViewModels.Insert(0, new TagSubViewModel(
+                            _assignmentDetailViewModel, newTag));
+                    }
+                }
+            }
+        }
+        
         public class Deadline
         {
             public TimeSpan Time { get; set; }

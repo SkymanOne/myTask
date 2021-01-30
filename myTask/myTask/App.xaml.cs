@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using FFImageLoading.Forms;
 using myTask.Services.Navigation;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;

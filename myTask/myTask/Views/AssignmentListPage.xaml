@@ -35,10 +35,32 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <StackLayout Padding="10, 10">
+                                    <StackLayout Padding="10, 10, 10, 0"
+                                                 HeightRequest="75">
                                             <material:MaterialLabel
+                                                TypeScale="H6"
+                                                Padding="10, 0, 0, 0"
                                                 Text="{Binding Title}"/>
-                                        </StackLayout>
+                                            <CollectionView ItemsSource="{Binding Tags}"
+                                                            HeightRequest="35"
+                                                            ItemsUpdatingScrollMode="KeepItemsInView"
+                                                            HorizontalScrollBarVisibility="Never">
+                                                <CollectionView.ItemsLayout>
+                                                    <LinearItemsLayout Orientation="Horizontal"
+                                                                       ItemSpacing="5"/>
+                                                </CollectionView.ItemsLayout>
+                                                <CollectionView.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <material:MaterialChip 
+                                                            HorizontalOptions="FillAndExpand"
+                                                            Text="{Binding Title}"
+                                                            TextColor="White"
+                                                            BackgroundColor="#D81B60">
+                                                        </material:MaterialChip>
+                                                    </DataTemplate>
+                                                </CollectionView.ItemTemplate>
+                                            </CollectionView>
+                                    </StackLayout>
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>

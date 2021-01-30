@@ -6,6 +6,8 @@ using Android.Views;
 using Android.Widget;
 using Android.OS;
 using CarouselView.FormsPlugin.Droid;
+using FFImageLoading.Forms.Platform;
+using FFImageLoading.Svg.Forms;
 
 namespace myTask.Android
 {
@@ -22,6 +24,8 @@ namespace myTask.Android
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             XF.Material.Droid.Material.Init(this, savedInstanceState);
             CarouselViewRenderer.Init();
+            CachedImageRenderer.Init(true);
+            var ignore = typeof(SvgCachedImage);
             LoadApplication(new App());
         }
     }

@@ -112,6 +112,7 @@
         <PackageReference Include="SQLiteNetExtensions" Version="2.1.0" />
         <PackageReference Include="SQLiteNetExtensions.Async" Version="2.1.0" />
         <PackageReference Include="Xam.Plugin.TabView" Version="1.1.1" />
+        <PackageReference Include="Xamarin.FFImageLoading.Svg.Forms" Version="2.4.11.982" />
         <PackageReference Include="Xamarin.Forms" Version="5.0.0.1874" />
         <PackageReference Include="XF.Material" Version="1.7.7" />
     </ItemGroup>
@@ -122,6 +123,8 @@
         </ProjectReference>
     </ItemGroup>
     <ItemGroup>
+      <BundleResource Include="Resources\baseline_add_white_18dp.png" />
+      <BundleResource Include="Resources\baseline_clear_white_18dp.png" />
       <BundleResource Include="Resources\xf_arrow_dropdown.png" />
       <BundleResource Include="Resources\xf_arrow_dropdown@2x.png" />
       <BundleResource Include="Resources\xf_arrow_dropdown@3x.png" />

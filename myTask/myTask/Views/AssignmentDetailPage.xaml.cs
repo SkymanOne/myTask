@@ -16,5 +16,15 @@ namespace myTask.Views
         {
             InitializeComponent();
         }
+
+        private void VisualElement_OnFocused(object sender, FocusEventArgs e)
+        {
+            (sender as Editor).HeightRequest = 300;
+        }
+
+        private void VisualElement_OnUnfocused(object sender, FocusEventArgs e)
+        {
+            (sender as Editor).HeightRequest = 30;
+        }
     }
 }
