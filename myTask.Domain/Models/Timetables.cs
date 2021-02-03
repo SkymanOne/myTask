@@ -11,7 +11,7 @@ namespace myTask.Domain.Models
         public Guid Id { get; set; }
         public int Number { get; set; }
         public int Year { get; set; }
-        [OneToMany(CascadeOperations = CascadeOperation.All)]
+        [OneToMany]
         public List<DailyTimetable> Timetables { get; set; }
     }
 
@@ -23,13 +23,13 @@ namespace myTask.Domain.Models
         public int DayNumber { get; set; }
         public DayOfWeek Day { get; set; }
         public double AvailableTimeInHours { get; set; }
-        [OneToMany(CascadeOperations = CascadeOperation.All)]
+        [OneToMany]
         public List<Assignment> Assignments { get; set; }
         
         [ForeignKey(typeof(WeeklyTimetable))]
         public Guid WeeklyTimetableId { get; set; }
 
-        [ManyToOne(CascadeOperations = CascadeOperation.All)]
+        [ManyToOne]
         public WeeklyTimetable Week { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using myTask.Domain.Models;
+using myTask.Services.AssignmentsManager;
 using myTask.Services.Database;
 using myTask.Services.Database.MockRepositories;
 using myTask.Services.Database.Repositories;
@@ -39,6 +40,7 @@ namespace myTask
         {
             Container.Register<INavigationService, NavigationService>();
             Container.Register<IUserConfigManager, UserConfigManager>();
+            Container.Register<IAssignmentsManager, AssignmentsManager>();
             Container.Register<DbConnection>(((c, o) =>
             {
                 var dbConnection = new DbConnection();

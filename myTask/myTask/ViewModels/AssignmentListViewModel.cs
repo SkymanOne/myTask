@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using myTask.Domain.Models;
+using myTask.Services.AssignmentsManager;
 using myTask.Services.Database.Repositories;
 using myTask.Services.Navigation;
 using myTask.Services.UserConfigManager;
@@ -18,7 +19,7 @@ namespace myTask.ViewModels
     public class AssignmentListViewModel : BaseViewModel
     {
         public override Type WiredPageType => typeof(AssignmentListPage);
-        private readonly IRepository<Assignment> _assignmentRepository;
+        private readonly IAssignmentsManager _manager;
         private readonly IUserConfigManager _configManager;
         
         public ICommand DetailCommand { get; set; }
@@ -59,13 +60,13 @@ namespace myTask.ViewModels
             set => SetValue(ref _assignments, value);
         }
 
-        public AssignmentListViewModel(INavigationService navigationService, IRepository<Assignment> repository, IUserConfigManager userConfigManager) : base(navigationService)
+        public AssignmentListViewModel(INavigationService navigationService, IAssignmentsManager manager, IUserConfigManager userConfigManager) : base(navigationService)
         {
             DetailCommand = new Command<Assignment>(GoToDetailPage);
             CreateNewCommand = new Command(CreateNewPage);
             ResetCommand = new Command(ResetAsync);
-            _assignmentRepository = repository;
             _configManager = userConfigManager;
+            _manager = manager;
         }
 
         private async void GoToDetailPage(Assignment assignment)
@@ -84,16 +85,16 @@ namespace myTask.ViewModels
                     Title = title,
                     Deadline = DateTime.Now + TimeSpan.FromMinutes(20)
                 };
-                var result = await _assignmentRepository.CreateItemAsync(assignment);
-                if (result) await UpdateListAsync();
+                GoToDetailPage(assignment);
             }
         }
 
         private async Task UpdateListAsync()
         {
             //TODO: replace with AssignmentManager
-            var resultAwait = await _assignmentRepository.GetAllItemsAsync();
-            if (resultAwait != null) Assignments = resultAwait.ToList();
+            var allItemsAsync = await _manager.LoadAssignmentsAsync(
+                DateTime.Now.DayOfWeek);
+            if (allItemsAsync != null) Assignments = allItemsAsync.Assignments.ToList();
         }
 
         private async void ResetAsync()

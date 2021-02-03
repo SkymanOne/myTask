@@ -13,11 +13,11 @@ namespace myTask.Domain.Models
         public byte[] Icon { get; set; }
         public string Title { get; set; }
         public string Description { get; set; } = "No description provided";
-        [ManyToMany(typeof(AssignmentTag), CascadeOperations = CascadeOperation.All)]
-        public virtual List<Tag> Tags { get; set; }
 
-        [TextBlob(nameof(SubTasksBlobbed))]
-        public List<SubTask> SubTasks { get; set; } 
+        [ManyToMany(typeof(AssignmentTag), CascadeOperations = CascadeOperation.All)]
+        public virtual List<Tag> Tags { get; set; } = new List<Tag>();
+
+        [TextBlob(nameof(SubTasksBlobbed))] public List<SubTask> SubTasks { get; set; } = new List<SubTask>();
         public string SubTasksBlobbed { get; set; }
         //set by user
         public double Importance { get; set; } = 0.5;

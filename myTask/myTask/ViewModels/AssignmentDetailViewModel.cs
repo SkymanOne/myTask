@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using myTask.DataStructures;
 using myTask.Domain.Models;
+using myTask.Services.AssignmentsManager;
 using myTask.Services.Database.Repositories;
 using myTask.Services.Navigation;
 using myTask.ViewModels.Base;
@@ -21,6 +22,7 @@ namespace myTask.ViewModels
         public override Type WiredPageType => typeof(AssignmentDetailPage);
 
         private readonly IRepository<Assignment> _assignmentRepository;
+        private readonly IAssignmentsManager _assignmentsManager;
         private readonly IRepository<Tag> _tagRepository;
 
         public ICommand UpdateTitleCommand { get; set; }
@@ -59,13 +61,15 @@ namespace myTask.ViewModels
 
         public AssignmentDetailViewModel(INavigationService navigationService, 
             IRepository<Assignment> assignmentRepository,
-            IRepository<Tag> tagRepository) : base(navigationService)
+            IRepository<Tag> tagRepository,
+            IAssignmentsManager assignmentsManager) : base(navigationService)
         {
             UpdateCommand = new Command(UpdateAsync);
             UpdateTitleCommand = new Command(UpdateLabelAsync);
             DeleteCommand = new Command(DeleteAsync);
             _assignmentRepository = assignmentRepository;
             _tagRepository = tagRepository;
+            _assignmentsManager = assignmentsManager;
         }
 
         private async void UpdateAsync()
@@ -93,7 +97,15 @@ namespace myTask.ViewModels
                     Assignment.Tags.Add(item);
                 }
             }
-            await _assignmentRepository.UpdateItemAsync(Assignment);
+
+            if (_assignment.Id == Guid.Empty)
+            {
+                await _assignmentsManager.CreateAssigmentAsync(_assignment);
+            }
+            else
+            {
+                await _assignmentsManager.UpdateAssignmentAsync(Assignment);   
+            }
             await _navigationService.NavigateToAsync<AssignmentListViewModel>();
             await _navigationService.ClearTheStackAsync();
         }
