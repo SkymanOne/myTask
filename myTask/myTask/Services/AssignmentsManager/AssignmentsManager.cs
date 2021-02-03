@@ -102,6 +102,7 @@ namespace myTask.Services.AssignmentsManager
                 {
                     assignment.PriorityLevel = PriorityLevel.High;
                     CalculatePriorityCoefficient(ref assignment, currentDayTimetable);
+                    CalculateKinbens(ref assignment, currentDayTimetable);
                     currentDayTimetable.Assignments.Add(assignment);
                     result = await _repWrapper.DailyTimetableRepo.UpdateItemAsync(currentDayTimetable);
                 }
@@ -126,6 +127,21 @@ namespace myTask.Services.AssignmentsManager
             assignment.PriorityCoefficient = cp;
         }
 
+        
+        /// <summary>
+        /// Calculates awarding points based on the required time to complete the assignment and available time
+        /// </summary>
+        /// <param name="assignment">reference to the assignment object</param>
+        /// <param name="todayWeekday">today's timetable object</param>
+        private void CalculateKinbens(ref Assignment assignment, DailyTimetable todayWeekday)
+        {
+            int t = assignment.DurationMinutes;
+            double w = todayWeekday.AvailableTimeInHours;
+            decimal ct = decimal.Round(new decimal(t / w), 6, MidpointRounding.AwayFromZero);
+            int kinbens = (int) (200 * ct);
+            assignment.Kinbens = kinbens;
+        }
+
         public async Task<bool> UpdateAssignmentAsync(Assignment assignment)
         {
             return await _repWrapper.AssignmentRepo.UpdateItemAsync(assignment);
@@ -148,6 +164,7 @@ namespace myTask.Services.AssignmentsManager
                 var currentDayTimetable =
                     await LoadAssignmentsAsync(DateTime.Now.DayOfWeek, DateTime.Today.DayOfYear / 7);
                 CalculatePriorityCoefficient(ref assignment, currentDayTimetable);
+                CalculateKinbens(ref assignment, currentDayTimetable);
                 await _repWrapper.AssignmentRepo.UpdateItemAsync(assignment);
 
                 //get the first available day and add the assignment to it

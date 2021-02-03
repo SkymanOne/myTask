@@ -51,6 +51,8 @@ namespace myTask.ViewModels
         }
 
         private List<Assignment> _assignments;
+        
+        //TODO: use stacks
         public List<Assignment> Assignments
         {
             get => _assignments;
@@ -89,6 +91,7 @@ namespace myTask.ViewModels
 
         private async Task UpdateListAsync()
         {
+            //TODO: replace with AssignmentManager
             var resultAwait = await _assignmentRepository.GetAllItemsAsync();
             if (resultAwait != null) Assignments = resultAwait.ToList();
         }

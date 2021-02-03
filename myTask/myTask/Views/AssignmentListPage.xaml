@@ -21,18 +21,27 @@
             <StackLayout 
                 AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
                 AbsoluteLayout.LayoutFlags="All">
-                <StackLayout Orientation="Horizontal">
+                <Grid Padding="10, 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="9*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
                     <material:MaterialLabel
-                        Padding="15, 0"
+                        Grid.Column="0"
                         Text="{Binding CurrentDate}"
-                        FontSize="33"/>
-                    <material:MaterialIconButton Image="baseline_build_white_18dp.png"
-                                                 BackgroundColor="Transparent"
-                                                 TintColor="Black"
-                                                 WidthRequest="20"
-                                                 HeightRequest="20"
-                                                 Command="{Binding ResetCommand}"/>
-                </StackLayout>
+                        FontSize="30"/>
+                    <material:MaterialIconButton
+                        Grid.Column="1"
+                        Image="baseline_build_white_18dp.png"
+                        BackgroundColor="Transparent"
+                        TintColor="Black"
+                        WidthRequest="10"
+                        HeightRequest="10"
+                        Command="{Binding ResetCommand}"/>
+                </Grid>
                 <ListView ItemsSource="{Binding Assignments}"
                           HasUnevenRows="True"
                           Margin="5, 0, 5, 0"
@@ -43,8 +52,17 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <StackLayout Padding="10, 10, 10, 0"
-                                                 HeightRequest="75">
+                                    <StackLayout
+                                        Orientation="Horizontal"
+                                        Padding="10, 10, 10, 0"
+                                        HeightRequest="75">
+                                        <StackLayout>
+                                            <Label Text="Image"/>
+                                            <material:MaterialLabel Text="{Binding Kinbens,
+                                                                            StringFormat='{0} kbs'}"
+                                                                    TypeScale="Caption"/>
+                                        </StackLayout>
+                                        <StackLayout>
                                             <material:MaterialLabel
                                                 TypeScale="H6"
                                                 Padding="10, 0, 0, 0"
@@ -68,6 +86,7 @@
                                                     </DataTemplate>
                                                 </CollectionView.ItemTemplate>
                                             </CollectionView>
+                                    </StackLayout>
                                     </StackLayout>
                                 </ViewCell>
                             </DataTemplate>

@@ -29,7 +29,8 @@ namespace myTask.ViewModels
         public ICommand DeleteCommand { get; set; }
 
 
-        // does not work
+        // UPDATE does not work
+        // Since dictionary works with KeyValuePair structure which is immutable
         //TODO: implement observable dictionary
         public ObservableCollection<SubTask> SubTasks { get; set; }
         public ObservableCollection<TagSubViewModel> TagSubViewModels { get; set; }
@@ -133,14 +134,12 @@ namespace myTask.ViewModels
                     new SubTask("World")
                 };
                 SubTasks = new ObservableCollection<SubTask>(subTasksFromBlobbed);
-                
+
                 TagSubViewModels = new ObservableCollection<TagSubViewModel>(
-                    assignment.Tags.Select(x => new TagSubViewModel(this, x)));
-                TagSubViewModels.Add(new TagSubViewModel(this, new Tag()
+                    assignment.Tags.Select(x => new TagSubViewModel(this, x)))
                 {
-                    Id = Guid.Empty,
-                    Title = "Add new"
-                }));
+                    new TagSubViewModel(this, new Tag() {Id = Guid.Empty, Title = "Add new"})
+                };
                 DeadlineModel = new Deadline()
                 {
                     Date = Assignment.Deadline.Date,
