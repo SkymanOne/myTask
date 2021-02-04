@@ -91,7 +91,6 @@ namespace myTask.ViewModels
 
         private async Task UpdateListAsync()
         {
-            //TODO: replace with AssignmentManager
             var allItemsAsync = await _manager.LoadAssignmentsAsync(
                 DateTime.Now.DayOfWeek);
             if (allItemsAsync != null) Assignments = allItemsAsync.Assignments.ToList();

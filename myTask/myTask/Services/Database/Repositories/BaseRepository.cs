@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using SQLite;
+using SQLiteNetExtensionsAsync.Extensions;
 
 namespace myTask.Services.Database.Repositories
 {
@@ -23,6 +24,11 @@ namespace myTask.Services.Database.Repositories
         public virtual async Task<T> GetItemByIdAsync(object id)
         {
             return await Database.GetAsync<T>(id);
+        }
+
+        protected async Task LoadChildrenAsync(T item)
+        {
+            await Database.GetChildrenAsync(item, true);
         }
 
         public virtual async Task<IEnumerable<T>> GetItemsByQueryAsync(Expression<Func<T, bool>> expression)

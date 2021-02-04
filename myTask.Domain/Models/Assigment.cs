@@ -14,7 +14,7 @@ namespace myTask.Domain.Models
         public string Title { get; set; }
         public string Description { get; set; } = "No description provided";
 
-        [ManyToMany(typeof(AssignmentTag), CascadeOperations = CascadeOperation.All)]
+        [ManyToMany(typeof(AssignmentTag), CascadeOperations = CascadeOperation.CascadeRead | CascadeOperation.CascadeInsert)]
         public virtual List<Tag> Tags { get; set; } = new List<Tag>();
 
         [TextBlob(nameof(SubTasksBlobbed))] public List<SubTask> SubTasks { get; set; } = new List<SubTask>();

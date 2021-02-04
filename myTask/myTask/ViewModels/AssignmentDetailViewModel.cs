@@ -74,14 +74,14 @@ namespace myTask.ViewModels
 
         private async void UpdateAsync()
         {
-            Assignment.SubTasks = SubTasks.ToList();
-            Assignment.Deadline = DeadlineModel.GetTime();
-            Assignment.DurationMinutes = TimeRequired.GetTotalInMinutes();
+            _assignment.SubTasks = SubTasks.ToList();
+            _assignment.Deadline = DeadlineModel.GetTime();
+            _assignment.DurationMinutes = TimeRequired.GetTotalInMinutes();
             var tags = TagSubViewModels
                 .Select(x => x.Tag)
                 .Where(x => x.Title != "Add new")
                 .ToList();
-            Assignment.Tags = new List<Tag>();
+            _assignment.Tags = new List<Tag>();
             foreach (var tag in tags)
             {
                 var item = await _tagRepository.GetItemAsync(x =>
@@ -90,11 +90,11 @@ namespace myTask.ViewModels
                 {
                     tag.Assignments = new List<Assignment> {Assignment};
                     await _tagRepository.CreateItemAsync(tag);
-                    Assignment.Tags.Add(tag);
+                    _assignment.Tags.Add(tag);
                 }
                 else
                 {
-                    Assignment.Tags.Add(item);
+                    _assignment.Tags.Add(item);
                 }
             }
 
@@ -104,7 +104,7 @@ namespace myTask.ViewModels
             }
             else
             {
-                await _assignmentsManager.UpdateAssignmentAsync(Assignment);   
+                await _assignmentsManager.UpdateAssignmentAsync(_assignment);   
             }
             await _navigationService.NavigateToAsync<AssignmentListViewModel>();
             await _navigationService.ClearTheStackAsync();

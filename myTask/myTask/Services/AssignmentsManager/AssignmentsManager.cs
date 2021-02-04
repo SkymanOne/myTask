@@ -84,8 +84,7 @@ namespace myTask.Services.AssignmentsManager
         {
             if (weekOfTheYear == -1) weekOfTheYear = DateTime.Now.DayOfYear / 7;
             var weeklyTimetable = await LoadWeeklyTimetableAsync(weekOfTheYear);
-            var dailyTimetableId = weeklyTimetable?.Timetables.Find(x => x.Day == day).Id;
-            var dailyTimetable = await _repWrapper.DailyTimetableRepo.GetItemByIdAsync(dailyTimetableId);
+            var dailyTimetable = weeklyTimetable?.Timetables.Find(x => x.Day == day);
             return dailyTimetable;
         }
 

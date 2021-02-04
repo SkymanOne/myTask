@@ -10,7 +10,7 @@ namespace myTask.Domain.Models
         [PrimaryKey]
         public Guid Id { get; set; }
         public string Title { get; set; }
-        [ManyToMany(typeof(AssignmentTag), CascadeOperations = CascadeOperation.All)]
+        [ManyToMany(typeof(AssignmentTag), CascadeOperations = CascadeOperation.CascadeRead | CascadeOperation.CascadeInsert)]
         public virtual List<Assignment> Assignments { get; set; }
     }
 }

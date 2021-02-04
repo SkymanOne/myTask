@@ -17,7 +17,9 @@ namespace myTask.Services.Database.Repositories
         {
             try
             {
-                return await Database.GetWithChildrenByQueryAsync(expression);
+                var item = await Database.GetWithChildrenByQueryAsync(expression);
+                await LoadChildrenAsync(item);
+                return item;
             }
             catch (InvalidOperationException)
             {
