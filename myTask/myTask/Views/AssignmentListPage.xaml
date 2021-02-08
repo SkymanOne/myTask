@@ -6,33 +6,23 @@
              x:Class="myTask.Views.AssignmentListPage"
              NavigationPage.HasNavigationBar="false"
              Title="Assignments">
-    <ContentPage.Resources>
-        <StackLayout x:Key="EmptyHeader">
-            <material:MaterialLabel
-                Margin="0, 10, 0, 0"
-                HorizontalOptions="CenterAndExpand"
-                Text="No assignments present!"
-                TypeScale="H5"/>
-        </StackLayout>
-    </ContentPage.Resources>
     <ContentPage.Content>
-        <AbsoluteLayout 
-            Padding="0, 50, 0, 0">
-            <StackLayout 
+        <AbsoluteLayout Padding="0, 50, 0, 0">
+            <StackLayout
                 AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
                 AbsoluteLayout.LayoutFlags="All">
                 <Grid Padding="10, 0">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="9*"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="9*" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <material:MaterialLabel
                         Grid.Column="0"
                         Text="{Binding CurrentDate}"
-                        FontSize="30"/>
+                        FontSize="30" />
                     <material:MaterialIconButton
                         Grid.Column="1"
                         Image="baseline_build_white_18dp.png"
@@ -40,70 +30,81 @@
                         TintColor="Black"
                         WidthRequest="10"
                         HeightRequest="10"
-                        Command="{Binding ResetCommand}"/>
+                        Command="{Binding ResetCommand}" />
                 </Grid>
-                <ListView ItemsSource="{Binding Assignments}"
-                          HasUnevenRows="True"
-                          Margin="5, 0, 5, 0"
-                          Footer=""
-                          ItemSelected="ListView_OnItemSelected"
-                          ItemTapped="ListView_OnItemTapped"
-                          SeparatorVisibility="Default">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <ViewCell>
-                                    <StackLayout
-                                        Orientation="Horizontal"
-                                        Padding="10, 10, 10, 0"
-                                        HeightRequest="75">
-                                        <StackLayout>
-                                            <Label Text="Image"/>
-                                            <material:MaterialLabel Text="{Binding Kinbens,
-                                                                            StringFormat='{0} kbs'}"
-                                                                    TypeScale="Caption"/>
-                                        </StackLayout>
-                                        <StackLayout>
-                                            <material:MaterialLabel
-                                                TypeScale="H6"
-                                                Padding="10, 0, 0, 0"
-                                                Text="{Binding Title}"/>
-                                            <CollectionView ItemsSource="{Binding Tags}"
-                                                            HeightRequest="35"
-                                                            ItemsUpdatingScrollMode="KeepItemsInView"
-                                                            HorizontalScrollBarVisibility="Never">
-                                                <CollectionView.ItemsLayout>
-                                                    <LinearItemsLayout Orientation="Horizontal"
-                                                                       ItemSpacing="5"/>
-                                                </CollectionView.ItemsLayout>
-                                                <CollectionView.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <material:MaterialChip 
-                                                            HorizontalOptions="FillAndExpand"
-                                                            Text="{Binding Title}"
-                                                            TextColor="White"
-                                                            BackgroundColor="#D81B60">
-                                                        </material:MaterialChip>
-                                                    </DataTemplate>
-                                                </CollectionView.ItemTemplate>
-                                            </CollectionView>
-                                    </StackLayout>
-                                    </StackLayout>
-                                </ViewCell>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                </ListView>
+                <CarouselView
+                    ItemsSource="{Binding Days}"
+                    Loop="False"
+                    CurrentItemChangedCommand="{Binding ItemChangedCommand}"
+                    Position="{Binding Position}"
+                    CurrentItem="{Binding CurrentItem, Mode=TwoWay}">
+                    <CarouselView.ItemTemplate>
+                        <DataTemplate>
+                            <ListView ItemsSource="{Binding Assignments}"
+                                      HasUnevenRows="True"
+                                      Margin="5, 0, 5, 0"
+                                      Footer=""
+                                      ItemSelected="ListView_OnItemSelected"
+                                      ItemTapped="ListView_OnItemTapped"
+                                      SeparatorVisibility="Default">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <ViewCell>
+                                            <StackLayout
+                                                Orientation="Horizontal"
+                                                Padding="10, 10, 10, 0"
+                                                HeightRequest="75">
+                                                <StackLayout>
+                                                    <Label Text="Image" />
+                                                    <material:MaterialLabel
+                                                        Text="{Binding Kinbens,
+                                                                                StringFormat='{0} kbs'}"
+                                                        TypeScale="Caption" />
+                                                </StackLayout>
+                                                <StackLayout>
+                                                    <material:MaterialLabel
+                                                        TypeScale="H6"
+                                                        Padding="10, 0, 0, 0"
+                                                        Text="{Binding Title}" />
+                                                    <CollectionView ItemsSource="{Binding Tags}"
+                                                                    HeightRequest="35"
+                                                                    ItemsUpdatingScrollMode="KeepItemsInView"
+                                                                    HorizontalScrollBarVisibility="Never">
+                                                        <CollectionView.ItemsLayout>
+                                                            <LinearItemsLayout Orientation="Horizontal"
+                                                                               ItemSpacing="5" />
+                                                        </CollectionView.ItemsLayout>
+                                                        <CollectionView.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <material:MaterialChip
+                                                                    HorizontalOptions="FillAndExpand"
+                                                                    Text="{Binding Title}"
+                                                                    TextColor="White"
+                                                                    BackgroundColor="#D81B60" />
+                                                            </DataTemplate>
+                                                        </CollectionView.ItemTemplate>
+                                                    </CollectionView>
+                                                </StackLayout>
+                                            </StackLayout>
+                                        </ViewCell>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </DataTemplate>
+                    </CarouselView.ItemTemplate>
+                </CarouselView>
             </StackLayout>
-                <material:MaterialButton
-                    AbsoluteLayout.LayoutBounds="0.95, 0.97, 70, 70"
-                    AbsoluteLayout.LayoutFlags="PositionProportional"
-                    Text="+"
-                    Command="{Binding CreateNewCommand}"
-                    TextColor="Black"
-                    FontSize="40"
-                    WidthRequest="100"
-                    BackgroundColor="Yellow"
-                    HeightRequest="100"
-                    CornerRadius="50"/>
+            <material:MaterialButton
+                AbsoluteLayout.LayoutBounds="0.95, 0.97, 70, 70"
+                AbsoluteLayout.LayoutFlags="PositionProportional"
+                Text="+"
+                Command="{Binding CreateNewCommand}"
+                TextColor="Black"
+                FontSize="40"
+                WidthRequest="100"
+                BackgroundColor="Yellow"
+                HeightRequest="100"
+                CornerRadius="50" />
         </AbsoluteLayout>
     </ContentPage.Content>
 </ContentPage>

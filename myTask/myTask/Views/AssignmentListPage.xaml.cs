@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using myTask.Domain.Models;
 using myTask.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -27,7 +28,7 @@ namespace myTask.Views
         private void ListView_OnItemTapped(object sender, ItemTappedEventArgs e)
         {
             if (BindingContext is AssignmentListViewModel viewModel)
-                viewModel.DetailCommand.Execute(e.Item);
+                viewModel.CurrentDay.DetailCommand.Execute(e.Item);
         }
     }
 }

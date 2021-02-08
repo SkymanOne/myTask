@@ -17,11 +17,13 @@ namespace myTask.Services.AssignmentsManager
         //if more repositories are required to be added
         private readonly IRepositoryWrapper _repWrapper;
         private readonly IUserConfigManager _userConfigManager;
+        private readonly Calendar _calendar;
 
         public AssignmentsManager(IRepositoryWrapper repositoryWrapper, IUserConfigManager userConfigManager)
         {
             _repWrapper = repositoryWrapper;
             _userConfigManager = userConfigManager;
+            _calendar = new GregorianCalendar(GregorianCalendarTypes.Localized);
         }
 
         public async Task Init()
@@ -60,7 +62,7 @@ namespace myTask.Services.AssignmentsManager
                 int c = (int) DateTime.Now.DayOfWeek;
                 for (int i = c; i < 7; i++)
                 {
-                    var dayNumber = calendar.GetDayOfYear(DateTime.Today.Add(new TimeSpan(c-i, 0, 0, 0)));
+                    var dayNumber = calendar.GetDayOfYear(DateTime.Today.Add(new TimeSpan(i-c, 0, 0, 0)));
                     var dailyTimetable = new DailyTimetable()
                     {
                         Id = Guid.NewGuid(),
@@ -82,7 +84,10 @@ namespace myTask.Services.AssignmentsManager
 
         public async Task<DailyTimetable> LoadAssignmentsAsync(DayOfWeek day, int weekOfTheYear = -1)
         {
-            if (weekOfTheYear == -1) weekOfTheYear = DateTime.Now.DayOfYear / 7;
+            if (weekOfTheYear == -1)
+            {
+                weekOfTheYear = GetCurrentWeek();
+            }
             var weeklyTimetable = await LoadWeeklyTimetableAsync(weekOfTheYear);
             var dailyTimetable = weeklyTimetable?.Timetables.Find(x => x.Day == day);
             return dailyTimetable;
@@ -100,7 +105,7 @@ namespace myTask.Services.AssignmentsManager
             if (result == false) return result;
             TimeSpan timeToDeadline = assignment.Deadline - DateTime.Now;
             var currentDayTimetable =
-                await LoadAssignmentsAsync(DateTime.Now.DayOfWeek, DateTime.Today.DayOfYear / 7);
+                await LoadAssignmentsAsync(DateTime.Now.DayOfWeek, GetCurrentWeek());
             if (timeToDeadline.TotalDays <= 3 || currentDayTimetable != null)
             {
                 if (currentDayTimetable.AvailableTimeInHours * 60 >= assignment.DurationMinutes)
@@ -153,6 +158,12 @@ namespace myTask.Services.AssignmentsManager
             assignment.Kinbens = kinbens;
         }
 
+
+        private int GetCurrentWeek()
+        {
+            return _calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFullWeek, DayOfWeek.Sunday);
+        }
+
         public async Task<bool> UpdateAssignmentAsync(Assignment assignment)
         {
             return await _repWrapper.AssignmentRepo.UpdateItemAsync(assignment);
@@ -177,14 +188,15 @@ namespace myTask.Services.AssignmentsManager
                     await LoadAssignmentsAsync(DateTime.Now.DayOfWeek, DateTime.Today.DayOfYear / 7);
                 CalculatePriorityCoefficient(ref assignment, currentDayTimetable);
                 CalculateKinbens(ref assignment, currentDayTimetable);
-                await _repWrapper.AssignmentRepo.UpdateItemAsync(assignment);
 
+                await RemoveAssignmentFromOldTimetable(assignment);
+                
                 //get the first available day and add the assignment to it
                 var availableDay = daysBeforeDeadlineList
                     .First(x => x.AvailableTimeInHours * 60 < assignment.DurationMinutes);
                 availableDay.Assignments.Add(assignment);
                 
-                await RemoveAssignmentFromOldTimetable(assignment);
+                await _repWrapper.AssignmentRepo.UpdateItemAsync(assignment);
                 
                 await _repWrapper.DailyTimetableRepo.UpdateItemAsync(availableDay);
                 return true;

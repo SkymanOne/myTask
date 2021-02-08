@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using myTask.Domain.Models;
 using myTask.Services.AssignmentsManager;
@@ -37,7 +38,21 @@ namespace myTask
         }
 
         public static void UpdateDependencies(bool useMocks)
-        {
+        {            
+            if (useMocks)
+            {
+                FileInfo info = new FileInfo(Constants.DB_PATH);
+                info.Delete();
+                //Container.Register(typeof(IRepository<>), typeof(MockRepository<>));
+            }
+            else
+            {
+                Container.Register<IRepository<Assignment>, AssignmentRepository>();
+                Container.Register<IRepository<Tag>, TagRepository>();
+                Container.Register<IRepository<WeeklyTimetable>, WeeklyTimetableRepository>();
+                Container.Register<IRepository<DailyTimetable>, DailyTimetableRepository>();
+                Container.Register<IRepositoryWrapper, RepositoryWrapper>();
+            }
             Container.Register<INavigationService, NavigationService>();
             Container.Register<IUserConfigManager, UserConfigManager>();
             Container.Register<IAssignmentsManager, AssignmentsManager>();
@@ -53,18 +68,6 @@ namespace myTask
                 });
                 return dbConnection;
             } ));
-            if (useMocks)
-            {
-                Container.Register(typeof(IRepository<>), typeof(MockRepository<>));
-            }
-            else
-            {
-                Container.Register<IRepository<Assignment>, AssignmentRepository>();
-                Container.Register<IRepository<Tag>, TagRepository>();
-                Container.Register<IRepository<WeeklyTimetable>, WeeklyTimetableRepository>();
-                Container.Register<IRepository<DailyTimetable>, DailyTimetableRepository>();
-                Container.Register<IRepositoryWrapper, RepositoryWrapper>();
-            }
         }
 
         public static T Resolve<T>() where T : class
