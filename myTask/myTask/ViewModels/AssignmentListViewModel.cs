@@ -125,8 +125,10 @@ namespace myTask.ViewModels
             _week = week;
             Days = _week.Timetables.Select(x => new DaySubViewModel(this, x)).ToList();
             CurrentDay = Days.First(x => x.DailyTimetable.Day == DateTime.Now.DayOfWeek);
+            Position = Days.IndexOf(CurrentDay);
             OnPropertyChanged(nameof(Days));
             OnPropertyChanged(nameof(CurrentDay));
+            OnPropertyChanged(nameof(Position));
         }
 
         public class DaySubViewModel : SubViewModel

@@ -167,6 +167,7 @@
                         <Entry Placeholder="0"
                                MaxLength="2"
                                WidthRequest="40"
+                               ReturnCommand="{Binding RequiredTimeCompletedCommand}"
                                Text="{Binding TimeRequired.Hours}"
                                Keyboard="Numeric"/>
                         <material:MaterialLabel Text="hours"
@@ -176,6 +177,7 @@
                         <Entry Placeholder="0"
                                MaxLength="2"
                                WidthRequest="40"
+                               ReturnCommand="{Binding RequiredTimeCompletedCommand}"
                                Text="{Binding TimeRequired.Minutes}"
                                Keyboard="Numeric"/>
                         <material:MaterialLabel Text="minutes"

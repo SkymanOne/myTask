@@ -21,7 +21,7 @@ namespace myTask
         static SuperContainer()
         {
             Container = TinyIoCContainer.Current;
-            
+
             //register viewmodels as multi instances
             Container.Register<AssignmentListViewModel>();
             Container.Register<AssignmentDetailViewModel>();
@@ -32,27 +32,24 @@ namespace myTask
             Container.Register<SetWorkingDaysViewModel>();
             Container.Register<SetWorkingHoursViewModel>();
             Container.Register<InitNavViewModel>();
-            
+
             //register services
             Container.Register<INavigationService, NavigationService>();
         }
 
         public static void UpdateDependencies(bool useMocks)
-        {            
+        {
             if (useMocks)
             {
                 FileInfo info = new FileInfo(Constants.DB_PATH);
                 info.Delete();
                 //Container.Register(typeof(IRepository<>), typeof(MockRepository<>));
             }
-            else
-            {
-                Container.Register<IRepository<Assignment>, AssignmentRepository>();
-                Container.Register<IRepository<Tag>, TagRepository>();
-                Container.Register<IRepository<WeeklyTimetable>, WeeklyTimetableRepository>();
-                Container.Register<IRepository<DailyTimetable>, DailyTimetableRepository>();
-                Container.Register<IRepositoryWrapper, RepositoryWrapper>();
-            }
+            Container.Register<IRepository<Assignment>, AssignmentRepository>();
+            Container.Register<IRepository<Tag>, TagRepository>();
+            Container.Register<IRepository<WeeklyTimetable>, WeeklyTimetableRepository>();
+            Container.Register<IRepository<DailyTimetable>, DailyTimetableRepository>();
+            Container.Register<IRepositoryWrapper, RepositoryWrapper>();
             Container.Register<INavigationService, NavigationService>();
             Container.Register<IUserConfigManager, UserConfigManager>();
             Container.Register<IAssignmentsManager, AssignmentsManager>();
@@ -67,7 +64,7 @@ namespace myTask
                     await dbConnection.Init();
                 });
                 return dbConnection;
-            } ));
+            }));
         }
 
         public static T Resolve<T>() where T : class

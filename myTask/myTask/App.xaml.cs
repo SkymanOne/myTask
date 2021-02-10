@@ -22,7 +22,7 @@ namespace myTask
             //helps for debugging
             //as it now exceptions during startup are shown fully
             MainPage = new ContentPage();
-            InitApp(false);
+            InitApp(true);
         }
 
         protected override async void OnStart()

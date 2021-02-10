@@ -49,10 +49,14 @@ namespace myTask.Services.Database.Repositories
             var config = await _userConfigManager.GetConfigAsync();
             var freeTimeLeft = 
                 config.WeeklyAvailableTimeInHours.ElementAt((int)item.Day) - item.Assignments.Sum(x => x.DurationMinutes / 60);
-            if (freeTimeLeft < 0)
-                return false;
-            await Database.UpdateWithChildrenAsync(item);
-            return true;
+            if (freeTimeLeft >= 0)
+            {
+                item.AvailableTimeInHours = freeTimeLeft;
+                await Database.UpdateWithChildrenAsync(item);
+                return true;
+            }
+
+            return false;
         }
     }
 }

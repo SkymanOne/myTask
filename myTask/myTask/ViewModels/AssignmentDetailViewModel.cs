@@ -29,6 +29,8 @@ namespace myTask.ViewModels
         public ICommand UpdateCommand { get; set; }
         public ICommand PickNewIcon { get; set; }
         public ICommand DeleteCommand { get; set; }
+        
+        public ICommand RequiredTimeCompletedCommand { get; set; }
 
 
         // UPDATE does not work
@@ -67,6 +69,7 @@ namespace myTask.ViewModels
             UpdateCommand = new Command(UpdateAsync);
             UpdateTitleCommand = new Command(UpdateLabelAsync);
             DeleteCommand = new Command(DeleteAsync);
+            RequiredTimeCompletedCommand = new Command(RequiredTimeCompleted);
             _assignmentRepository = assignmentRepository;
             _tagRepository = tagRepository;
             _assignmentsManager = assignmentsManager;
@@ -121,6 +124,18 @@ namespace myTask.ViewModels
                 await _assignmentRepository.DeleteItemAsync(Assignment);
                 await _navigationService.NavigateToAsync<AssignmentListViewModel>();
                 await _navigationService.ClearTheStackAsync();
+            }
+        }
+
+        private void RequiredTimeCompleted()
+        {
+            var timeBeforeDeadline = (_deadline.GetTime() - DateTime.Now).Minutes;
+            if (timeBeforeDeadline <= TimeRequired.GetTotalInMinutes())
+            {
+                var newDeadline = DateTime.Now.AddMinutes(TimeRequired.GetTotalInMinutes());
+                DeadlineModel.Date = newDeadline.Date;
+                DeadlineModel.Time = newDeadline.TimeOfDay;
+                OnPropertyChanged(nameof(DeadlineModel));
             }
         }
 

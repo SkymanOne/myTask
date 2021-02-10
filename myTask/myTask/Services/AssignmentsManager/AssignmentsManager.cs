@@ -86,7 +86,7 @@ namespace myTask.Services.AssignmentsManager
         {
             if (weekOfTheYear == -1)
             {
-                weekOfTheYear = GetCurrentWeek();
+                weekOfTheYear = GetCurrentWeekNumber();
             }
             var weeklyTimetable = await LoadWeeklyTimetableAsync(weekOfTheYear);
             var dailyTimetable = weeklyTimetable?.Timetables.Find(x => x.Day == day);
@@ -105,7 +105,7 @@ namespace myTask.Services.AssignmentsManager
             if (result == false) return result;
             TimeSpan timeToDeadline = assignment.Deadline - DateTime.Now;
             var currentDayTimetable =
-                await LoadAssignmentsAsync(DateTime.Now.DayOfWeek, GetCurrentWeek());
+                await LoadAssignmentsAsync(DateTime.Now.DayOfWeek, GetCurrentWeekNumber());
             if (timeToDeadline.TotalDays <= 3 || currentDayTimetable != null)
             {
                 if (currentDayTimetable.AvailableTimeInHours * 60 >= assignment.DurationMinutes)
@@ -117,6 +117,10 @@ namespace myTask.Services.AssignmentsManager
                     currentDayTimetable.Assignments.Add(assignment);
                     await _repWrapper.AssignmentRepo.UpdateItemAsync(assignment);
                     result = await _repWrapper.DailyTimetableRepo.UpdateItemAsync(currentDayTimetable);
+                    if (result == false)
+                    {
+                        result = await MoveAssignmentBackwardsAsync(assignment);
+                    }
                 }
                 else
                 {
@@ -159,13 +163,17 @@ namespace myTask.Services.AssignmentsManager
         }
 
 
-        private int GetCurrentWeek()
+        private int GetCurrentWeekNumber()
         {
             return _calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFullWeek, DayOfWeek.Sunday);
         }
 
         public async Task<bool> UpdateAssignmentAsync(Assignment assignment)
         {
+            var currentDayTimetable =
+                await LoadAssignmentsAsync(DateTime.Now.DayOfWeek, GetCurrentWeekNumber());
+            CalculatePriorityCoefficient(ref assignment, currentDayTimetable);
+            CalculateKinbens(ref assignment, currentDayTimetable);
             return await _repWrapper.AssignmentRepo.UpdateItemAsync(assignment);
         }
 
@@ -193,7 +201,7 @@ namespace myTask.Services.AssignmentsManager
                 
                 //get the first available day and add the assignment to it
                 var availableDay = daysBeforeDeadlineList
-                    .First(x => x.AvailableTimeInHours * 60 < assignment.DurationMinutes);
+                    .First(x => x.AvailableTimeInHours * 60 >= assignment.DurationMinutes);
                 availableDay.Assignments.Add(assignment);
                 
                 await _repWrapper.AssignmentRepo.UpdateItemAsync(assignment);
@@ -203,7 +211,7 @@ namespace myTask.Services.AssignmentsManager
             }
             
             //if there are no days with enough free time 
-            //we need to move assignments with lower priority to the next 
+            //we need to move assignments with lower priority to the next day
             else
             {
                 #region CanbeUsed
@@ -371,15 +379,29 @@ namespace myTask.Services.AssignmentsManager
 
         private async Task<IEnumerable<DailyTimetable>> GetVacantDaysBeforeDeadline(Assignment assignment)
         {
-            int deadlineWeekNumber = assignment.Deadline.DayOfYear / 7;
-            var weeksBeforeDeadline = from week in await _repWrapper.WeeklyTimetableRepo.GetAllItemsAsync()
-                where
-                    week.Year <= assignment.Deadline.Year &&
-                    week.Number < deadlineWeekNumber
-                select week.Timetables;
+            int deadlineWeekNumber =
+                _calendar.GetWeekOfYear(assignment.Deadline, CalendarWeekRule.FirstFullWeek, DayOfWeek.Sunday);
+            int currentWeekNumber = GetCurrentWeekNumber();
+            // var weeksBeforeDeadline = from week in await _repWrapper.WeeklyTimetableRepo.GetAllItemsAsync()
+            //     where
+            //         week.Year <= assignment.Deadline.Year &&
+            //         week.Number < deadlineWeekNumber
+            //     select week.Timetables;
+            var weeksBeforeDeadline = new List<WeeklyTimetable>();
+            for (int i = 0; i < deadlineWeekNumber-currentWeekNumber; i++)
+            {
+                var week = await LoadWeeklyTimetableAsync(currentWeekNumber + i);
+                weeksBeforeDeadline.Add(week);
+            }
+
             var vacantDays = weeksBeforeDeadline
-                .SelectMany(x => x).Where(x => x.Week.Number <= deadlineWeekNumber
-                                               && x.Day <= assignment.Deadline.DayOfWeek);
+                .SelectMany(x => x.Timetables)
+                .Select(x => x)
+                .Where(x => x.DayNumber <= _calendar.GetDayOfYear(assignment.Deadline));
+
+            // var vacantDays = weeksBeforeDeadline
+            //     .SelectMany(x => x).Where(x => x.Week.Number <= deadlineWeekNumber
+            //                                    && x.Day <= assignment.Deadline.DayOfWeek);
             return vacantDays;
         }
 
