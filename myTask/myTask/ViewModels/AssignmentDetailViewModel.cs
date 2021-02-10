@@ -121,7 +121,7 @@ namespace myTask.ViewModels
             );
             if (confirm == true)
             {
-                await _assignmentRepository.DeleteItemAsync(Assignment);
+                await _assignmentsManager.DeleteAssignmentAsync(Assignment);
                 await _navigationService.NavigateToAsync<AssignmentListViewModel>();
                 await _navigationService.ClearTheStackAsync();
             }
@@ -129,10 +129,10 @@ namespace myTask.ViewModels
 
         private void RequiredTimeCompleted()
         {
-            var timeBeforeDeadline = (_deadline.GetTime() - DateTime.Now).Minutes;
+            var timeBeforeDeadline = (_deadline.GetTime() - DateTime.Now).TotalMinutes;
             if (timeBeforeDeadline <= TimeRequired.GetTotalInMinutes())
             {
-                var newDeadline = DateTime.Now.AddMinutes(TimeRequired.GetTotalInMinutes());
+                var newDeadline = DateTime.Now.AddMinutes(TimeRequired.GetTotalInMinutes() + 15);
                 DeadlineModel.Date = newDeadline.Date;
                 DeadlineModel.Time = newDeadline.TimeOfDay;
                 OnPropertyChanged(nameof(DeadlineModel));

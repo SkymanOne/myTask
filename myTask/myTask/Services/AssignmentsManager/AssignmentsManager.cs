@@ -141,7 +141,7 @@ namespace myTask.Services.AssignmentsManager
             double rho = assignment.Importance;
             int d = (int) Math.Round((assignment.Deadline - DateTime.Now).TotalMinutes);
             double w = todayWeekday.AvailableTimeInHours * 60;
-            decimal ct = decimal.Round(new decimal(t / w), 6, MidpointRounding.AwayFromZero);
+            var ct = w != 0 ? decimal.Round(new decimal(t / w), 6, MidpointRounding.AwayFromZero) : 1;
             decimal cd = decimal.Round(new decimal(1 - (t / d)), 6, MidpointRounding.AwayFromZero);
             double cp = Math.Pow((double) ct, (double) cd) * rho;
             assignment.PriorityCoefficient = cp;
@@ -157,7 +157,7 @@ namespace myTask.Services.AssignmentsManager
         {
             int t = assignment.DurationMinutes;
             double w = todayWeekday.AvailableTimeInHours * 60;
-            decimal ct = decimal.Round(new decimal(t / w), 6, MidpointRounding.AwayFromZero);
+            var ct = w != 0 ? decimal.Round(new decimal(t / w), 6, MidpointRounding.AwayFromZero) : 1;
             int kinbens = (int) (200 * ct);
             assignment.Kinbens = kinbens;
         }
@@ -170,8 +170,10 @@ namespace myTask.Services.AssignmentsManager
 
         public async Task<bool> UpdateAssignmentAsync(Assignment assignment)
         {
+            await _repWrapper.AssignmentRepo.UpdateItemAsync(assignment);
             var currentDayTimetable =
                 await LoadAssignmentsAsync(DateTime.Now.DayOfWeek, GetCurrentWeekNumber());
+            await UpdateTimetableAsync(currentDayTimetable);
             CalculatePriorityCoefficient(ref assignment, currentDayTimetable);
             CalculateKinbens(ref assignment, currentDayTimetable);
             return await _repWrapper.AssignmentRepo.UpdateItemAsync(assignment);
@@ -181,6 +183,7 @@ namespace myTask.Services.AssignmentsManager
         {
             throw new System.NotImplementedException();
         }
+        
 
         public async Task<bool> MoveAssignmentForwardAsync(Assignment assignment)
         {
@@ -325,8 +328,8 @@ namespace myTask.Services.AssignmentsManager
                 x => x.DayNumber <= assignment.Deadline.DayOfYear);
             
             //as we increase number of assignments we want to move on the day
-            //we need to have to indicate that the number of assignments to move
-            //is greater that the number of existing assignments on any day
+            //we have to indicate that the number of assignments to move
+            //is greater than the number of existing assignments on any day
             bool overflowedNumberOfAssignments = false;
 
             //convert complex IEnumerable to simple array so it can be easily iterated through
@@ -382,37 +385,43 @@ namespace myTask.Services.AssignmentsManager
             int deadlineWeekNumber =
                 _calendar.GetWeekOfYear(assignment.Deadline, CalendarWeekRule.FirstFullWeek, DayOfWeek.Sunday);
             int currentWeekNumber = GetCurrentWeekNumber();
-            // var weeksBeforeDeadline = from week in await _repWrapper.WeeklyTimetableRepo.GetAllItemsAsync()
-            //     where
-            //         week.Year <= assignment.Deadline.Year &&
-            //         week.Number < deadlineWeekNumber
-            //     select week.Timetables;
             var weeksBeforeDeadline = new List<WeeklyTimetable>();
+            
+            //populate list with week object before the deadline
             for (int i = 0; i < deadlineWeekNumber-currentWeekNumber; i++)
             {
                 var week = await LoadWeeklyTimetableAsync(currentWeekNumber + i);
                 weeksBeforeDeadline.Add(week);
             }
-
+            
+            //search for vacant days in these weeks before the day of deadline
             var vacantDays = weeksBeforeDeadline
                 .SelectMany(x => x.Timetables)
                 .Select(x => x)
                 .Where(x => x.DayNumber <= _calendar.GetDayOfYear(assignment.Deadline));
-
-            // var vacantDays = weeksBeforeDeadline
-            //     .SelectMany(x => x).Where(x => x.Week.Number <= deadlineWeekNumber
-            //                                    && x.Day <= assignment.Deadline.DayOfWeek);
+            
+            
             return vacantDays;
         }
+
 
         public async Task<bool> MoveAssignmentBackwardsAsync(Assignment assignment)
         {
             throw new System.NotImplementedException();
         }
 
-        public async Task UpdateTimetableAsync()
+        public async Task<bool> UpdateTimetableAsync(DailyTimetable dailyTimetable)
         {
-            throw new System.NotImplementedException();
+            return await _repWrapper.DailyTimetableRepo.UpdateItemAsync(dailyTimetable);
+        }
+
+        public async Task<bool> DeleteAssignmentAsync(Assignment assignment)
+        {
+            var resultDelete = await _repWrapper.AssignmentRepo.DeleteItemAsync(assignment);
+            var dailyTimetable = await _repWrapper.DailyTimetableRepo.GetItemByIdAsync(assignment.DayId);
+            dailyTimetable.Assignments.Remove(assignment);
+            var resultUpdate = await UpdateTimetableAsync(dailyTimetable);
+            return resultDelete && resultUpdate;
         }
     }
 }

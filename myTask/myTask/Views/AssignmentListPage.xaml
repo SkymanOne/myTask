@@ -54,7 +54,7 @@
                                                 Orientation="Horizontal"
                                                 Padding="10, 10, 10, 0"
                                                 HeightRequest="75">
-                                                <StackLayout>
+                                                <StackLayout WidthRequest="70">
                                                     <Label Text="Image" />
                                                     <material:MaterialLabel
                                                         Text="{Binding Kinbens,
@@ -64,7 +64,7 @@
                                                 <StackLayout>
                                                     <material:MaterialLabel
                                                         TypeScale="H6"
-                                                        Padding="10, 0, 0, 0"
+                                                        Padding="5, 0, 0, 0"
                                                         Text="{Binding Title}" />
                                                     <CollectionView ItemsSource="{Binding Tags}"
                                                                     HeightRequest="35"

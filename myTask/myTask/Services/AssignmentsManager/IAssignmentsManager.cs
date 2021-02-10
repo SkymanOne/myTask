@@ -18,9 +18,10 @@ namespace myTask.Services.AssignmentsManager
         Task<IEnumerable<Assignment>> LoadAssignmentsAsync();
         Task<bool> CreateAssigmentAsync(Assignment assignment);
         Task<bool> UpdateAssignmentAsync(Assignment assignment);
+        Task<bool> DeleteAssignmentAsync(Assignment assignment);
         Task<List<Assignment>> SplitAssignmentAsync(Assignment assignment);
         Task<bool> MoveAssignmentForwardAsync(Assignment assignment);
         Task<bool> MoveAssignmentBackwardsAsync(Assignment assignment);
-        Task UpdateTimetableAsync();
+        Task<bool> UpdateTimetableAsync(DailyTimetable dailyTimetable);
     }
 }
