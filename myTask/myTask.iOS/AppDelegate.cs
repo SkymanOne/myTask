@@ -5,6 +5,7 @@ using CarouselView.FormsPlugin.iOS;
 using FFImageLoading.Forms.Platform;
 using FFImageLoading.Svg.Forms;
 using Foundation;
+using ImageCircle.Forms.Plugin.iOS;
 using UIKit;
 
 namespace myTask.iOS
@@ -28,6 +29,7 @@ namespace myTask.iOS
             XF.Material.iOS.Material.Init();
             CarouselViewRenderer.Init();
             CachedImageRenderer.Init();
+            ImageCircleRenderer.Init();
             var ignore = typeof(SvgCachedImage);
             LoadApplication(new App());
 

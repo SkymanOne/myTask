@@ -1,9 +1,12 @@
 using System;
+using System.IO;
 using System.Linq.Expressions;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using myTask.Domain.Models;
 using SQLite;
 using SQLiteNetExtensionsAsync.Extensions;
+using Xamarin.Forms;
 
 namespace myTask.Helpers
 {
@@ -36,6 +39,13 @@ namespace myTask.Helpers
                 default:
                     return "";
             }
+        }
+
+        public static ImageSource GetImageSource(this Assignment assignment)
+        {
+            if (assignment.Icon == null)
+                return ImageSource.FromFile("placeholder.png");
+            return ImageSource.FromStream(() => new MemoryStream(assignment.Icon));
         }
     }
 }

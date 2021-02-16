@@ -4,6 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
              x:Class="myTask.Views.AssignmentListPage"
+             xmlns:control="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
              NavigationPage.HasNavigationBar="false"
              Title="Assignments">
     <ContentPage.Content>
@@ -35,6 +36,9 @@
                 <CarouselView
                     ItemsSource="{Binding Days}"
                     Loop="False"
+                    Margin="0, 5, 0, 0"
+                    VerticalOptions="FillAndExpand"
+                    HorizontalOptions="FillAndExpand"
                     CurrentItemChangedCommand="{Binding ItemChangedCommand}"
                     Position="{Binding Position}"
                     CurrentItem="{Binding CurrentItem, Mode=TwoWay}">
@@ -42,6 +46,8 @@
                         <DataTemplate>
                             <ListView ItemsSource="{Binding Assignments}"
                                       HasUnevenRows="True"
+                                      HorizontalOptions="FillAndExpand"
+                                      VerticalOptions="FillAndExpand"
                                       Margin="5, 0, 5, 0"
                                       Footer=""
                                       ItemSelected="ListView_OnItemSelected"
@@ -55,9 +61,18 @@
                                                 Padding="10, 10, 10, 0"
                                                 HeightRequest="75">
                                                 <StackLayout WidthRequest="70">
-                                                    <Label Text="Image" />
+                                                    <control:CircleImage 
+                                                        Source="{Binding ImageSource}" Aspect="AspectFill"
+                                                        VerticalOptions="FillAndExpand"
+                                                        HorizontalOptions="FillAndExpand"
+                                                        WidthRequest="10"
+                                                        BorderColor="{Binding BorderColor}"
+                                                        BorderThickness="3"
+                                                        HeightRequest="50">
+                                                    </control:CircleImage>
                                                     <material:MaterialLabel
-                                                        Text="{Binding Kinbens,
+                                                        HorizontalOptions="CenterAndExpand"
+                                                        Text="{Binding Assignment.Kinbens,
                                                                                 StringFormat='{0} kbs'}"
                                                         TypeScale="Caption" />
                                                 </StackLayout>
@@ -65,8 +80,8 @@
                                                     <material:MaterialLabel
                                                         TypeScale="H6"
                                                         Padding="5, 0, 0, 0"
-                                                        Text="{Binding Title}" />
-                                                    <CollectionView ItemsSource="{Binding Tags}"
+                                                        Text="{Binding Assignment.Title}" />
+                                                    <CollectionView ItemsSource="{Binding Assignment.Tags}"
                                                                     HeightRequest="35"
                                                                     ItemsUpdatingScrollMode="KeepItemsInView"
                                                                     HorizontalScrollBarVisibility="Never">
@@ -74,11 +89,20 @@
                                                             <LinearItemsLayout Orientation="Horizontal"
                                                                                ItemSpacing="5" />
                                                         </CollectionView.ItemsLayout>
+                                                        <CollectionView.EmptyView>
+                                                            <ContentView>
+                                                                <material:MaterialChip
+                                                                        HorizontalOptions="FillAndExpand"
+                                                                        Text="No tags present"
+                                                                        TextColor="White"
+                                                                        BackgroundColor="#546E7A" />
+                                                            </ContentView>
+                                                        </CollectionView.EmptyView>
                                                         <CollectionView.ItemTemplate>
                                                             <DataTemplate>
                                                                 <material:MaterialChip
                                                                     HorizontalOptions="FillAndExpand"
-                                                                    Text="{Binding Title}"
+                                                                    Text="{Binding Assignment.Title}"
                                                                     TextColor="White"
                                                                     BackgroundColor="#D81B60" />
                                                             </DataTemplate>

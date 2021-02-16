@@ -6,6 +6,7 @@
              xmlns:tabview="clr-namespace:Xam.Plugin.TabView;assembly=Xam.Plugin.TabView"
              xmlns:ff="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
              xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
+             xmlns:control="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
              x:Class="myTask.Views.AssignmentDetailPage">
     <ContentPage.ToolbarItems>
         <ToolbarItem
@@ -33,11 +34,16 @@
                             <StackLayout>
                                 <StackLayout
                                     HorizontalOptions="Center">
-                                    <Image />
+                                    <control:CircleImage 
+                                        Source="{Binding ImageSource}" Aspect="AspectFill"
+                                        VerticalOptions="FillAndExpand"
+                                        WidthRequest="200"
+                                        HeightRequest="200">
+                                    </control:CircleImage>
                                     <material:MaterialButton
                                         ButtonType="Text"
                                         FontSize="9"
-                                        Command="{Binding PickNewIcon}"
+                                        Command="{Binding PickNewIconCommand}"
                                         Text="Choose Icon" />
                                 </StackLayout>
                             </StackLayout>
@@ -95,7 +101,8 @@
                                 <Editor
                                     Focused="VisualElement_OnFocused"
                                     Unfocused="VisualElement_OnUnfocused"
-                                    MinimumHeightRequest="50"
+                                    TextColor="#424242"
+                                    HeightRequest="130"
                                     Text="{Binding Assignment.Description}"
                                     VerticalOptions="FillAndExpand" />
                             </StackLayout>
@@ -179,8 +186,9 @@
                                 <StackLayout Orientation="Horizontal">
                                     <Entry Placeholder="0"
                                            MaxLength="2"
-                                           WidthRequest="40"
+                                           WidthRequest="50"
                                            ReturnCommand="{Binding RequiredTimeCompletedCommand}"
+                                           Unfocused="TimeEntry_OnFocused"
                                            Text="{Binding TimeRequired.Hours}"
                                            Keyboard="Numeric" />
                                     <material:MaterialLabel Text="hours"
@@ -189,7 +197,8 @@
                                                             Margin="0, 0, 10, 0" />
                                     <Entry Placeholder="0"
                                            MaxLength="2"
-                                           WidthRequest="40"
+                                           WidthRequest="50"
+                                           Unfocused="TimeEntry_OnFocused"
                                            ReturnCommand="{Binding RequiredTimeCompletedCommand}"
                                            Text="{Binding TimeRequired.Minutes}"
                                            Keyboard="Numeric" />

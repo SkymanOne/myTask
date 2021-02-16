@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using myTask.Domain.Models;
+using myTask.Helpers;
 using myTask.Services.AssignmentsManager;
 using myTask.Services.Database.Repositories;
 using myTask.Services.Navigation;
@@ -143,7 +144,14 @@ namespace myTask.ViewModels
                 Calendar calendar = new GregorianCalendar(GregorianCalendarTypes.Localized);
                 DetailCommand = new Command<Assignment>(GoToDetailPage);
                 _viewModel = listViewModel;
-                Assignments = dailyTimetable.Assignments;
+                Assignments = dailyTimetable.Assignments
+                    .Select(x => new AssignmentViewModel()
+                {
+                    Assignment = x
+                })
+                    .OrderByDescending(x => x.Assignment.PriorityLevel)
+                    .ThenBy(x => x.Assignment.Kinbens)
+                    .ToList();
                 DailyTimetable = dailyTimetable;
                 _dateTime = calendar.AddDays(new DateTime(DateTime.Now.Year, 1, 1), DailyTimetable.DayNumber-1);
             }
@@ -176,10 +184,10 @@ namespace myTask.ViewModels
                 }
             }
 
-            private List<Assignment> _assignments;
+            private List<AssignmentViewModel> _assignments;
 
             //TODO: use stacks
-            public List<Assignment> Assignments
+            public List<AssignmentViewModel> Assignments
             {
                 get => _assignments;
                 set => SetValue(ref _assignments, value);
@@ -189,13 +197,29 @@ namespace myTask.ViewModels
             {
                 await _viewModel._navigationService.NavigateToAsync<AssignmentDetailViewModel>(assignment);
             }
-            
+        }
 
-            private async Task UpdateListAsync()
+        public class AssignmentViewModel
+        {
+            public Assignment Assignment { get; set; }
+            public ImageSource ImageSource => Assignment.GetImageSource();
+
+            public Color BorderColor
             {
-                var allItemsAsync = await _viewModel._manager.LoadAssignmentsAsync(
-                    DateTime.Now.DayOfWeek);
-                if (allItemsAsync != null) Assignments = allItemsAsync.Assignments.ToList();
+                get
+                {
+                    switch (Assignment.PriorityLevel)
+                    {
+                        case PriorityLevel.High:
+                            return Color.FromHex("#FF0C3E");
+                        case PriorityLevel.Medium:
+                            return Color.FromHex("#F2994A");
+                        case PriorityLevel.Low:
+                            return Color.FromHex("#27AE60");
+                    }
+
+                    return Color.Transparent;
+                }
             }
         }
     }

@@ -1,16 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using myTask.DataStructures;
 using myTask.Domain.Models;
+using myTask.Helpers;
 using myTask.Services.AssignmentsManager;
 using myTask.Services.Database.Repositories;
 using myTask.Services.Navigation;
 using myTask.ViewModels.Base;
 using myTask.Views;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using XF.Material.Forms;
 using XF.Material.Forms.UI.Dialogs;
@@ -27,7 +30,7 @@ namespace myTask.ViewModels
 
         public ICommand UpdateTitleCommand { get; set; }
         public ICommand UpdateCommand { get; set; }
-        public ICommand PickNewIcon { get; set; }
+        public ICommand PickNewIconCommand { get; set; }
         public ICommand DeleteCommand { get; set; }
         public ICommand RequiredTimeCompletedCommand { get; set; }
         public ICommand StartPauseCommand { get; set; }
@@ -60,6 +63,14 @@ namespace myTask.ViewModels
         {
             get => _timeRequired;
             set => SetValue(ref _timeRequired, value);
+        }
+
+        private ImageSource _imageSource;
+
+        public ImageSource ImageSource
+        {
+            get => _imageSource;
+            set => SetValue(ref _imageSource, value);
         }
 
         private string _status;
@@ -107,6 +118,7 @@ namespace myTask.ViewModels
             RequiredTimeCompletedCommand = new Command(RequiredTimeCompleted);
             StartPauseCommand = new Command(StartPauseAssignment);
             FinishCommand = new Command(FinishAssignment);
+            PickNewIconCommand = new Command(PickPicture);
             _assignmentRepository = assignmentRepository;
             _tagRepository = tagRepository;
             _assignmentsManager = assignmentsManager;
@@ -228,6 +240,28 @@ namespace myTask.ViewModels
             }
         }
 
+        private async void PickPicture()
+        {
+            try
+            {
+                var photo = await MediaPicker.PickPhotoAsync();
+                if (photo != null)
+                {
+                    await using (var stream = await photo.OpenReadAsync())
+                    {
+                        MemoryStream memStream = new MemoryStream();
+                        await stream.CopyToAsync(memStream);
+                        Assignment.Icon = memStream.GetBuffer();
+                    }
+                    ImageSource = Assignment.GetImageSource();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
         public override async Task Init(object param)
         {
             using (await MaterialDialog.Instance.LoadingDialogAsync("Loading"))
@@ -252,9 +286,11 @@ namespace myTask.ViewModels
                         Date = Assignment.Deadline.Date,
                         Time = Assignment.Deadline.TimeOfDay,
                     };
+                    ImageSource = Assignment.GetImageSource();
                     TimeRequired = Duration.InitFromMinutes(Assignment.DurationMinutes);
                     SetButtonLabel();
                     OnPropertyChanged(nameof(Time));
+                    OnPropertyChanged(nameof(ImageSource));
                     OnPropertyChanged(nameof(DeadlineModel));
                     OnPropertyChanged(nameof(SubTasks));
                     OnPropertyChanged(nameof(TimeRequired));

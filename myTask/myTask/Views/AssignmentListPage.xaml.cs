@@ -28,7 +28,7 @@ namespace myTask.Views
         private void ListView_OnItemTapped(object sender, ItemTappedEventArgs e)
         {
             if (BindingContext is AssignmentListViewModel viewModel)
-                viewModel.CurrentDay.DetailCommand.Execute(e.Item);
+                viewModel.CurrentDay.DetailCommand.Execute((e.Item as AssignmentListViewModel.AssignmentViewModel).Assignment);
         }
     }
 }

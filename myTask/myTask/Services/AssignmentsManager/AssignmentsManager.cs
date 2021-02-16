@@ -106,7 +106,7 @@ namespace myTask.Services.AssignmentsManager
             TimeSpan timeToDeadline = assignment.Deadline - DateTime.Now;
             var currentDayTimetable =
                 await LoadAssignmentsAsync(DateTime.Now.DayOfWeek, GetCurrentWeekNumber());
-            if (timeToDeadline.TotalDays <= 3 || currentDayTimetable != null)
+            if (timeToDeadline.TotalDays <= 3 && currentDayTimetable != null)
             {
                 if (currentDayTimetable.AvailableTimeInHours * 60 >= assignment.DurationMinutes)
                 {
@@ -129,7 +129,7 @@ namespace myTask.Services.AssignmentsManager
             }
             else
             {
-                result = await MoveAssignmentBackwardsAsync(assignment);
+                result = await MoveAssignmentForwardAsync(assignment);
             }
 
             return result;
@@ -388,7 +388,7 @@ namespace myTask.Services.AssignmentsManager
             var weeksBeforeDeadline = new List<WeeklyTimetable>();
             
             //populate list with week object before the deadline
-            for (int i = 0; i < deadlineWeekNumber-currentWeekNumber; i++)
+            for (int i = 0; i <= deadlineWeekNumber-currentWeekNumber; i++)
             {
                 var week = await LoadWeeklyTimetableAsync(currentWeekNumber + i);
                 weeksBeforeDeadline.Add(week);

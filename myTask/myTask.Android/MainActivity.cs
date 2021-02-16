@@ -8,6 +8,7 @@ using Android.OS;
 using CarouselView.FormsPlugin.Droid;
 using FFImageLoading.Forms.Platform;
 using FFImageLoading.Svg.Forms;
+using ImageCircle.Forms.Plugin.Droid;
 
 namespace myTask.Android
 {
@@ -25,6 +26,7 @@ namespace myTask.Android
             XF.Material.Droid.Material.Init(this, savedInstanceState);
             CarouselViewRenderer.Init();
             CachedImageRenderer.Init(true);
+            ImageCircleRenderer.Init();
             var ignore = typeof(SvgCachedImage);
             LoadApplication(new App());
         }

@@ -34,7 +34,7 @@ namespace myTask.Domain.Models
         public Status Status { get; set; } = Status.Created;
         
         [ForeignKey(typeof(DailyTimetable))]
-        public Guid DayId { get; set; } 
+        public Guid DayId { get; set; }
     }
 
     public enum PriorityLevel

@@ -5,6 +5,7 @@ using myTask.Services.Navigation;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using myTask.Views;
+using XF.Material.Forms.UI.Dialogs;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 
@@ -28,7 +29,10 @@ namespace myTask
         protected override async void OnStart()
         {
             // Handle when your app starts
-            await InitNavigation();
+            using (await MaterialDialog.Instance.LoadingDialogAsync("Loading application"))
+            {
+                await InitNavigation();
+            }
         }
 
         protected override void OnSleep()

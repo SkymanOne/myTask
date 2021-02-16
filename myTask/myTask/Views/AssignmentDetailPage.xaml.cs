@@ -17,14 +17,36 @@ namespace myTask.Views
             InitializeComponent();
         }
 
+
+        private void TimeEntry_OnFocused(object sender, FocusEventArgs e)
+        {
+            if (sender is Entry entry)
+            {
+                entry.ReturnCommand.Execute(e.IsFocused);
+            }
+        }
+
         private void VisualElement_OnFocused(object sender, FocusEventArgs e)
         {
-            (sender as Editor).HeightRequest = 300;
+            if (sender is Editor editor)
+            {
+                editor.Text = "";
+                editor.HeightRequest = 300;
+                editor.BackgroundColor = Color.Snow;
+            }
         }
 
         private void VisualElement_OnUnfocused(object sender, FocusEventArgs e)
         {
-            (sender as Editor).HeightRequest = 30;
+            if (sender is Editor editor)
+            {
+                editor.HeightRequest = 120;
+                editor.BackgroundColor = Color.White;
+                if (string.IsNullOrWhiteSpace(editor.Text) || string.IsNullOrEmpty(editor.Text))
+                {
+                    editor.Text = "No description provided";
+                }
+            }
         }
     }
 }
