@@ -28,6 +28,11 @@ namespace myTask.Domain.Models
         public int Kinbens { get; set; } = 20;
         public DateTime Deadline { get; set; }
         public int DurationMinutes { get; set; }
+        
+        public int TimeTakenToFinishMinutes { get; set; }
+
+        public Status Status { get; set; } = Status.Created;
+        
         [ForeignKey(typeof(DailyTimetable))]
         public Guid DayId { get; set; } 
     }
@@ -37,5 +42,13 @@ namespace myTask.Domain.Models
         Low,
         Medium,
         High
+    }
+
+    public enum Status
+    {
+        Created,
+        Going,
+        Paused,
+        Finished
     }
 }
