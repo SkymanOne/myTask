@@ -3,201 +3,233 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:myTask;assembly=myTask"
+             xmlns:tabview="clr-namespace:Xam.Plugin.TabView;assembly=Xam.Plugin.TabView"
              xmlns:ff="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
              xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
              x:Class="myTask.Views.AssignmentDetailPage">
     <ContentPage.ToolbarItems>
-        <ToolbarItem 
+        <ToolbarItem
             Text="Update"
-            Command="{Binding UpdateCommand}"/>
+            Command="{Binding UpdateCommand}" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <ScrollView>
-            <StackLayout Padding="10">
-                <!-- Icon section Start -->
-                <StackLayout>
-                    <StackLayout
-                        HorizontalOptions="Center">
-                        <Image />
-                        <material:MaterialButton
-                            ButtonType="Text"
-                            FontSize="9"
-                            Command="{Binding PickNewIcon}"
-                            Text="Choose Icon" />
-                    </StackLayout>
-                </StackLayout>
-                <!-- Icon section End -->
-
-                <!-- Title section Start -->
-                <StackLayout
-                    Orientation="Horizontal">
-                    <material:MaterialLabel
-                        HorizontalOptions="Start"
-                        VerticalTextAlignment="Center"
-                        HorizontalTextAlignment="Start"
-                        Text="{Binding Assignment.Title}" />
-                    <material:MaterialButton
-                        ButtonType="Text"
-                        Command="{Binding UpdateTitleCommand}"
-                        Text="change" />
-                </StackLayout>
-                <!-- Title section End -->
-
-                <!-- Tags section Start -->
-                <StackLayout Orientation="Horizontal"
-                             VerticalOptions="Start"
-                             HorizontalOptions="FillAndExpand">
-                    <CollectionView VerticalOptions="Start"
-                                  HorizontalOptions="FillAndExpand"
-                                  HeightRequest="50"
-                                  ItemsUpdatingScrollMode="KeepItemsInView"
-                                  HorizontalScrollBarVisibility="Never"
-                                  ItemsSource="{Binding TagSubViewModels}">
-                        <CollectionView.ItemsLayout>
-                            <LinearItemsLayout Orientation="Horizontal"
-                                               ItemSpacing="5"/>
-                        </CollectionView.ItemsLayout>
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <material:MaterialChip 
-                                    HorizontalOptions="FillAndExpand"
-                                    ActionImage="{Binding ImageSource}"
-                                    Text="{Binding Tag.Title}"
-                                    TextColor="White"
-                                    BackgroundColor="{Binding BackgroundClr}"
-                                    ActionImageTintColor="White"
-                                    ActionImageTappedCommand="{Binding ContextDisplayCommand}">
-                                    </material:MaterialChip>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </StackLayout>
-                <!-- Tags section End -->
-
-                <!-- Description section Start -->
-                <StackLayout
-                    VerticalOptions="FillAndExpand"
-                    Padding="20">
-                    <Editor
-                        Focused="VisualElement_OnFocused"
-                        Unfocused="VisualElement_OnUnfocused"
-                        MinimumHeightRequest="50"
-                        Text="{Binding Assignment.Description}" 
-                        VerticalOptions="FillAndExpand"/>
-                </StackLayout>
-                <!-- Description section End -->
-
-                <!-- Subtasks section Start -->
-                <StackLayout
-                    HorizontalOptions="Start"
-                    VerticalOptions="Start"
-                    BindableLayout.ItemsSource="{Binding SubTasks, Mode=TwoWay}"
-                    BindableLayout.EmptyView="No items present">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate>
-                            <StackLayout Orientation="Horizontal"
-                                         Padding="0, -15, 0, 0">
-                                <CheckBox IsChecked="{Binding Completed, Mode=TwoWay}"
-                                          VerticalOptions="Center">
-                                </CheckBox>
-                                    <material:MaterialLabel Text="{Binding Title}"
-                                                            VerticalOptions="Center" />
+        <tabview:TabViewControl
+            IsSwipeEnabled="True"
+            HeaderBackgroundColor="Transparent"
+            HeaderTabTextColor="Gray"
+            TabSizeOption="*"
+            HeaderSelectionUnderlineThickness="2"
+            TabHeaderSpacing="10"
+            HeaderSelectionUnderlineColor="DimGray"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand">
+            <tabview:TabViewControl.ItemSource>
+                <tabview:TabItem HeaderIcon="icon.png" 
+                                 HeaderText="Details"
+                                 HeaderIconSize="0">
+                    <ScrollView>
+                        <StackLayout Padding="10">
+                            <!-- Icon section Start -->
+                            <StackLayout>
+                                <StackLayout
+                                    HorizontalOptions="Center">
+                                    <Image />
+                                    <material:MaterialButton
+                                        ButtonType="Text"
+                                        FontSize="9"
+                                        Command="{Binding PickNewIcon}"
+                                        Text="Choose Icon" />
+                                </StackLayout>
                             </StackLayout>
+                            <!-- Icon section End -->
 
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </StackLayout>
-                <!-- Subtasks section End -->
-                
-                <!-- Priority Level Section Start -->
-                <StackLayout HorizontalOptions="Fill"
-                             VerticalOptions="Start">
-                    <material:MaterialLabel Text="Priority ⚡️"
-                                            TypeScale="H6"
-                                            Margin="0, 10, 0, 10"
-                                            HorizontalOptions="StartAndExpand"
-                                            VerticalOptions="Start"/>
-                    <StackLayout Orientation="Horizontal"
-                                 HorizontalOptions="Fill">
-                        <material:MaterialLabel Text="Low"
-                                                TypeScale="Body2"
-                                                HorizontalOptions="Start"
-                                                VerticalOptions="Center"/>
-                        <Slider Minimum="0" 
-                                Maximum="1" 
-                                Value="{Binding Assignment.Importance}"
-                                HorizontalOptions="FillAndExpand"
-                                VerticalOptions="Center"/>
-                        <material:MaterialLabel Text="High"
-                                                TypeScale="Body2"
-                                                VerticalOptions="Center"/>
+                            <!-- Title section Start -->
+                            <StackLayout
+                                Orientation="Horizontal">
+                                <material:MaterialLabel
+                                    HorizontalOptions="Start"
+                                    VerticalTextAlignment="Center"
+                                    HorizontalTextAlignment="Start"
+                                    Text="{Binding Assignment.Title}" />
+                                <material:MaterialButton
+                                    ButtonType="Text"
+                                    Command="{Binding UpdateTitleCommand}"
+                                    Text="change" />
+                            </StackLayout>
+                            <!-- Title section End -->
+
+                            <!-- Tags section Start -->
+                            <StackLayout Orientation="Horizontal"
+                                         VerticalOptions="Start"
+                                         HorizontalOptions="FillAndExpand">
+                                <CollectionView VerticalOptions="Start"
+                                                HorizontalOptions="FillAndExpand"
+                                                HeightRequest="50"
+                                                ItemsUpdatingScrollMode="KeepItemsInView"
+                                                HorizontalScrollBarVisibility="Never"
+                                                ItemsSource="{Binding TagSubViewModels}">
+                                    <CollectionView.ItemsLayout>
+                                        <LinearItemsLayout Orientation="Horizontal"
+                                                           ItemSpacing="5" />
+                                    </CollectionView.ItemsLayout>
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <material:MaterialChip
+                                                HorizontalOptions="FillAndExpand"
+                                                ActionImage="{Binding ImageSource}"
+                                                Text="{Binding Tag.Title}"
+                                                TextColor="White"
+                                                BackgroundColor="{Binding BackgroundClr}"
+                                                ActionImageTintColor="White"
+                                                ActionImageTappedCommand="{Binding ContextDisplayCommand}" />
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </StackLayout>
+                            <!-- Tags section End -->
+
+                            <!-- Description section Start -->
+                            <StackLayout
+                                VerticalOptions="FillAndExpand"
+                                Padding="20">
+                                <Editor
+                                    Focused="VisualElement_OnFocused"
+                                    Unfocused="VisualElement_OnUnfocused"
+                                    MinimumHeightRequest="50"
+                                    Text="{Binding Assignment.Description}"
+                                    VerticalOptions="FillAndExpand" />
+                            </StackLayout>
+                            <!-- Description section End -->
+
+                            <!-- Subtasks section Start -->
+                            <StackLayout
+                                HorizontalOptions="Start"
+                                VerticalOptions="Start"
+                                BindableLayout.ItemsSource="{Binding SubTasks, Mode=TwoWay}"
+                                BindableLayout.EmptyView="No items present">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackLayout Orientation="Horizontal"
+                                                     Padding="0, -15, 0, 0">
+                                            <CheckBox IsChecked="{Binding Completed, Mode=TwoWay}"
+                                                      VerticalOptions="Center" />
+                                            <material:MaterialLabel Text="{Binding Title}"
+                                                                    VerticalOptions="Center" />
+                                        </StackLayout>
+
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </StackLayout>
+                            <!-- Subtasks section End -->
+
+                            <!-- Priority Level Section Start -->
+                            <StackLayout HorizontalOptions="Fill"
+                                         VerticalOptions="Start">
+                                <material:MaterialLabel Text="Priority ⚡️"
+                                                        TypeScale="H6"
+                                                        Margin="0, 10, 0, 10"
+                                                        HorizontalOptions="StartAndExpand"
+                                                        VerticalOptions="Start" />
+                                <StackLayout Orientation="Horizontal"
+                                             HorizontalOptions="Fill">
+                                    <material:MaterialLabel Text="Low"
+                                                            TypeScale="Body2"
+                                                            HorizontalOptions="Start"
+                                                            VerticalOptions="Center" />
+                                    <Slider Minimum="0"
+                                            Maximum="1"
+                                            Value="{Binding Assignment.Importance}"
+                                            HorizontalOptions="FillAndExpand"
+                                            VerticalOptions="Center" />
+                                    <material:MaterialLabel Text="High"
+                                                            TypeScale="Body2"
+                                                            VerticalOptions="Center" />
+                                </StackLayout>
+
+                            </StackLayout>
+                            <!-- Priority Level Section End -->
+
+                            <!--Deadline Section Start -->
+                            <StackLayout>
+                                <material:MaterialLabel Text="Deadline 🔥️"
+                                                        TypeScale="H6"
+                                                        Margin="0, 10, 0, 10"
+                                                        HorizontalOptions="StartAndExpand"
+                                                        VerticalOptions="Start" />
+                                <material:MaterialLabel Text="Date"
+                                                        TypeScale="Body2"
+                                                        Margin="0, 10" />
+                                <material:MaterialDatePicker Date="{Binding DeadlineModel.Date}"
+                                                             Format="dd MMMM, yyyy"
+                                                             MinimumDate="{Binding DeadlineModel.MinDate}" />
+                                <material:MaterialLabel Text="Time"
+                                                        TypeScale="Body2"
+                                                        Margin="0, 10" />
+                                <material:MaterialTimePicker Time="{Binding DeadlineModel.Time}" />
+                            </StackLayout>
+                            <!-- Deadline Section End -->
+
+                            <!-- Time required section start -->
+                            <StackLayout>
+                                <material:MaterialLabel Text="Time Required ⏰️"
+                                                        TypeScale="H6"
+                                                        Margin="0, 10, 0, 10"
+                                                        HorizontalOptions="StartAndExpand"
+                                                        VerticalOptions="Start" />
+                                <StackLayout Orientation="Horizontal">
+                                    <Entry Placeholder="0"
+                                           MaxLength="2"
+                                           WidthRequest="40"
+                                           ReturnCommand="{Binding RequiredTimeCompletedCommand}"
+                                           Text="{Binding TimeRequired.Hours}"
+                                           Keyboard="Numeric" />
+                                    <material:MaterialLabel Text="hours"
+                                                            TypeScale="Caption"
+                                                            VerticalOptions="End"
+                                                            Margin="0, 0, 10, 0" />
+                                    <Entry Placeholder="0"
+                                           MaxLength="2"
+                                           WidthRequest="40"
+                                           ReturnCommand="{Binding RequiredTimeCompletedCommand}"
+                                           Text="{Binding TimeRequired.Minutes}"
+                                           Keyboard="Numeric" />
+                                    <material:MaterialLabel Text="minutes"
+                                                            TypeScale="Caption"
+                                                            VerticalOptions="End"
+                                                            Margin="0, 0, 10, 0" />
+                                </StackLayout>
+                            </StackLayout>
+                            <!-- Time required section end -->
+
+                            <!-- Delete the task section START -->
+                            <StackLayout>
+                                <material:MaterialButton
+                                    Text="Delete the task"
+                                    ButtonType="Outlined"
+                                    FontSize="Small"
+                                    Command="{Binding DeleteCommand}" />
+                            </StackLayout>
+                            <!-- Delete the task section END -->
+                        </StackLayout>
+                    </ScrollView>
+                </tabview:TabItem>
+                <tabview:TabItem
+                    HeaderIcon="icon.png"
+                    HeaderIconSize="0"
+                    HeaderText="Timer">
+                    <StackLayout Padding="10">
+                       <StackLayout VerticalOptions="CenterAndExpand"
+                                    HorizontalOptions="CenterAndExpand">
+                           <material:MaterialLabel Text="{Binding Timer.Time}"
+                                                   TypeScale="H4"/>
+                           <material:MaterialButton Text="{Binding StatusButton}"
+                                                    Command="{Binding StartPauseCommand}"/>
+                           <material:MaterialButton Text="Stop"
+                                                    Command="{Binding StartCommand}"/>
+                       </StackLayout>
                     </StackLayout>
-                    
-                </StackLayout>
-                <!-- Priority Level Section End -->
-                
-                <!--Deadline Section Start -->
-                <StackLayout>
-                    <material:MaterialLabel Text="Deadline 🔥️"
-                                            TypeScale="H6"
-                                            Margin="0, 10, 0, 10"
-                                            HorizontalOptions="StartAndExpand"
-                                            VerticalOptions="Start"/>
-                    <material:MaterialLabel Text="Date"
-                                            TypeScale="Body2"
-                                            Margin="0, 10"/>
-                    <material:MaterialDatePicker Date="{Binding DeadlineModel.Date}"
-                                                 Format="dd MMMM, yyyy"
-                                                 MinimumDate="{Binding DeadlineModel.MinDate}"/>
-                    <material:MaterialLabel Text="Time"
-                                            TypeScale="Body2"
-                                            Margin="0, 10"/>
-                    <material:MaterialTimePicker Time="{Binding DeadlineModel.Time}"/>
-                </StackLayout>
-                <!-- Deadline Section End -->
-                
-                <!-- Time required section start -->
-                <StackLayout>
-                    <material:MaterialLabel Text="Time Required ⏰️"
-                                            TypeScale="H6"
-                                            Margin="0, 10, 0, 10"
-                                            HorizontalOptions="StartAndExpand"
-                                            VerticalOptions="Start"/>
-                    <StackLayout Orientation="Horizontal">
-                        <Entry Placeholder="0"
-                               MaxLength="2"
-                               WidthRequest="40"
-                               ReturnCommand="{Binding RequiredTimeCompletedCommand}"
-                               Text="{Binding TimeRequired.Hours}"
-                               Keyboard="Numeric"/>
-                        <material:MaterialLabel Text="hours"
-                                                TypeScale="Caption"
-                                                VerticalOptions="End"
-                                                Margin="0, 0, 10, 0"/>
-                        <Entry Placeholder="0"
-                               MaxLength="2"
-                               WidthRequest="40"
-                               ReturnCommand="{Binding RequiredTimeCompletedCommand}"
-                               Text="{Binding TimeRequired.Minutes}"
-                               Keyboard="Numeric"/>
-                        <material:MaterialLabel Text="minutes"
-                                                TypeScale="Caption"
-                                                VerticalOptions="End"
-                                                Margin="0, 0, 10, 0"/>
-                    </StackLayout>
-                </StackLayout>
-                <!-- Time required section end -->
-                
-                <!-- Delete the task section START -->
-                <StackLayout>
-                    <material:MaterialButton 
-                        Text="Delete the task"
-                        ButtonType="Outlined"
-                        FontSize="Small"
-                        Command="{Binding DeleteCommand}"/>
-                </StackLayout>
-                <!-- Delete the task section END -->
-            </StackLayout>
-        </ScrollView>
+                </tabview:TabItem>
+            </tabview:TabViewControl.ItemSource>
+        </tabview:TabViewControl>
     </ContentPage.Content>
 </ContentPage>

@@ -325,10 +325,10 @@ namespace myTask.Services.AssignmentsManager
         {
             //get daily timetables before deadline
             var daysBeforeDeadline = await _repWrapper.DailyTimetableRepo.GetItemsByQueryAsync(
-                x => x.DayNumber <= assignment.Deadline.DayOfYear);
+                x => x.DayNumber <= assignment.Deadline.DayOfYear && x.DayNumber >= _calendar.GetDayOfYear(DateTime.Now));
             
             //as we increase number of assignments we want to move on the day
-            //we have to indicate that the number of assignments to move
+            //we need to indicate that the number of assignments to move
             //is greater than the number of existing assignments on any day
             bool overflowedNumberOfAssignments = false;
 
@@ -365,7 +365,7 @@ namespace myTask.Services.AssignmentsManager
             }
 
             //if none of the assignments can be moved forward, so we can free enough time
-            //increase the number of assignments on the dat to move and repeat the process recursively
+            //increase the number of assignments on the day to move and repeat the process recursively
             if (!lowPriorityAssignments.SelectMany(x => x).Any() && !overflowedNumberOfAssignments)
             {
                 numberOfTasks++;
