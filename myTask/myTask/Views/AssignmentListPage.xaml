@@ -5,6 +5,7 @@
              xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
              x:Class="myTask.Views.AssignmentListPage"
              xmlns:control="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
+             xmlns:car="clr-namespace:CarouselView.FormsPlugin.Abstractions;assembly=CarouselView.FormsPlugin.Abstractions"
              NavigationPage.HasNavigationBar="false"
              Title="Assignments">
     <ContentPage.Content>
@@ -33,16 +34,16 @@
                         HeightRequest="10"
                         Command="{Binding ResetCommand}" />
                 </Grid>
-                <CarouselView
+                <car:CarouselViewControl
                     ItemsSource="{Binding Days}"
-                    Loop="False"
+                    SelectedItem="{Binding CurrentDay}"
                     Margin="0, 5, 0, 0"
+                    InfiniteScrolling="False"
                     VerticalOptions="FillAndExpand"
                     HorizontalOptions="FillAndExpand"
-                    CurrentItemChangedCommand="{Binding ItemChangedCommand}"
-                    Position="{Binding Position}"
-                    CurrentItem="{Binding CurrentItem, Mode=TwoWay}">
-                    <CarouselView.ItemTemplate>
+                    PositionSelectedCommand="{Binding ItemChangedCommand}"
+                    Position="{Binding Position}">
+                    <car:CarouselViewControl.ItemTemplate>
                         <DataTemplate>
                             <ListView ItemsSource="{Binding Assignments}"
                                       HasUnevenRows="True"
@@ -115,8 +116,8 @@
                                 </ListView.ItemTemplate>
                             </ListView>
                         </DataTemplate>
-                    </CarouselView.ItemTemplate>
-                </CarouselView>
+                    </car:CarouselViewControl.ItemTemplate>
+                </car:CarouselViewControl>
             </StackLayout>
             <material:MaterialButton
                 AbsoluteLayout.LayoutBounds="0.95, 0.97, 70, 70"

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CarouselView.FormsPlugin.Abstractions;
 using myTask.Domain.Models;
 using myTask.Helpers;
 using myTask.Services.AssignmentsManager;
@@ -39,7 +40,7 @@ namespace myTask.ViewModels
         public int Position
         {
             get => _position;
-            set => _position = value;
+            set => SetValue(ref _position, value);
         }
 
         private string _currentDate;
@@ -60,7 +61,7 @@ namespace myTask.ViewModels
         {
             CreateNewCommand = new Command(CreateNewPage);
             ResetCommand = new Command(ResetAsync);
-            ItemChangedCommand = new Command(ItemChanged);
+            ItemChangedCommand = new Command<PositionSelectedEventArgs>(ItemChanged);
             _configManager = userConfigManager;
             _manager = manager;
         }
@@ -92,8 +93,9 @@ namespace myTask.ViewModels
             await _navigationService.NavigateToAsync<AssignmentDetailViewModel>(assignment);
         }
 
-        private async void ItemChanged()
+        private async void ItemChanged(PositionSelectedEventArgs e)
         { 
+            if (Days == null) return;
             var currentDay = Days[Position];
             CurrentDate = currentDay.CurrentDate;
             OnPropertyChanged(nameof(CurrentDate));
