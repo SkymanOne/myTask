@@ -55,7 +55,7 @@
         <PackageReference Include="Xam.Plugins.Forms.ImageCircle" Version="3.0.0.5" />
         <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
         <PackageReference Include="Xamarin.FFImageLoading.Svg.Forms" Version="2.4.11.982" />
-        <PackageReference Include="Xamarin.Forms" Version="5.0.0.1905" />
+        <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
         <PackageReference Include="Xamarin.Google.Android.Material" Version="1.2.1.1" />
         <PackageReference Include="Xamarin.AndroidX.AppCompat" Version="1.2.0.5" />
         <PackageReference Include="Xamarin.AndroidX.Legacy.Support.V4" Version="1.0.0.5" />
@@ -76,6 +76,7 @@
         <None Include="Properties\AndroidManifest.xml" />
     </ItemGroup>
     <ItemGroup>
+        <AndroidResource Include="Resources\drawable\add.png" />
         <AndroidResource Include="Resources\drawable\baseline_add_white_18dp.png" />
         <AndroidResource Include="Resources\drawable\baseline_build_white_18dp.png" />
         <AndroidResource Include="Resources\drawable\baseline_clear_white_18dp.png" />

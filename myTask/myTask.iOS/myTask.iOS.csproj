@@ -115,7 +115,7 @@
         <PackageReference Include="Xam.Plugins.Forms.ImageCircle" Version="3.0.0.5" />
         <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
         <PackageReference Include="Xamarin.FFImageLoading.Svg.Forms" Version="2.4.11.982" />
-        <PackageReference Include="Xamarin.Forms" Version="5.0.0.1905" />
+        <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
         <PackageReference Include="XF.Material" Version="1.7.7" />
     </ItemGroup>
     <ItemGroup>
@@ -125,11 +125,16 @@
         </ProjectReference>
     </ItemGroup>
     <ItemGroup>
+      <BundleResource Include="Resources\add.png" />
+      <BundleResource Include="Resources\analytics.png" />
+      <BundleResource Include="Resources\assignment.png" />
       <BundleResource Include="Resources\baseline_add_white_18dp.png" />
       <BundleResource Include="Resources\baseline_build_white_18dp.png" />
       <BundleResource Include="Resources\baseline_clear_white_18dp.png" />
+      <BundleResource Include="Resources\calendar.png" />
       <BundleResource Include="Resources\loading_animation.json" />
       <BundleResource Include="Resources\placeholder.png" />
+      <BundleResource Include="Resources\social.png" />
       <BundleResource Include="Resources\xf_arrow_dropdown.png" />
       <BundleResource Include="Resources\xf_arrow_dropdown@2x.png" />
       <BundleResource Include="Resources\xf_arrow_dropdown@3x.png" />

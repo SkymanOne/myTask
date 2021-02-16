@@ -15,6 +15,7 @@ namespace myTask.Views
         public TimetablePage()
         {
             InitializeComponent();
+            IconImageSource = ImageSource.FromFile("calendar.png");
         }
     }
 }

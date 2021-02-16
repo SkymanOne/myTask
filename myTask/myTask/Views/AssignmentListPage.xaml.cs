@@ -16,6 +16,7 @@ namespace myTask.Views
         public AssignmentListPage()
         {
             InitializeComponent();
+            IconImageSource = ImageSource.FromFile("assignment.png");
         }
 
         private void ListView_OnItemSelected(object sender, SelectedItemChangedEventArgs e)

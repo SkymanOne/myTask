@@ -253,7 +253,7 @@ namespace myTask.Services.AssignmentsManager
                 }
                 */
                 #endregion
-                
+                //TODO: test
                 //retrieve less important assignments that can potentially be moved forward
                 var lessImportantAssignments = await GetLowPriorityAssignmentsOnDay(assignment);
                 //if there are no any ones => the assignments can't be moved forward

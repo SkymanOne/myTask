@@ -41,6 +41,7 @@
                     InfiniteScrolling="False"
                     VerticalOptions="FillAndExpand"
                     HorizontalOptions="FillAndExpand"
+                    ShowIndicators="True"
                     PositionSelectedCommand="{Binding ItemChangedCommand}"
                     Position="{Binding Position}">
                     <car:CarouselViewControl.ItemTemplate>
@@ -103,7 +104,7 @@
                                                             <DataTemplate>
                                                                 <material:MaterialChip
                                                                     HorizontalOptions="FillAndExpand"
-                                                                    Text="{Binding Assignment.Title}"
+                                                                    Text="{Binding Title}"
                                                                     TextColor="White"
                                                                     BackgroundColor="#D81B60" />
                                                             </DataTemplate>
@@ -126,8 +127,8 @@
                 Command="{Binding CreateNewCommand}"
                 TextColor="Black"
                 FontSize="40"
-                WidthRequest="100"
-                BackgroundColor="Yellow"
+                WidthRequest="200"
+                BackgroundColor="#FFC400"
                 HeightRequest="100"
                 CornerRadius="50" />
         </AbsoluteLayout>

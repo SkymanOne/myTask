@@ -151,6 +151,7 @@ namespace myTask.ViewModels
                 {
                     Assignment = x
                 })
+                    .Where(x => x.Assignment.Status != Status.Finished)
                     .OrderByDescending(x => x.Assignment.PriorityLevel)
                     .ThenBy(x => x.Assignment.Kinbens)
                     .ToList();

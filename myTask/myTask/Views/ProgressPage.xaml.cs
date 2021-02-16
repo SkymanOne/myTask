@@ -15,6 +15,7 @@ namespace myTask.Views
         public ProgressPage()
         {
             InitializeComponent();
+            IconImageSource = ImageSource.FromFile("analytics.png");
         }
     }
 }

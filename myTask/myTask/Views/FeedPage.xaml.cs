@@ -15,6 +15,7 @@ namespace myTask.Views
         public FeedPage()
         {
             InitializeComponent();
+            IconImageSource = ImageSource.FromFile("social.png");
         }
     }
 }
