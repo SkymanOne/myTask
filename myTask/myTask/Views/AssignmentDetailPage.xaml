@@ -220,12 +220,18 @@
                     <StackLayout Padding="10">
                        <StackLayout VerticalOptions="CenterAndExpand"
                                     HorizontalOptions="CenterAndExpand">
-                           <material:MaterialLabel Text="{Binding Timer.Time}"
+                           <material:MaterialLabel
+                               HorizontalOptions="Center"
+                               Text="{Binding Time}"
                                                    TypeScale="H4"/>
-                           <material:MaterialButton Text="{Binding StatusButton}"
-                                                    Command="{Binding StartPauseCommand}"/>
-                           <material:MaterialButton Text="Stop"
-                                                    Command="{Binding StartCommand}"/>
+                           <material:MaterialButton 
+                               HorizontalOptions="Center"
+                               Text="{Binding StatusButton, Mode=TwoWay}"
+                               Command="{Binding StartPauseCommand}"/>
+                           <material:MaterialButton 
+                               HorizontalOptions="Center"
+                               Text="Stop"
+                               Command="{Binding FinishCommand}"/>
                        </StackLayout>
                     </StackLayout>
                 </tabview:TabItem>

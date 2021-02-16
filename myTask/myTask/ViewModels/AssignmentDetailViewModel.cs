@@ -29,8 +29,9 @@ namespace myTask.ViewModels
         public ICommand UpdateCommand { get; set; }
         public ICommand PickNewIcon { get; set; }
         public ICommand DeleteCommand { get; set; }
-        
         public ICommand RequiredTimeCompletedCommand { get; set; }
+        public ICommand StartPauseCommand { get; set; }
+        public ICommand FinishCommand { get; set; }
 
 
         // UPDATE does not work
@@ -61,6 +62,40 @@ namespace myTask.ViewModels
             set => SetValue(ref _timeRequired, value);
         }
 
+        private string _status;
+
+        public string StatusButton
+        {
+            get => _status;
+            set => SetValue(ref _status, value);
+        }
+        
+        private void SetButtonLabel()
+        {
+            if (_assignment == null)
+            {
+                StatusButton = "Start";
+                OnPropertyChanged(nameof(StatusButton));
+                return;
+            }
+            switch (_assignment.Status)
+            {
+                case Status.Created:
+                case Status.Finished:
+                    StatusButton = "Start";
+                    break;
+                case Status.Paused:
+                    StatusButton = "Resume";
+                    break;
+                default:
+                    StatusButton = "Pause";
+                    break;
+            }
+            OnPropertyChanged(nameof(StatusButton));
+        }
+
+        public string Time => _assignment == null ? "00:00:00" : $"{(_assignment.TimeElapsedSeconds / 3600):00}:{((_assignment.TimeElapsedSeconds % 3600) / 60):00}:{(_assignment.TimeElapsedSeconds % 3600 % 60):00}";
+
         public AssignmentDetailViewModel(INavigationService navigationService, 
             IRepository<Assignment> assignmentRepository,
             IRepository<Tag> tagRepository,
@@ -70,6 +105,8 @@ namespace myTask.ViewModels
             UpdateTitleCommand = new Command(UpdateLabelAsync);
             DeleteCommand = new Command(DeleteAsync);
             RequiredTimeCompletedCommand = new Command(RequiredTimeCompleted);
+            StartPauseCommand = new Command(StartPauseAssignment);
+            FinishCommand = new Command(FinishAssignment);
             _assignmentRepository = assignmentRepository;
             _tagRepository = tagRepository;
             _assignmentsManager = assignmentsManager;
@@ -150,6 +187,47 @@ namespace myTask.ViewModels
             else await MaterialDialog.Instance.SnackbarAsync("Invalid title", 2000);
         }
 
+        private async void StartPauseAssignment()
+        {
+            if (Assignment.Status != Status.Going)
+            {
+                Assignment.Status = Status.Going;
+                SetButtonLabel();
+                Device.StartTimer(new TimeSpan(0, 0, 1), () =>
+                {
+                    Assignment.TimeElapsedSeconds++;
+                    OnPropertyChanged(nameof(Time));
+                    return Assignment.Status == Status.Going;
+                });
+            }
+            else
+            {
+                Assignment.Status = Status.Paused;
+                SetButtonLabel();
+            }
+            await _assignmentRepository.UpdateItemAsync(_assignment);
+        }
+
+        private async void FinishAssignment()
+        {
+            if (Assignment.Status == Status.Going || Assignment.Status == Status.Paused)
+            {
+                bool confirmed = await MaterialDialog.Instance.ConfirmAsync("Would you like to finish the assignment",
+                    "Confirmation", "Yes", "No") ?? false;
+                if (confirmed)
+                {
+                    Assignment.Status = Status.Finished;
+                    SetButtonLabel();
+                    await _assignmentRepository.UpdateItemAsync(_assignment);
+                }
+            }
+            else
+            {
+                await MaterialDialog.Instance.SnackbarAsync(
+                    "The assignments has either already been finished or not started");
+            }
+        }
+
         public override async Task Init(object param)
         {
             if (param is Assignment assignment)
@@ -173,6 +251,8 @@ namespace myTask.ViewModels
                     Time = Assignment.Deadline.TimeOfDay,
                 };
                 TimeRequired = Duration.InitFromMinutes(Assignment.DurationMinutes);
+                SetButtonLabel();
+                OnPropertyChanged(nameof(Time));
                 OnPropertyChanged(nameof(DeadlineModel));
                 OnPropertyChanged(nameof(SubTasks));
                 OnPropertyChanged(nameof(TimeRequired));

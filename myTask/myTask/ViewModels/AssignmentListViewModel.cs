@@ -111,7 +111,7 @@ namespace myTask.ViewModels
                 var assignment = new Assignment()
                 {
                     Title = title,
-                    Deadline = DateTime.Now + TimeSpan.FromMinutes(20)
+                    Deadline = DateTime.Now + TimeSpan.FromMinutes(20),
                 };
                 GoToDetailPage(assignment);
             }

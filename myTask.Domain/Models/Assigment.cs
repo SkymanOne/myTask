@@ -29,7 +29,7 @@ namespace myTask.Domain.Models
         public DateTime Deadline { get; set; }
         public int DurationMinutes { get; set; }
         
-        public int TimeTakenToFinishMinutes { get; set; }
+        public int TimeElapsedSeconds { get; set; }
 
         public Status Status { get; set; } = Status.Created;
         
