@@ -113,7 +113,7 @@
         <PackageReference Include="SQLiteNetExtensions.Async" Version="2.1.0" />
         <PackageReference Include="Xam.Plugin.TabView" Version="1.1.1" />
         <PackageReference Include="Xamarin.FFImageLoading.Svg.Forms" Version="2.4.11.982" />
-        <PackageReference Include="Xamarin.Forms" Version="5.0.0.1874" />
+        <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
         <PackageReference Include="XF.Material" Version="1.7.7" />
     </ItemGroup>
     <ItemGroup>

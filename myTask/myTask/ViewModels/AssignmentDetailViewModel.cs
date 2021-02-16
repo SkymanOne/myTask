@@ -80,12 +80,12 @@ namespace myTask.ViewModels
             }
             switch (_assignment.Status)
             {
+                case Status.Paused:
+                    StatusButton = "Resume";
+                    break;
                 case Status.Created:
                 case Status.Finished:
                     StatusButton = "Start";
-                    break;
-                case Status.Paused:
-                    StatusButton = "Resume";
                     break;
                 default:
                     StatusButton = "Pause";
@@ -230,37 +230,40 @@ namespace myTask.ViewModels
 
         public override async Task Init(object param)
         {
-            if (param is Assignment assignment)
+            using (await MaterialDialog.Instance.LoadingDialogAsync("Loading"))
             {
-                Assignment = assignment;
-                var subTasksFromBlobbed = Assignment.SubTasks ?? new List<SubTask>
+                if (param is Assignment assignment)
                 {
-                    new SubTask("Hello"),
-                    new SubTask("World")
-                };
-                SubTasks = new ObservableCollection<SubTask>(subTasksFromBlobbed);
+                    Assignment = assignment;
+                    var subTasksFromBlobbed = Assignment.SubTasks ?? new List<SubTask>
+                    {
+                        new SubTask("Hello"),
+                        new SubTask("World")
+                    };
+                    SubTasks = new ObservableCollection<SubTask>(subTasksFromBlobbed);
 
-                TagSubViewModels = new ObservableCollection<TagSubViewModel>(
-                    assignment.Tags.Select(x => new TagSubViewModel(this, x)))
+                    TagSubViewModels = new ObservableCollection<TagSubViewModel>(
+                        assignment.Tags.Select(x => new TagSubViewModel(this, x)))
+                    {
+                        new TagSubViewModel(this, new Tag() {Id = Guid.Empty, Title = "Add new"})
+                    };
+                    DeadlineModel = new Deadline()
+                    {
+                        Date = Assignment.Deadline.Date,
+                        Time = Assignment.Deadline.TimeOfDay,
+                    };
+                    TimeRequired = Duration.InitFromMinutes(Assignment.DurationMinutes);
+                    SetButtonLabel();
+                    OnPropertyChanged(nameof(Time));
+                    OnPropertyChanged(nameof(DeadlineModel));
+                    OnPropertyChanged(nameof(SubTasks));
+                    OnPropertyChanged(nameof(TimeRequired));
+                    OnPropertyChanged(nameof(TagSubViewModels));
+                }
+                else
                 {
-                    new TagSubViewModel(this, new Tag() {Id = Guid.Empty, Title = "Add new"})
-                };
-                DeadlineModel = new Deadline()
-                {
-                    Date = Assignment.Deadline.Date,
-                    Time = Assignment.Deadline.TimeOfDay,
-                };
-                TimeRequired = Duration.InitFromMinutes(Assignment.DurationMinutes);
-                SetButtonLabel();
-                OnPropertyChanged(nameof(Time));
-                OnPropertyChanged(nameof(DeadlineModel));
-                OnPropertyChanged(nameof(SubTasks));
-                OnPropertyChanged(nameof(TimeRequired));
-                OnPropertyChanged(nameof(TagSubViewModels));
-            }
-            else
-            {
-                await base.Init(param);
+                    await base.Init(param);
+                }
             }
         }
 

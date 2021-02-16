@@ -15,12 +15,12 @@
     <ContentPage.Content>
         <tabview:TabViewControl
             IsSwipeEnabled="True"
-            HeaderBackgroundColor="Transparent"
-            HeaderTabTextColor="Gray"
+            HeaderBackgroundColor="#3949AB"
+            HeaderTabTextColor="White"
             TabSizeOption="*"
             HeaderSelectionUnderlineThickness="2"
             TabHeaderSpacing="10"
-            HeaderSelectionUnderlineColor="DimGray"
+            HeaderSelectionUnderlineColor="#FFC400"
             HorizontalOptions="FillAndExpand"
             VerticalOptions="FillAndExpand">
             <tabview:TabViewControl.ItemSource>
@@ -219,18 +219,25 @@
                     HeaderText="Timer">
                     <StackLayout Padding="10">
                        <StackLayout VerticalOptions="CenterAndExpand"
-                                    HorizontalOptions="CenterAndExpand">
+                                    Spacing="10"
+                                    HorizontalOptions="Fill">
                            <material:MaterialLabel
                                HorizontalOptions="Center"
                                Text="{Binding Time}"
                                                    TypeScale="H4"/>
-                           <material:MaterialButton 
+                           <Button
                                HorizontalOptions="Center"
+                               BackgroundColor="#3949AB"
+                               WidthRequest="100"
+                               TextColor="White"
                                Text="{Binding StatusButton, Mode=TwoWay}"
                                Command="{Binding StartPauseCommand}"/>
-                           <material:MaterialButton 
+                           <Button
                                HorizontalOptions="Center"
                                Text="Stop"
+                               WidthRequest="100"
+                               TextColor="White"
+                               BackgroundColor="#3949AB"
                                Command="{Binding FinishCommand}"/>
                        </StackLayout>
                     </StackLayout>
