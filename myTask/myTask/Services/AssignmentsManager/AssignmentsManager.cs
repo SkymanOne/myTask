@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -103,6 +104,14 @@ namespace myTask.Services.AssignmentsManager
         {
             var result = await _repWrapper.AssignmentRepo.CreateItemAsync(assignment);
             if (result == false) return result;
+            result = await AllocateTimeSlot(assignment);
+            return result;
+        }
+
+
+        private async Task<bool> AllocateTimeSlot(Assignment assignment)
+        {
+            bool result;
             TimeSpan timeToDeadline = assignment.Deadline - DateTime.Now;
             var currentDayTimetable =
                 await LoadAssignmentsAsync(DateTime.Now.DayOfWeek, GetCurrentWeekNumber());
@@ -170,12 +179,8 @@ namespace myTask.Services.AssignmentsManager
 
         public async Task<bool> UpdateAssignmentAsync(Assignment assignment)
         {
-            await _repWrapper.AssignmentRepo.UpdateItemAsync(assignment);
-            var currentDayTimetable =
-                await LoadAssignmentsAsync(DateTime.Now.DayOfWeek, GetCurrentWeekNumber());
-            await UpdateTimetableAsync(currentDayTimetable);
-            CalculatePriorityCoefficient(ref assignment, currentDayTimetable);
-            CalculateKinbens(ref assignment, currentDayTimetable);
+            await RemoveAssignmentFromOldTimetable(assignment);
+            await AllocateTimeSlot(assignment);
             return await _repWrapper.AssignmentRepo.UpdateItemAsync(assignment);
         }
 
@@ -185,7 +190,7 @@ namespace myTask.Services.AssignmentsManager
         }
         
 
-        public async Task<bool> MoveAssignmentForwardAsync(Assignment assignment)
+        public async Task<bool> MoveAssignmentForwardAsync(Assignment assignment, bool nextDay = false)
         {
             //check if there are any days with enough free time for the assignment
             var vacantDaysBeforeDeadline = await GetVacantDaysBeforeDeadline(assignment);
@@ -200,11 +205,22 @@ namespace myTask.Services.AssignmentsManager
                 CalculatePriorityCoefficient(ref assignment, currentDayTimetable);
                 CalculateKinbens(ref assignment, currentDayTimetable);
 
-                await RemoveAssignmentFromOldTimetable(assignment);
+                var oldDay = await RemoveAssignmentFromOldTimetable(assignment);
                 
                 //get the first available day and add the assignment to it
-                var availableDay = daysBeforeDeadlineList
-                    .First(x => x.AvailableTimeInHours * 60 >= assignment.DurationMinutes);
+                DailyTimetable? availableDay;
+                if (nextDay == false)
+                {
+                    availableDay = daysBeforeDeadlineList
+                        .First(x => x.AvailableTimeInHours * 60 >= assignment.DurationMinutes);
+                }
+                else
+                {
+                    availableDay = daysBeforeDeadlineList
+                        .First(x => x.AvailableTimeInHours * 60 >= assignment.DurationMinutes
+                        && x.DayNumber != oldDay!.DayNumber);
+                }
+
                 availableDay.Assignments.Add(assignment);
                 
                 await _repWrapper.AssignmentRepo.UpdateItemAsync(assignment);
@@ -268,18 +284,21 @@ namespace myTask.Services.AssignmentsManager
                 //each group represent assignments on the same day
                 foreach (var groupOfAssignments in lessImportantAssignments)
                 {
+                    if (groupOfAssignments == null || !groupOfAssignments.Any())
+                        continue;
+                    
                     //there may be a case when one of the assignments on the day can't be moved forward,
                     //then we should check the next day
                     //otherwise, no need to check other days
                     //so we quit the loop
-                    if (beenMovedSuccessfully)
-                    {
-                        freedDayId = groupOfAssignments.Select(x => x.DayId).First();
-                        break;
-                    }
+                    freedDayId = groupOfAssignments.Select(x => x.DayId).First();
                     foreach (var assignmentToMove in groupOfAssignments)
                     {
-                        beenMovedSuccessfully = await MoveAssignmentForwardAsync(assignmentToMove);
+                        beenMovedSuccessfully = await MoveAssignmentForwardAsync(assignmentToMove, true);
+                    }
+                    if (beenMovedSuccessfully)
+                    {
+                        break;
                     }
                 }
                 
@@ -306,26 +325,27 @@ namespace myTask.Services.AssignmentsManager
         }
 
 
-        private async Task<bool> RemoveAssignmentFromOldTimetable(Assignment assignment)
+        private async Task<DailyTimetable?> RemoveAssignmentFromOldTimetable(Assignment assignment)
         {
             if (assignment.DayId != default)
             {
                 var previousDay = await _repWrapper.DailyTimetableRepo.GetItemAsync(
                     x => x.Id == assignment.DayId);
-                previousDay.Assignments.Remove(assignment);
-                var result = await _repWrapper.DailyTimetableRepo.UpdateItemAsync(previousDay);
-                return result;
+                previousDay.Assignments.Remove(previousDay.Assignments.Find(x => x.Id == assignment.Id));
+                await _repWrapper.DailyTimetableRepo.UpdateItemAsync(previousDay);
+                return previousDay;
             }
 
-            return false;
+            return null;
         }
 
 
-        private async Task<List<List<Assignment>>> GetLowPriorityAssignmentsOnDay(Assignment assignment, int numberOfTasks = 1)
+        private async Task<List<List<Assignment>>?> GetLowPriorityAssignmentsOnDay(Assignment assignment, int numberOfTasks = 1)
         {
             //get daily timetables before deadline
+            var currentDay = _calendar.GetDayOfYear(DateTime.Now);
             var daysBeforeDeadline = await _repWrapper.DailyTimetableRepo.GetItemsByQueryAsync(
-                x => x.DayNumber <= assignment.Deadline.DayOfYear && x.DayNumber >= _calendar.GetDayOfYear(DateTime.Now));
+                x => x.DayNumber <= assignment.Deadline.DayOfYear && x.DayNumber >= currentDay);
             
             //as we increase number of assignments we want to move on the day
             //we need to indicate that the number of assignments to move
@@ -344,7 +364,7 @@ namespace myTask.Services.AssignmentsManager
                 //check whether the last day before deadline has enough assignments to move
                 overflowedNumberOfAssignments = i == dailyTimetables.Length
                                                 && dailyTimetables[i].Assignments.Count() > numberOfTasks;
-                
+                lowPriorityAssignments.Add(new List<Assignment>());
                 //iterate through assignments on the day
                 foreach (var dailyTimetableAssignment in dailyTimetables[i].Assignments)
                 {
@@ -354,29 +374,41 @@ namespace myTask.Services.AssignmentsManager
                     //check whether there is any point in moving adding the assignments
                     //to the list by comparing the freed time with the duration
                     //of the fresh assignments
-                    double freedTime = dailyTimetables[i].AvailableTimeInHours * 60 -
-                                       dailyTimetableAssignment.DurationMinutes;
-                    if (freedTime <= assignment.DurationMinutes 
+                    // double freedTime = dailyTimetables[i].AvailableTimeInHours * 60 -
+                    //                    dailyTimetableAssignment.DurationMinutes;
+                    
+                    //check whether the time required by the assignment
+                    //is within 20% boundaries
+                    int boundaryDuration = assignment.DurationMinutes;
+                    int freedTime = dailyTimetableAssignment.DurationMinutes;
+                    
+                    if ((freedTime >= boundaryDuration * 0.8 || freedTime <= boundaryDuration * 1.2)
                         && dailyTimetableAssignment.PriorityLevel == PriorityLevel.Low)
                     {
                         lowPriorityAssignments[i].Add(dailyTimetableAssignment);
                     }
                 }
-            }
 
-            //if none of the assignments can be moved forward, so we can free enough time
-            //increase the number of assignments on the day to move and repeat the process recursively
-            if (!lowPriorityAssignments.SelectMany(x => x).Any() && !overflowedNumberOfAssignments)
-            {
-                numberOfTasks++;
-                lowPriorityAssignments = await GetLowPriorityAssignmentsOnDay(assignment, numberOfTasks);
+                //if total freed time on the day is less than time required by the assignment
+                //empty the list
+                if (assignment.DurationMinutes > lowPriorityAssignments[i].Select(x => x.DurationMinutes).Sum() + dailyTimetables[i].AvailableTimeInHours * 60)
+                {
+                    lowPriorityAssignments[i] = new List<Assignment>();
+                }
             }
             //if we reach the point when the number is too big, then none of the assignments can be moved
-            else
+            if (overflowedNumberOfAssignments)
             {
-                lowPriorityAssignments = null;
+                return null;
             }
-
+            //if none of the assignments can be moved forward, so we can free enough time
+            //increase the number of assignments on the day to move and repeat the process recursively
+            if (!lowPriorityAssignments.SelectMany(x => x).Any())
+            {
+                numberOfTasks++;
+                return await GetLowPriorityAssignmentsOnDay(assignment, numberOfTasks);
+            }
+            //otherwise everything is fine => return the list
             return lowPriorityAssignments;
         }
 
@@ -398,7 +430,9 @@ namespace myTask.Services.AssignmentsManager
             var vacantDays = weeksBeforeDeadline
                 .SelectMany(x => x.Timetables)
                 .Select(x => x)
-                .Where(x => x.DayNumber <= _calendar.GetDayOfYear(assignment.Deadline));
+                .Where(x => x.DayNumber <= _calendar.GetDayOfYear(assignment.Deadline) 
+                            && x.DayNumber >= _calendar.GetDayOfYear(DateTime.Now)
+                            && x.AvailableTimeInHours >= assignment.DurationMinutes / 60.0);
             
             
             return vacantDays;

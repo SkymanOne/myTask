@@ -44,11 +44,16 @@ namespace myTask.Services.Database.Repositories
             }
         }
 
+        public override async Task<IEnumerable<DailyTimetable>> GetItemsByQueryAsync(Expression<Func<DailyTimetable, bool>> expression)
+        {
+            return await Database.GetAllWithChildrenAsync(expression);
+        }
+
         public override async Task<bool> UpdateItemAsync(DailyTimetable item)
         {
             var config = await _userConfigManager.GetConfigAsync();
             var freeTimeLeft = 
-                config.WeeklyAvailableTimeInHours.ElementAt((int)item.Day) - item.Assignments.Sum(x => x.DurationMinutes / 60);
+                config.WeeklyAvailableTimeInHours.ElementAt((int)item.Day) - item.Assignments.Sum(x => x.DurationMinutes / 60.0);
             if (freeTimeLeft >= 0)
             {
                 item.AvailableTimeInHours = freeTimeLeft;

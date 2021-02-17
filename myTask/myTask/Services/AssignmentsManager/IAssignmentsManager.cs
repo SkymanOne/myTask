@@ -20,7 +20,7 @@ namespace myTask.Services.AssignmentsManager
         Task<bool> UpdateAssignmentAsync(Assignment assignment);
         Task<bool> DeleteAssignmentAsync(Assignment assignment);
         Task<List<Assignment>> SplitAssignmentAsync(Assignment assignment);
-        Task<bool> MoveAssignmentForwardAsync(Assignment assignment);
+        Task<bool> MoveAssignmentForwardAsync(Assignment assignment, bool nextDay =  false);
         Task<bool> MoveAssignmentBackwardsAsync(Assignment assignment);
         Task<bool> UpdateTimetableAsync(DailyTimetable dailyTimetable);
     }
