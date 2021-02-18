@@ -20,6 +20,8 @@ namespace myTask.Services.Database.Repositories
         {
             return await Database.Table<T>().ToListAsync();
         }
+        
+        
 
         public virtual async Task<T> GetItemByIdAsync(object id)
         {

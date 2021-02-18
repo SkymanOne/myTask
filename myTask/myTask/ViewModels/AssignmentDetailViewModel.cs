@@ -10,6 +10,7 @@ using myTask.Domain.Models;
 using myTask.Helpers;
 using myTask.Services.AssignmentsManager;
 using myTask.Services.Database.Repositories;
+using myTask.Services.FeedService;
 using myTask.Services.Navigation;
 using myTask.ViewModels.Base;
 using myTask.Views;
@@ -27,6 +28,7 @@ namespace myTask.ViewModels
         private readonly IRepository<Assignment> _assignmentRepository;
         private readonly IAssignmentsManager _assignmentsManager;
         private readonly IRepository<Tag> _tagRepository;
+        private readonly IFeedService _feedService;
 
         public ICommand UpdateTitleCommand { get; set; }
         public ICommand UpdateCommand { get; set; }
@@ -110,7 +112,8 @@ namespace myTask.ViewModels
         public AssignmentDetailViewModel(INavigationService navigationService, 
             IRepository<Assignment> assignmentRepository,
             IRepository<Tag> tagRepository,
-            IAssignmentsManager assignmentsManager) : base(navigationService)
+            IAssignmentsManager assignmentsManager,
+            IFeedService feedService) : base(navigationService)
         {
             UpdateCommand = new Command(UpdateAsync);
             UpdateTitleCommand = new Command(UpdateLabelAsync);
@@ -122,6 +125,7 @@ namespace myTask.ViewModels
             _assignmentRepository = assignmentRepository;
             _tagRepository = tagRepository;
             _assignmentsManager = assignmentsManager;
+            _feedService = feedService;
         }
 
         private async void UpdateAsync()
@@ -153,10 +157,14 @@ namespace myTask.ViewModels
             if (_assignment.Id == Guid.Empty)
             {
                 await _assignmentsManager.CreateAssigmentAsync(_assignment);
+                await _feedService.RegisterUpdate("New assignment", "You created new assignment! Congratulations",
+                    _assignment);
             }
             else
             {
                 await _assignmentsManager.UpdateAssignmentAsync(_assignment);   
+                await _feedService.RegisterUpdate("Assignment update", "You updated an assignment! Get your hands on it",
+                    _assignment);
             }
             await _navigationService.NavigateToAsync<AssignmentListViewModel>();
             await _navigationService.ClearTheStackAsync();
@@ -170,6 +178,8 @@ namespace myTask.ViewModels
             );
             if (confirm == true)
             {
+                await _feedService.RegisterUpdate("Remove",
+                    "You deleted an assignment, don't worry, there are others to do");
                 await _assignmentsManager.DeleteAssignmentAsync(Assignment);
                 await _navigationService.NavigateToAsync<AssignmentListViewModel>();
                 await _navigationService.ClearTheStackAsync();
@@ -211,11 +221,15 @@ namespace myTask.ViewModels
                     OnPropertyChanged(nameof(Time));
                     return Assignment.Status == Status.Going;
                 });
+                await _feedService.RegisterUpdate("New start",
+                    $"You started an assignment {_assignment.Title}. Well done!", _assignment);
             }
             else
             {
                 Assignment.Status = Status.Paused;
                 SetButtonLabel();
+                await _feedService.RegisterUpdate("New start",
+                    $"You paused an assignment {_assignment.Title}. Well done!", _assignment);
             }
             await _assignmentRepository.UpdateItemAsync(_assignment);
         }
@@ -231,6 +245,8 @@ namespace myTask.ViewModels
                     Assignment.Status = Status.Finished;
                     SetButtonLabel();
                     await _assignmentRepository.UpdateItemAsync(_assignment);
+                    await _feedService.RegisterUpdate("Completion",
+                        $"You completed an assignment {_assignment.Title}. Congratulations! You earned {_assignment.Kinbens} kinbens", _assignment);
                 }
             }
             else

@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq.Expressions;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using myTask.Domain.Models;
+using myTask.Services.Database.Repositories;
 using SQLite;
 using SQLiteNetExtensionsAsync.Extensions;
 using Xamarin.Forms;
@@ -47,5 +49,12 @@ namespace myTask.Helpers
                 return ImageSource.FromFile("placeholder.png");
             return ImageSource.FromStream(() => new MemoryStream(assignment.Icon));
         }
+
+        public static async Task<IEnumerable<T>> GetRecentItems<T>(this IRepository<T> repository, int numberOfItems, int pageNumber)
+            where T : class, new()
+        {
+            return await repository.GetAllItemsAsync();
+        }
+
     }
 }

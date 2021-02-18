@@ -24,7 +24,8 @@ namespace myTask.Services.Database
                 typeof(Assignment),
                 typeof(AssignmentTag),
                 typeof(DailyTimetable),
-                typeof(WeeklyTimetable)
+                typeof(WeeklyTimetable),
+                typeof(UserUpdate)
             };
             if (!_setup)
             { 

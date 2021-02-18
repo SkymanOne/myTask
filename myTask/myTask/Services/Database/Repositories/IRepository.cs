@@ -18,4 +18,14 @@ namespace myTask.Services.Database.Repositories
         //not sure whether it is needed
         //Task<T> SaveChanges();
     }
+    
+    
+    /// <summary>
+    /// Extension repository of <c>IRepository</c> interface
+    /// </summary>
+    /// <typeparam name="T">The type of a model the repository is designed for</typeparam>
+    public interface IExtendedRepository<T> : IRepository<T> where T : class, new()
+    {
+        Task<IEnumerable<T>> GetRecentItemsByPageAsync(int number, int page);
+    }
 }

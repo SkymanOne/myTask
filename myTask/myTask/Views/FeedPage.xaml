@@ -2,14 +2,43 @@
 
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
              Title="Newsfeed"
              NavigationPage.HasNavigationBar="false"
              x:Class="myTask.Views.FeedPage">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Newsfeed will be added later"
-                   VerticalOptions="CenterAndExpand"
-                   HorizontalOptions="CenterAndExpand" />
+        <StackLayout Padding="5, 50, 5, 0">
+            <material:MaterialLabel Text="Newsfeed"
+                                    TypeScale="H3"
+                                    HorizontalOptions="CenterAndExpand"/>
+            <CollectionView ItemsSource="{Binding RecentUpdates}"
+                            RemainingItemsThreshold="3"
+                            RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}"
+                            EmptyView="You have no updates yet!"
+                            ItemsLayout="VerticalList">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <material:MaterialCard CornerRadius="2"
+                                               Elevation="2"
+                                               HorizontalOptions="FillAndExpand">
+                            <StackLayout HorizontalOptions="FillAndExpand"
+                                         VerticalOptions="FillAndExpand">
+                                <material:MaterialLabel Text="{Binding Title, StringFormat='{0}🔥'}"
+                                                        TypeScale="H5"
+                                                        HorizontalOptions="StartAndExpand"/>
+                                <material:MaterialLabel Text="{Binding Message}"
+                                                        TypeScale="Body1"
+                                                        HorizontalOptions="StartAndExpand"/>
+                                <StackLayout Orientation="Horizontal"
+                                             HorizontalOptions="StartAndExpand">
+                                    <material:MaterialLabel Text="{Binding DateTime.Date, StringFormat='{0:MMMM dd, yyyy}'}"/>
+                                    <material:MaterialLabel Text="{Binding DateTime.TimeOfDay, StringFormat='{}{0:hh\\:mm}'}"/>
+                                </StackLayout>
+                            </StackLayout>
+                        </material:MaterialCard>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -32,7 +32,7 @@ namespace myTask.Domain.Models
         public int TimeElapsedSeconds { get; set; }
 
         public Status Status { get; set; } = Status.Created;
-        
+
         [ForeignKey(typeof(DailyTimetable))]
         public Guid DayId { get; set; }
     }

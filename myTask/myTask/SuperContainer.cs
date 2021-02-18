@@ -7,6 +7,7 @@ using myTask.Services.Database;
 using myTask.Services.Database.MockRepositories;
 using myTask.Services.Database.Repositories;
 using myTask.Services.Database.RepositoryWrapper;
+using myTask.Services.FeedService;
 using myTask.Services.Navigation;
 using myTask.Services.UserConfigManager;
 using myTask.ViewModels;
@@ -49,10 +50,13 @@ namespace myTask
             Container.Register<IRepository<Tag>, TagRepository>();
             Container.Register<IRepository<WeeklyTimetable>, WeeklyTimetableRepository>();
             Container.Register<IRepository<DailyTimetable>, DailyTimetableRepository>();
+            Container.Register<IRepository<UserUpdate>, FeedRepository>();
+            Container.Register<IExtendedRepository<UserUpdate>, FeedRepository>();
             Container.Register<IRepositoryWrapper, RepositoryWrapper>();
             Container.Register<INavigationService, NavigationService>();
             Container.Register<IUserConfigManager, UserConfigManager>();
             Container.Register<IAssignmentsManager, AssignmentsManager>();
+            Container.Register<IFeedService, FeedService>();
             Container.Register<DbConnection>(((c, o) =>
             {
                 var dbConnection = new DbConnection();
