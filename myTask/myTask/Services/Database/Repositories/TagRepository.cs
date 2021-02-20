@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,6 +13,11 @@ namespace myTask.Services.Database.Repositories
     {
         public TagRepository(DbConnection connection) : base(connection)
         { }
+
+        public override async Task<IEnumerable<Tag>> GetAllItemsAsync()
+        {
+            return await Database.GetAllWithChildrenAsync<Tag>();
+        }
 
         public override async Task<Tag> GetItemAsync(Expression<Func<Tag, bool>> expression)
         {

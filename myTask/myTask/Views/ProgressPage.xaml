@@ -4,12 +4,32 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="myTask.Views.ProgressPage"
              NavigationPage.HasNavigationBar="false"
+             xmlns:micro="clr-namespace:Microcharts.Forms;assembly=Microcharts.Forms" 
+             xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
              Title="Progress">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Hello, world4!"
-                   VerticalOptions="CenterAndExpand"
-                   HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <ScrollView Padding="10, 10, 10, 0" Orientation="Vertical">
+            <StackLayout>
+                <material:MaterialLabel Text="Progress"
+                                        TypeScale="H2"/>
+                <material:MaterialLabel Text="Here is what you have done over the recent week"
+                                        TypeScale="Body2"/>
+                <material:MaterialLabel Padding="0, 20"
+                                        TypeScale="H5"
+                    Text="{Binding TotalKinbens, StringFormat='Overall, you have earned {0} kbs'}"/>
+                <material:MaterialLabel Text="Your assignments"
+                                        TypeScale="H6"/>
+                <micro:ChartView Chart="{Binding RadialChart}"
+                                 HeightRequest="200"
+                                 WidthRequest="200"
+                                 BackgroundColor="Transparent"/>
+                <material:MaterialLabel Text="Types of assignments"
+                                        TypeScale="H6"/>
+                <micro:ChartView Chart="{Binding DonutChart}"
+                                 HeightRequest="300"
+                                 WidthRequest="200"
+                                 BackgroundColor="Transparent"/>
+            </StackLayout>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

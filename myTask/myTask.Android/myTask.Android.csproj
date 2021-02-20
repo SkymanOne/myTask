@@ -48,6 +48,7 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="CarouselView.FormsPlugin" Version="6.0.0" />
+        <PackageReference Include="Microcharts.Forms" Version="0.9.5.9" />
         <PackageReference Include="sqlite-net-pcl" Version="1.7.335" />
         <PackageReference Include="SQLiteNetExtensions" Version="2.1.0" />
         <PackageReference Include="SQLiteNetExtensions.Async" Version="2.1.0" />
@@ -63,7 +64,7 @@
         <PackageReference Include="Xamarin.AndroidX.MediaRouter" Version="1.2.0" />
     <PackageReference Include="Xamarin.AndroidX.Migration" Version="1.0.8" />    <PackageReference Include="Xamarin.AndroidX.AppCompat.Resources">
       <Version>1.1.0.1</Version>
-    </PackageReference>    <PackageReference Include="XF.Material" Version="1.7.7" />
+    </PackageReference>    <PackageReference Include="Xamarin.Plugin.Calendar" Version="1.2.2936" />    <PackageReference Include="XF.Material" Version="1.7.7" />
 </ItemGroup>
     <ItemGroup>
         <Compile Include="MainActivity.cs" />
