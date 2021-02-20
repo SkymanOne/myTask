@@ -12,6 +12,7 @@ using myTask.Services.AssignmentsManager;
 using myTask.Services.Database.Repositories;
 using myTask.Services.FeedService;
 using myTask.Services.Navigation;
+using myTask.Services.UserConfigManager;
 using myTask.ViewModels.Base;
 using myTask.Views;
 using Xamarin.Essentials;
@@ -29,6 +30,7 @@ namespace myTask.ViewModels
         private readonly IAssignmentsManager _assignmentsManager;
         private readonly IRepository<Tag> _tagRepository;
         private readonly IFeedService _feedService;
+        private readonly IUserConfigManager _config;
 
         public ICommand UpdateTitleCommand { get; set; }
         public ICommand UpdateCommand { get; set; }
@@ -113,7 +115,8 @@ namespace myTask.ViewModels
             IRepository<Assignment> assignmentRepository,
             IRepository<Tag> tagRepository,
             IAssignmentsManager assignmentsManager,
-            IFeedService feedService) : base(navigationService)
+            IFeedService feedService,
+            IUserConfigManager configManager) : base(navigationService)
         {
             UpdateCommand = new Command(UpdateAsync);
             UpdateTitleCommand = new Command(UpdateLabelAsync);
@@ -126,6 +129,7 @@ namespace myTask.ViewModels
             _tagRepository = tagRepository;
             _assignmentsManager = assignmentsManager;
             _feedService = feedService;
+            _config = configManager;
         }
 
         private async void UpdateAsync()
@@ -211,6 +215,10 @@ namespace myTask.ViewModels
 
         private async void StartPauseAssignment()
         {
+            if (Assignment.Status == Status.Finished)
+            {
+                await MaterialDialog.Instance.SnackbarAsync("Assignment is completed");
+            }
             if (Assignment.Status != Status.Going)
             {
                 Assignment.Status = Status.Going;
@@ -244,6 +252,9 @@ namespace myTask.ViewModels
                 {
                     Assignment.Status = Status.Finished;
                     SetButtonLabel();
+                    var userConfig = await _config.GetConfigAsync();
+                    userConfig.Kinbens += Assignment.Kinbens;
+                    await _config.SetConfigAsync(userConfig);
                     await _assignmentRepository.UpdateItemAsync(_assignment);
                     await _feedService.RegisterUpdate("Completion",
                         $"You completed an assignment {_assignment.Title}. Congratulations! You earned {_assignment.Kinbens} kinbens", _assignment);

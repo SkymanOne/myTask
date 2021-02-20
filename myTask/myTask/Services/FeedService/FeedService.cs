@@ -33,6 +33,8 @@ namespace myTask.Services.FeedService
                 userUpdate.Assignment = assignment;
             }
             var item = await _updateRepository.CreateItemAsync(userUpdate) == true ? userUpdate : null;
+            //whenever there is a new updated created
+            //notify subscribers
             MessagingCenter.Send(this, "New Update");
             return item;
         }

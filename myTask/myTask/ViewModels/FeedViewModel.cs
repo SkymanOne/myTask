@@ -29,6 +29,7 @@ namespace myTask.ViewModels
             _feedService = feedService;
             RecentUpdates = new ObservableCollection<UserUpdate>();
             LoadMoreCommand = new Command(LoadMore);
+            //use built-in messaging centre for subscribing for updates from FeedService to update the list
             MessagingCenter.Subscribe<FeedService>(this, "New Update", (sender) => LoadNewUpdate());
         }
 

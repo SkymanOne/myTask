@@ -63,12 +63,13 @@ namespace myTask.Services.Navigation
         }
 
 
-        private Task<ObservableCollection<Page>> ResolveNavigation(List<Type> viewModels)
+        private async Task<ObservableCollection<Page>> ResolveNavigation(List<Type> viewModels)
         {
             ObservableCollection<Page> pages = new ObservableCollection<Page>();
             foreach (var viewModelType in viewModels)
             {
                 var viewModel = (BaseViewModel) SuperContainer.Resolve(viewModelType);
+                await viewModel.Init(null);
                 var page = ViewLocator.ResolvePageFromViewModel(viewModel);
                 
                 //wrap each page into a nav page in case we need to do some "in-tab" navigation
@@ -81,7 +82,7 @@ namespace myTask.Services.Navigation
                 pages.Add(navPage);
             }
 
-            return Task.FromResult(pages);
+            return pages;
         }
 
         public async Task NavigateToAsync<TViewModel>() where TViewModel : BaseViewModel

@@ -14,12 +14,15 @@
             <CollectionView ItemsSource="{Binding RecentUpdates}"
                             RemainingItemsThreshold="3"
                             RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}"
-                            EmptyView="You have no updates yet!"
-                            ItemsLayout="VerticalList">
+                            EmptyView="You have no updates yet!">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical"
+                                       ItemSpacing="10"/>
+                </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <material:MaterialCard CornerRadius="2"
-                                               Elevation="2"
+                                               Elevation="5"
                                                HorizontalOptions="FillAndExpand">
                             <StackLayout HorizontalOptions="FillAndExpand"
                                          VerticalOptions="FillAndExpand">
@@ -31,8 +34,8 @@
                                                         HorizontalOptions="StartAndExpand"/>
                                 <StackLayout Orientation="Horizontal"
                                              HorizontalOptions="StartAndExpand">
-                                    <material:MaterialLabel Text="{Binding DateTime.Date, StringFormat='{0:MMMM dd, yyyy}'}"/>
-                                    <material:MaterialLabel Text="{Binding DateTime.TimeOfDay, StringFormat='{}{0:hh\\:mm}'}"/>
+                                    <material:MaterialLabel TypeScale="Caption" Text="{Binding DateTime.Date, StringFormat='{0:MMMM dd, yyyy}'}"/>
+                                    <material:MaterialLabel TypeScale="Caption" Text="{Binding DateTime.TimeOfDay, StringFormat='{}{0:hh\\:mm}'}"/>
                                 </StackLayout>
                             </StackLayout>
                         </material:MaterialCard>
