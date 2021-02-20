@@ -10,7 +10,7 @@
              x:Class="myTask.Views.AssignmentDetailPage">
     <ContentPage.ToolbarItems>
         <ToolbarItem
-            Text="Update"
+            Text="{Binding UpdateButtonLabel}"
             Command="{Binding UpdateCommand}" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>

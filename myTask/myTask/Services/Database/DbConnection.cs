@@ -10,7 +10,7 @@ namespace myTask.Services.Database
     public class DbConnection
     {
         private static readonly Lazy<SQLiteAsyncConnection> LazyDbInitializer =
-            new Lazy<SQLiteAsyncConnection>(() => new SQLiteAsyncConnection(Constants.DB_PATH));
+            new Lazy<SQLiteAsyncConnection>(() => new SQLiteAsyncConnection(Constants.DB_PATH), true);
 
         public SQLiteAsyncConnection Database { get; } = LazyDbInitializer.Value;
         private bool _setup = false;

@@ -135,9 +135,10 @@ namespace myTask.Services.Navigation
             return Task.CompletedTask;
         }
 
-        public async Task NavigateToModalAsync<TViewModel>() where TViewModel : BaseViewModel
+        public async Task NavigateToModalAsync<TViewModel>(object parameters) where TViewModel : BaseViewModel
         {
             var viewModel = SuperContainer.Resolve<TViewModel>();
+            await viewModel.Init(parameters);
             var page = ViewLocator.ResolvePageFromViewModel(viewModel);
             await Application.Current.MainPage.Navigation.PushModalAsync(page);
         }

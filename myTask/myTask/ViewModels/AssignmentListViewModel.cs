@@ -115,6 +115,7 @@ namespace myTask.ViewModels
                 {
                     Title = title,
                     Deadline = DateTime.Now + TimeSpan.FromMinutes(20),
+                    DurationMinutes = 5
                 };
                 GoToDetailPage(assignment);
             }

@@ -22,6 +22,11 @@ namespace myTask.Services.Database.Repositories
             return await Database.GetAllWithChildrenAsync<Assignment>();
         }
 
+        public override async Task<IEnumerable<Assignment>> GetItemsByQueryAsync(Expression<Func<Assignment, bool>> expression)
+        {
+            return await Database.GetAllWithChildrenAsync(expression);
+        }
+
         public override async Task<Assignment> GetItemAsync(Expression<Func<Assignment, bool>> expression)
         {
             return await Database.GetWithChildrenByQueryAsync(expression);

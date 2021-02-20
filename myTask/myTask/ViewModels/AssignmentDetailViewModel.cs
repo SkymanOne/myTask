@@ -84,7 +84,16 @@ namespace myTask.ViewModels
             get => _status;
             set => SetValue(ref _status, value);
         }
-        
+
+        public string UpdateButtonLabel
+        {
+            get
+            {
+                if (Assignment == null || Assignment.Id == default) return "Create";
+                return "Update";
+            }
+        }
+
         private void SetButtonLabel()
         {
             if (_assignment == null)
@@ -322,6 +331,7 @@ namespace myTask.ViewModels
                     OnPropertyChanged(nameof(SubTasks));
                     OnPropertyChanged(nameof(TimeRequired));
                     OnPropertyChanged(nameof(TagSubViewModels));
+                    OnPropertyChanged(nameof(UpdateButtonLabel));
                 }
                 else
                 {

@@ -3,13 +3,68 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="myTask.Views.TimetablePage"
+             xmlns:plugin="clr-namespace:Xamarin.Plugin.Calendar.Controls;assembly=Xamarin.Plugin.Calendar"
+             xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
              NavigationPage.HasNavigationBar="false"
              Title="Timetable">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Command="{Binding TodayCommand}" Text="Today" />
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Hello, world3!"
-                   VerticalOptions="CenterAndExpand"
-                   HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <plugin:Calendar Events="{Binding Deadlines}"
+                         MaximumDate="{Binding MaximumDate}"
+                         MinimumDate="{Binding MinimumDate}"
+                         Month="{Binding Month}"
+                         SelectedDate="{Binding SelectedDate}"
+                         VerticalOptions="FillAndExpand"
+                         HorizontalOptions="FillAndExpand"
+                         Year="{Binding Year}"
+                         Padding="10, 20">
+            <plugin:Calendar.EventTemplate>
+                <DataTemplate>
+                    <StackLayout Padding="15, 0, 0, 10">
+                        <StackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding TappedCommand}" />
+                        </StackLayout.GestureRecognizers>
+                        <material:MaterialLabel Text="{Binding Assignment.Title}"
+                                                FontAttributes="Bold"
+                                                FontSize="Medium" />
+                        <CollectionView ItemsSource="{Binding Assignment.Tags}"
+                                        HeightRequest="35"
+                                        ItemsUpdatingScrollMode="KeepItemsInView"
+                                        HorizontalScrollBarVisibility="Never">
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout Orientation="Horizontal"
+                                                   ItemSpacing="5" />
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.EmptyView>
+                                <ContentView>
+                                    <material:MaterialChip
+                                        HorizontalOptions="FillAndExpand"
+                                        Text="No tags present"
+                                        TextColor="White"
+                                        BackgroundColor="#546E7A" />
+                                </ContentView>
+                            </CollectionView.EmptyView>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <material:MaterialChip
+                                        HorizontalOptions="FillAndExpand"
+                                        Text="{Binding Title}"
+                                        TextColor="White"
+                                        BackgroundColor="#D81B60" />
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                        <BoxView Color="LightGray" HeightRequest="2"/>
+                    </StackLayout>
+                </DataTemplate>
+            </plugin:Calendar.EventTemplate>
+            <plugin:Calendar.EmptyTemplate>
+                <DataTemplate>
+                    <material:MaterialLabel Text="No deadlines due this day!" />
+                </DataTemplate>
+            </plugin:Calendar.EmptyTemplate>
+        </plugin:Calendar>
     </ContentPage.Content>
 </ContentPage>

@@ -7,6 +7,7 @@ using Microcharts;
 using myTask.Domain.Models;
 using myTask.Services.AssignmentsManager;
 using myTask.Services.Database.Repositories;
+using myTask.Services.FeedService;
 using myTask.Services.Navigation;
 using myTask.Services.UserConfigManager;
 using myTask.ViewModels.Base;
@@ -34,32 +35,6 @@ namespace myTask.ViewModels
         private IEnumerable<ChartEntry> _radialEntries;
         private IEnumerable<ChartEntry> _donutEntries;
 
-        private Timer _timer;
-
-        private SKColor[] _colors = new[]
-        {
-            SKColor.Parse("#0277BD"),
-            SKColor.Parse("#00838F"),
-            SKColor.Parse("#00695C"),
-            SKColor.Parse("#689F38"),
-            SKColor.Parse("#388E3C"),
-            SKColor.Parse("#9E9D24"),
-            SKColor.Parse("#F57C00"),
-            SKColor.Parse("#FFA000"),
-            SKColor.Parse("#FBC02D"),
-            SKColor.Parse("#F9A825"),
-            SKColor.Parse("#FFC400"),
-            SKColor.Parse("#FF9100"),
-            SKColor.Parse("#D84315"),
-            SKColor.Parse("#455A64"),
-            SKColor.Parse("#455A64"),
-            SKColor.Parse("#4527A0"),
-            SKColor.Parse("#1565C0"),
-            SKColor.Parse("#283593"),
-            SKColor.Parse("#6A1B9A"),
-            SKColor.Parse("#AD1457"),
-            SKColor.Parse("#C62828"),
-        };
 
         public string TotalKinbens => _totalKinbens.ToString();
 
@@ -89,12 +64,14 @@ namespace myTask.ViewModels
             _tagRepository = tagRepository;
             _assignmentsManager = assignmentsManager;
             _configManager = configManager;
-            _timer = new Timer(100000);
-            _timer.Enabled = true;
-            _timer.Elapsed += async (sender, args) =>
-            {
-                await Init(null);
-            };
+            MessagingCenter.Subscribe<FeedService>(this, "New Update", 
+                async model =>
+                {
+                    await Init(null);
+                    OnPropertyChanged(nameof(DonutChart));
+                    OnPropertyChanged(nameof(RadialChart));
+                    OnPropertyChanged(nameof(TotalKinbens));
+                });
         }
 
         private IEnumerable<ChartEntry> GenerateEntries(ChartType chartType)
@@ -103,10 +80,6 @@ namespace myTask.ViewModels
             {
                 case ChartType.Radial:
                 {
-                    var total = _weeklyTimetable
-                        .Timetables
-                        .SelectMany(x => x.Assignments)
-                        .Count();
                     var createdAssignments = _weeklyTimetable
                         .Timetables
                         .SelectMany(x => x.Assignments)
@@ -121,26 +94,26 @@ namespace myTask.ViewModels
                         .Where(x => x.Status == Status.Finished);
                     return new List<ChartEntry>()
                     {
-                        new ChartEntry(createdAssignments.Count() / 10)
+                        new ChartEntry(finishedAssignments.Count())
                         {
-                            ValueLabel = createdAssignments.Count().ToString(),
-                            Color = SKColor.Parse("#512DA8"),
-                            ValueLabelColor = SKColor.Parse("#512DA8"),
-                            Label = "Created",
+                            ValueLabel = finishedAssignments.Count().ToString(),
+                            Color = SKColor.Parse("#00796B"),
+                            ValueLabelColor = SKColor.Parse("#00796B"),
+                            Label = "Finished",
                         },
-                        new ChartEntry(goingAssignments.Count() / 10)
+                        new ChartEntry(goingAssignments.Count())
                         {
                             ValueLabel = goingAssignments.Count().ToString(),
                             Color = SKColor.Parse("#C2185B"),
                             ValueLabelColor = SKColor.Parse("#C2185B"),
                             Label = "Going",
                         },
-                        new ChartEntry(finishedAssignments.Count() / 10)
+                        new ChartEntry(createdAssignments.Count())
                         {
-                            ValueLabel = finishedAssignments.Count().ToString(),
-                            Color = SKColor.Parse("#00796B"),
-                            ValueLabelColor = SKColor.Parse("#00796B"),
-                            Label = "Finished",
+                            ValueLabel = createdAssignments.Count().ToString(),
+                            Color = SKColor.Parse("#512DA8"),
+                            ValueLabelColor = SKColor.Parse("#512DA8"),
+                            Label = "Created",
                         },
                     };
                 }
@@ -149,11 +122,11 @@ namespace myTask.ViewModels
                     return _tags.Select(x =>
                     {
                         int i = _tags.IndexOf(x);
-                        if (i > _colors.Length - 1)
+                        if (i > Constants.COLORS.Length - 1)
                         {
                             i = 0;
                         }
-                        var color = _colors[i];
+                        var color = Constants.COLORS[i];
                         return new ChartEntry(x.Assignments.Count)
                         {
                             Label = x.Title,
@@ -169,7 +142,6 @@ namespace myTask.ViewModels
 
         public override async Task Init(object param)
         {
-            _timer.Stop();
             _config = await _configManager.GetConfigAsync();
             _totalKinbens = _config.Kinbens;
             _weeklyTimetable = await _assignmentsManager.LoadWeeklyTimetableAsync(
@@ -177,7 +149,6 @@ namespace myTask.ViewModels
             _tags = await _tagRepository.GetAllItemsAsync();
             _radialEntries = GenerateEntries(ChartType.Radial);
             _donutEntries = GenerateEntries(ChartType.Donut);
-            _timer.Start();
         }
 
         enum ChartType
