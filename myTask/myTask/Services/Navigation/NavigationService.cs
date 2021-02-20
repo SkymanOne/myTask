@@ -16,7 +16,6 @@ namespace myTask.Services.Navigation
 {
     public class NavigationService : INavigationService
     {
-
         private readonly IUserConfigManager _configManager;
 
         public NavigationService(IUserConfigManager configManager)
@@ -26,7 +25,6 @@ namespace myTask.Services.Navigation
 
         public async Task InitMainNavigation()
         {
-            
             UserConfig userConfig = await _configManager.GetConfigAsync();
             //check if the user has initialized an app
             if (userConfig.IsInit == false)
@@ -71,7 +69,7 @@ namespace myTask.Services.Navigation
                 var viewModel = (BaseViewModel) SuperContainer.Resolve(viewModelType);
                 await viewModel.Init(null);
                 var page = ViewLocator.ResolvePageFromViewModel(viewModel);
-                
+
                 //wrap each page into a nav page in case we need to do some "in-tab" navigation
                 //see https://docs.microsoft.com/en-us/xamarin/xamarin-forms/app-fundamentals/navigation/tabbed-page#navigate-within-a-tab
                 var navPage = new NavigationPage(page)
@@ -100,24 +98,24 @@ namespace myTask.Services.Navigation
             //resolve page's viewmodel
             var viewModel = SuperContainer.Resolve<TViewModel>();
             var page = ViewLocator.ResolvePageFromViewModel(viewModel);
-            
+
             //check if the main navigation has been init
             if (Application.Current.MainPage is TabbedPage tabbedPage)
             {
                 if (tabbedPage.CurrentPage is NavigationPage navigationPage)
                 {
-                    #pragma warning disable 8602
+#pragma warning disable 8602
                     await (page.BindingContext as BaseViewModel).Init(param);
-                    #pragma warning restore 8602
+#pragma warning restore 8602
                     await navigationPage.PushAsync(page);
                 }
             }
             else if (Application.Current.MainPage is InitNavPage navPage)
             {
-                #pragma warning disable 8602
+#pragma warning disable 8602
                 await viewModel.Init(param);
                 //await (page.BindingContext as BaseViewModel).Init(param);
-                #pragma warning restore 8602
+#pragma warning restore 8602
                 await navPage.PushAsync(page);
             }
             else
@@ -130,8 +128,10 @@ namespace myTask.Services.Navigation
         {
             for (int i = 0; i < Application.Current.MainPage.Navigation.NavigationStack.Count - 1; i++)
             {
-                Application.Current.MainPage.Navigation.RemovePage(Application.Current.MainPage.Navigation.NavigationStack[i]);
+                Application.Current.MainPage.Navigation.RemovePage(Application.Current.MainPage.Navigation
+                    .NavigationStack[i]);
             }
+
             return Task.CompletedTask;
         }
 
@@ -146,6 +146,21 @@ namespace myTask.Services.Navigation
         public async Task PopModalAsync()
         {
             await Application.Current.MainPage.Navigation.PopModalAsync();
+        }
+
+        public async Task PopAsync()
+        {
+            if (Application.Current.MainPage is TabbedPage tabbedPage)
+            {
+                if (tabbedPage.CurrentPage is NavigationPage navigationPage)
+                {
+                    await navigationPage.PopAsync(true);
+                }
+            }
+            else if (Application.Current.MainPage is InitNavPage navPage)
+            {
+                await navPage.PopAsync(true);
+            }
         }
     }
 }

@@ -9,6 +9,7 @@ using myTask.Domain.Models;
 using myTask.Helpers;
 using myTask.Services.AssignmentsManager;
 using myTask.Services.Database.Repositories;
+using myTask.Services.FeedService;
 using myTask.Services.Navigation;
 using myTask.Services.UserConfigManager;
 using myTask.ViewModels.Base;
@@ -64,6 +65,11 @@ namespace myTask.ViewModels
             ItemChangedCommand = new Command<PositionSelectedEventArgs>(ItemChanged);
             _configManager = userConfigManager;
             _manager = manager;
+            MessagingCenter.Subscribe<FeedService>(this, "New Update", 
+                async model =>
+                {
+                    await Init(null);
+                });
         }
         
         private async void ResetAsync()

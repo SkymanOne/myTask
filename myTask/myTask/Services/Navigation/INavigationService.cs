@@ -12,6 +12,8 @@ namespace myTask.Services.Navigation
 
         Task ClearTheStackAsync();
 
+        Task PopAsync();
+
         Task NavigateToModalAsync<TViewModel>(object parameters) where TViewModel : BaseViewModel;
         Task PopModalAsync();
     }

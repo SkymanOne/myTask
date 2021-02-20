@@ -179,8 +179,8 @@ namespace myTask.ViewModels
                 await _feedService.RegisterUpdate("Assignment update", "You updated an assignment! Get your hands on it",
                     _assignment);
             }
-            await _navigationService.NavigateToAsync<AssignmentListViewModel>();
-            await _navigationService.ClearTheStackAsync();
+
+            await _navigationService.PopAsync();
         }
         
 
@@ -194,8 +194,7 @@ namespace myTask.ViewModels
                 await _feedService.RegisterUpdate("Remove",
                     "You deleted an assignment, don't worry, there are others to do");
                 await _assignmentsManager.DeleteAssignmentAsync(Assignment);
-                await _navigationService.NavigateToAsync<AssignmentListViewModel>();
-                await _navigationService.ClearTheStackAsync();
+                await _navigationService.PopAsync();
             }
         }
 
