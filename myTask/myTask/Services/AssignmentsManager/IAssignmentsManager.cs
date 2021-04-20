@@ -16,7 +16,7 @@ namespace myTask.Services.AssignmentsManager
         Task<WeeklyTimetable> LoadWeeklyTimetableAsync(int weekOfTheYear);
         Task<DailyTimetable> LoadAssignmentsAsync(DayOfWeek day, int weekOfTheYear = -1);
         Task<IEnumerable<Assignment>> LoadAssignmentsAsync();
-        Task<bool> CreateAssigmentAsync(Assignment assignment);
+        Task<bool> CreateAssignmentAsync(Assignment assignment);
         Task<bool> UpdateAssignmentAsync(Assignment assignment);
         Task<bool> DeleteAssignmentAsync(Assignment assignment);
         Task<List<Assignment>> SplitAssignmentAsync(Assignment assignment);

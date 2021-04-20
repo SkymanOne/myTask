@@ -36,7 +36,7 @@
              
             <tabview:TabViewControl
                 HeaderBackgroundColor="Transparent"
-                HeaderTabTextColor="Green"
+                HeaderTabTextColor="#1A237E"
                 HeaderSelectionUnderlineColor="Gray"
                 TabHeaderSpacing="100"
                 IsSwipeEnabled="True"

@@ -166,9 +166,9 @@
                                 <material:MaterialLabel Text="Date"
                                                         TypeScale="Body2"
                                                         Margin="0, 10" />
-                                <material:MaterialDatePicker Date="{Binding DeadlineModel.Date}"
-                                                             Format="dd MMMM, yyyy"
-                                                             MinimumDate="{Binding DeadlineModel.MinDate}" />
+                                <DatePicker Format="dd MMMM, yyyy"
+                                                             MinimumDate="{Binding DeadlineModel.MinDate}" 
+                                                             Date="{Binding DeadlineModel.Date}"/>
                                 <material:MaterialLabel Text="Time"
                                                         TypeScale="Body2"
                                                         Margin="0, 10" />

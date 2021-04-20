@@ -30,7 +30,9 @@ namespace myTask.ViewModels
         private readonly IAssignmentsManager _assignmentsManager;
         private readonly IRepository<Tag> _tagRepository;
         private readonly IFeedService _feedService;
-        private readonly IUserConfigManager _config;
+        private readonly IUserConfigManager _configManager;
+
+        private UserConfig _config;
 
         public ICommand UpdateTitleCommand { get; set; }
         public ICommand UpdateCommand { get; set; }
@@ -94,6 +96,8 @@ namespace myTask.ViewModels
             }
         }
 
+
+        //sets button label based on the context (whether the assignment created or being edited)
         private void SetButtonLabel()
         {
             if (_assignment == null)
@@ -127,6 +131,7 @@ namespace myTask.ViewModels
             IFeedService feedService,
             IUserConfigManager configManager) : base(navigationService)
         {
+            //init commands with callback functions
             UpdateCommand = new Command(UpdateAsync);
             UpdateTitleCommand = new Command(UpdateLabelAsync);
             DeleteCommand = new Command(DeleteAsync);
@@ -134,23 +139,39 @@ namespace myTask.ViewModels
             StartPauseCommand = new Command(StartPauseAssignment);
             FinishCommand = new Command(FinishAssignment);
             PickNewIconCommand = new Command(PickPicture);
+
+            //assignment interfaces with implementations which are injected via IoC container
             _assignmentRepository = assignmentRepository;
             _tagRepository = tagRepository;
             _assignmentsManager = assignmentsManager;
             _feedService = feedService;
-            _config = configManager;
+            _configManager = configManager;
         }
 
         private async void UpdateAsync()
         {
+
+            if (IsNoWorkDay(await _configManager.GetConfigAsync()))
+            {
+                await MaterialDialog.Instance.AlertAsync(
+                    "Deadline cannot be earlier than minimum end time of the task");
+                return;
+            }
+            
+            //assign assign proprties viewmodel's values
             _assignment.SubTasks = SubTasks.ToList();
             _assignment.Deadline = DeadlineModel.GetTime();
             _assignment.DurationMinutes = TimeRequired.GetTotalInMinutes();
+
+            //exclude "add new" tag which we added to viewmodel's list during init
             var tags = TagSubViewModels
                 .Select(x => x.Tag)
                 .Where(x => x.Title != "Add new")
                 .ToList();
             _assignment.Tags = new List<Tag>();
+
+            //to avoid duplicates of tags
+            //check whether the tag exists, otherwise create one
             foreach (var tag in tags)
             {
                 var item = await _tagRepository.GetItemAsync(x =>
@@ -166,10 +187,9 @@ namespace myTask.ViewModels
                     _assignment.Tags.Add(item);
                 }
             }
-
             if (_assignment.Id == Guid.Empty)
             {
-                await _assignmentsManager.CreateAssigmentAsync(_assignment);
+                await _assignmentsManager.CreateAssignmentAsync(_assignment);
                 await _feedService.RegisterUpdate("New assignment", "You created new assignment! Congratulations",
                     _assignment);
             }
@@ -203,6 +223,8 @@ namespace myTask.ViewModels
             var timeBeforeDeadline = (_deadline.GetTime() - DateTime.Now).TotalMinutes;
             if (timeBeforeDeadline <= TimeRequired.GetTotalInMinutes())
             {
+                //if user sets deadline earlier than it would be able to complete it by
+                //set deadline by adding required time to current time and add extra 15 min as a time margin
                 var newDeadline = DateTime.Now.AddMinutes(TimeRequired.GetTotalInMinutes() + 15);
                 DeadlineModel.Date = newDeadline.Date;
                 DeadlineModel.Time = newDeadline.TimeOfDay;
@@ -231,11 +253,14 @@ namespace myTask.ViewModels
             {
                 Assignment.Status = Status.Going;
                 SetButtonLabel();
+                //start device internal timer
                 Device.StartTimer(new TimeSpan(0, 0, 1), () =>
                 {
+                    //increment elapsed second property until assignment isn't finished
+                    if (Assignment.Status != Status.Going) return false;
                     Assignment.TimeElapsedSeconds++;
                     OnPropertyChanged(nameof(Time));
-                    return Assignment.Status == Status.Going;
+                    return true;
                 });
                 await _feedService.RegisterUpdate("New start",
                     $"You started an assignment {_assignment.Title}. Well done!", _assignment);
@@ -260,9 +285,9 @@ namespace myTask.ViewModels
                 {
                     Assignment.Status = Status.Finished;
                     SetButtonLabel();
-                    var userConfig = await _config.GetConfigAsync();
+                    var userConfig = await _configManager.GetConfigAsync();
                     userConfig.Kinbens += Assignment.Kinbens;
-                    await _config.SetConfigAsync(userConfig);
+                    await _configManager.SetConfigAsync(userConfig);
                     await _assignmentRepository.UpdateItemAsync(_assignment);
                     await _feedService.RegisterUpdate("Completion",
                         $"You completed an assignment {_assignment.Title}. Congratulations! You earned {_assignment.Kinbens} kinbens", _assignment);
@@ -297,8 +322,14 @@ namespace myTask.ViewModels
             }
         }
 
+        private bool IsNoWorkDay(UserConfig config)
+        {
+            return config.WeeklyAvailableTimeInHours.ElementAt((int) DeadlineModel.Date.DayOfWeek) == 0;
+        }
+
         public override async Task Init(object param)
         {
+            //show user a loading windown until all data is fetched
             using (await MaterialDialog.Instance.LoadingDialogAsync("Loading"))
             {
                 if (param is Assignment assignment)
@@ -321,6 +352,14 @@ namespace myTask.ViewModels
                         Date = Assignment.Deadline.Date,
                         Time = Assignment.Deadline.TimeOfDay,
                     };
+                    
+                    
+                    while (IsNoWorkDay(await _configManager.GetConfigAsync()))
+                    {
+                        DeadlineModel.MinDate = DeadlineModel.MinDate.AddDays(1);
+                        DeadlineModel.Date = DeadlineModel.Date.AddDays(1);
+                    }
+                    
                     ImageSource = Assignment.GetImageSource();
                     TimeRequired = Duration.InitFromMinutes(Assignment.DurationMinutes);
                     SetButtonLabel();
@@ -362,6 +401,7 @@ namespace myTask.ViewModels
                 Tag = tag;
                 ContextDisplayCommand = new Command(ContextDisplay);
                 ImageSource = tag.Title == "Add new" ? "baseline_add_white_18dp.png" : "baseline_clear_white_18dp.png";
+                //set a random color as the chip background
                 Random rnd = new Random();
                 int colorIndex = rnd.Next(0, _colors.Length);
                 BackgroundClr = _colors[colorIndex];

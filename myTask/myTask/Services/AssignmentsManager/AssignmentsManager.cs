@@ -29,7 +29,7 @@ namespace myTask.Services.AssignmentsManager
 
         public async Task Init()
         {
-            
+            //TODO: add web service init
         }
 
         public async Task<IEnumerable<Assignment>> LoadAllAssignmentsAsync()
@@ -37,9 +37,11 @@ namespace myTask.Services.AssignmentsManager
             return await _repWrapper.AssignmentRepo.GetAllItemsAsync();
         }
 
-        public async Task<WeeklyTimetable> LoadWeeklyTimetableAsync(int weekOfTheYear)
+        public async Task<WeeklyTimetable?> LoadWeeklyTimetableAsync(int weekOfTheYear)
         {
-            var weeklyTimetable = await _repWrapper.WeeklyTimetableRepo.GetItemAsync(x => x.Number == weekOfTheYear);
+            var weeklyTimetable = await _repWrapper
+                        .WeeklyTimetableRepo
+                        .GetItemAsync(x => x.Number == weekOfTheYear);
             if (weeklyTimetable == null || weeklyTimetable.Timetables.Count == 0) 
             {
                 //if we are trying to access the week before today which doesn't exist
@@ -61,9 +63,11 @@ namespace myTask.Services.AssignmentsManager
                 }
 
                 int c = (int) DateTime.Now.DayOfWeek;
+                //populate with days between now and the end of working week
                 for (int i = c; i < 7; i++)
                 {
-                    var dayNumber = calendar.GetDayOfYear(DateTime.Today.Add(new TimeSpan(i-c, 0, 0, 0)));
+                    var dayNumber = calendar.GetDayOfYear(DateTime.Today.Add(new TimeSpan(i - c, 0, 0, 0)));
+
                     var dailyTimetable = new DailyTimetable()
                     {
                         Id = Guid.NewGuid(),
@@ -77,7 +81,9 @@ namespace myTask.Services.AssignmentsManager
                     weeklyTimetable.Timetables.Add(dailyTimetable);
                 }
 
-                await _repWrapper.WeeklyTimetableRepo.UpdateItemAsync(weeklyTimetable);
+                await _repWrapper
+                        .WeeklyTimetableRepo
+                        .UpdateItemAsync(weeklyTimetable);
             }
             
             return weeklyTimetable;
@@ -100,7 +106,7 @@ namespace myTask.Services.AssignmentsManager
         }
 
         //TODO: change bool with complex parameter model
-        public async Task<bool> CreateAssigmentAsync(Assignment assignment)
+        public async Task<bool> CreateAssignmentAsync(Assignment assignment)
         {
             var result = await _repWrapper.AssignmentRepo.CreateItemAsync(assignment);
             if (result == false) return result;
@@ -197,13 +203,6 @@ namespace myTask.Services.AssignmentsManager
             var daysBeforeDeadlineList = vacantDaysBeforeDeadline.ToList();
             if (daysBeforeDeadlineList.Any())
             {
-                //the assignments can then be easily completed and moved
-                assignment.PriorityLevel = PriorityLevel.Low;
-                //load today in order to calculate the priority coefficient
-                var currentDayTimetable =
-                    await LoadAssignmentsAsync(DateTime.Now.DayOfWeek, DateTime.Today.DayOfYear / 7);
-                CalculatePriorityCoefficient(ref assignment, currentDayTimetable);
-                CalculateKinbens(ref assignment, currentDayTimetable);
 
                 var oldDay = await RemoveAssignmentFromOldTimetable(assignment);
                 
@@ -220,6 +219,11 @@ namespace myTask.Services.AssignmentsManager
                         .First(x => x.AvailableTimeInHours * 60 >= assignment.DurationMinutes
                         && x.DayNumber != oldDay!.DayNumber);
                 }
+                
+                //the assignments can then be easily completed and moved
+                assignment.PriorityLevel = PriorityLevel.Low;
+                CalculatePriorityCoefficient(ref assignment, availableDay);
+                CalculateKinbens(ref assignment, availableDay);
 
                 availableDay.Assignments.Add(assignment);
                 

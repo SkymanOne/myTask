@@ -14,10 +14,17 @@ namespace myTask.Services.Database.Repositories
 
         public async Task<IEnumerable<UserUpdate>> GetRecentItemsByPageAsync(int number, int page)
         {
-            return await Database.Table<UserUpdate>()
-                .OrderByDescending(x => x.DateTime)
-                .Skip((page - 1) * number).Take(number)
-                .ToListAsync();
+            try
+            {
+                return await Database.Table<UserUpdate>()
+                    .OrderByDescending(x => x.DateTime)
+                    .Skip((page - 1) * number).Take(number)
+                    .ToListAsync();
+            }
+            catch (Exception e)
+            {
+                return new List<UserUpdate>();
+            }
         }
     }
 }

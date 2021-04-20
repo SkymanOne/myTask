@@ -59,14 +59,14 @@ namespace myTask.ViewModels
             set => SetValue(ref _selectedDate, value);
         }
 
-        private DateTime _minimumDate = new DateTime(2021, 1, 1);
+        private DateTime _minimumDate = DateTime.Today.AddYears(-1);
         public DateTime MinimumDate
         {
             get => _minimumDate;
             set => SetValue(ref _minimumDate, value);
         }
 
-        private DateTime _maximumDate = DateTime.Today.AddMonths(5);
+        private DateTime _maximumDate = DateTime.Today.AddYears(1);
         public DateTime MaximumDate
         {
             get => _maximumDate;
@@ -82,6 +82,7 @@ namespace myTask.ViewModels
                 async model =>
                 {
                     await Init(null);
+                    OnPropertyChanged(nameof(Deadlines));
                 });
         }
 
@@ -109,6 +110,7 @@ namespace myTask.ViewModels
         private async Task AddDeadlines()
         {
             var assignments = await GetDeadlinesDuringTheMonth();
+            Deadlines = new EventCollection();
             for (int i = 1; i <= _calendar.GetDaysInMonth(Year, Month); i++)
             {
                 DateTime date = new DateTime(Year, Month, i);
